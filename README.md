@@ -4,14 +4,10 @@ WebScount (WS) — set of tools for gathering information from web-sites or web-
 # Links
 Video-review (eng subs): [https://www.youtube.com/watch?v=NcJpjZ7AesA](https://www.youtube.com/watch?v=NcJpjZ7AesA)
 
-Project forum: [http://hack4sec.pro/forum/viewforum.php?f=4](http://hack4sec.pro/forum/viewforum.php?f=4)
-
-Docs en [http://hack4sec.pro/wiki/index.php/WebScout_en](http://hack4sec.pro/wiki/index.php/WebScout_en)
-
-Docs ru [http://hack4sec.pro/wiki/index.php/WebScout](http://hack4sec.pro/wiki/index.php/WebScout)
+Docs en/ru - see wiki
 
 # Authors
-Anton Kuzmin (anton.kuzmin.russia@gmail.com) [http://anton-kuzmin.ru](http://anton-kuzmin.ru) (ru) [http://kuzya.pro](http://kuzya.pro) (en)
+Anton Kuzmin (anton.kuzmin.russia@gmail.com) [http://anton-kuzmin.ru](http://anton-kuzmin.ru) (ru) [http://anton-kuzmin.pro](http://anton-kuzmin.pro) (en)
 
 Alexey Meshcheryakov (tank1st99@gmail.com)
 
