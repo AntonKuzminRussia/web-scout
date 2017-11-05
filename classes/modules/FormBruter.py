@@ -367,7 +367,8 @@ class FormBruter(WSModule):
                                 self.options['conffile'].value,
                                 self.options['first-stop'].value.lower(),
                                 self.options['login'].value,
-                                #self.options['reload-form-page'].value.lower(),
+                                self.options['pass-min-len'].value,
+                                self.options['pass-max-len'].value,
                                 pass_found,
                                 counter,
                                 result
@@ -385,6 +386,8 @@ class FormBruter(WSModule):
                                 self.options['confstr'].value,
                                 self.options['first-stop'].value.lower(),
                                 self.options['login'].value,
+                                self.options['pass-min-len'].value,
+                                self.options['pass-max-len'].value,
                                 pass_found,
                                 counter,
                                 result
