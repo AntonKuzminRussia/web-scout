@@ -127,7 +127,7 @@ class SFormBruterThread(SeleniumThread):
                     self.browser_create()
                     continue
 
-                page_load_time_limit = 10
+                timeout_page_load = int(Registry().get('config')['selenium']['timeout_page_load'])
                 start_timeout_time = int(time.time())
                 while True:
                     try:
@@ -138,7 +138,7 @@ class SFormBruterThread(SeleniumThread):
                         self.browser.find_element(By.CSS_SELECTOR, brute_conf['^SUBMIT^']).click()
                         break
                     except InvalidElementStateException as ex:
-                        if int(time.time()) < start_timeout_time + page_load_time_limit:
+                        if int(time.time()) < start_timeout_time + timeout_page_load:
                             time.sleep(1)
                         else:
                             raise ex
