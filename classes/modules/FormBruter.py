@@ -113,13 +113,13 @@ class FormBruter(WSModule):
                 False,
                 ['--ddos-human-action']
             ),
-            #"reload-form-page": WSOption(
-            #    "reload-form-page",
-            #    "Reload page with form before every auth request",
-            #    "0",
-            #    False,
-            #    ['--reload-form-page']
-            #),
+            "reload-form-page": WSOption(
+               "reload-form-page",
+               "Reload page with form before every auth request",
+               "1",
+               False,
+               ['--reload-form-page']
+            ),
             "browser-recreate-phrase": WSOption(
                 "browser-recreate-phrase",
                 "Phrase for recreate browser with new proxy",
@@ -298,6 +298,7 @@ class FormBruter(WSModule):
                     self.options['conffile'].value,
                     self.options['first-stop'].value.lower(),
                     self.options['login'].value,
+                    self.options['reload-form-page'].value,
                     self.options['pass-min-len'].value,
                     self.options['pass-max-len'].value,
                     pass_found,
@@ -367,6 +368,7 @@ class FormBruter(WSModule):
                                 self.options['conffile'].value,
                                 self.options['first-stop'].value.lower(),
                                 self.options['login'].value,
+                                self.options['reload-form-page'].value,
                                 self.options['pass-min-len'].value,
                                 self.options['pass-max-len'].value,
                                 pass_found,

@@ -12,7 +12,7 @@ import Queue
 import time
 
 from selenium.webdriver.common.by import By
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import TimeoutException, InvalidElementStateException
 
 from classes.Registry import Registry
 from classes.threads.SeleniumThread import SeleniumThread
@@ -31,7 +31,7 @@ class SFormBruterThread(SeleniumThread):
 
     def __init__(
             self, queue, protocol, host, url, false_phrase, true_phrase, delay, ddos_phrase, ddos_human,
-            recreate_phrase, conffile, first_stop, login, pass_min_len, pass_max_len, #reload_form_page,
+            recreate_phrase, conffile, first_stop, login, reload_form_page, pass_min_len, pass_max_len,
             pass_found, counter, result
     ):
         super(SFormBruterThread, self).__init__()
@@ -52,7 +52,7 @@ class SFormBruterThread(SeleniumThread):
         self.login = login
         self.pass_found = pass_found
         self.logger = Registry().get('logger')
-        #self.reload_form_page = int(reload_form_page)
+        self.reload_form_page = int(reload_form_page)
         self.pass_min_len = int(pass_min_len)
         self.pass_max_len = int(pass_max_len)
 
@@ -113,12 +113,13 @@ class SFormBruterThread(SeleniumThread):
                         (self.pass_max_len and len(word) > self.pass_max_len):
                     continue
 
-                #if self.reload_form_page or \
-                    #    (not self.browser.element_exists(By.CSS_SELECTOR, brute_conf['^USER^']) or
-                    #     not self.browser.element_exists(By.CSS_SELECTOR, brute_conf['^PASS^'])) :
-                    #self.browser.get(self.protocol + "://" + self.host + self.url)
+                if self.browser.current_url == 'about:blank' or \
+                        self.reload_form_page or \
+                       (not self.browser.element_exists(By.CSS_SELECTOR, brute_conf['^USER^']) or
+                        not self.browser.element_exists(By.CSS_SELECTOR, brute_conf['^PASS^'])):
+                    self.browser.get(self.protocol + "://" + self.host + self.url)
 
-                self.browser.get(self.protocol + "://" + self.host + self.url)
+                # self.browser.get(self.protocol + "://" + self.host + self.url)
 
                 if len(self.recreate_phrase) and self.browser.page_source.lower().count(self.recreate_phrase.lower()):
                     need_retest = True
@@ -126,11 +127,22 @@ class SFormBruterThread(SeleniumThread):
                     self.browser_create()
                     continue
 
-                self.browser.find_element(By.CSS_SELECTOR, brute_conf['^USER^']).clear()
-                self.browser.find_element(By.CSS_SELECTOR, brute_conf['^USER^']).send_keys(self.login)
-                self.browser.find_element(By.CSS_SELECTOR, brute_conf['^PASS^']).clear()
-                self.browser.find_element(By.CSS_SELECTOR, brute_conf['^PASS^']).send_keys(word)
-                self.browser.find_element(By.CSS_SELECTOR, brute_conf['^SUBMIT^']).click()
+                page_load_time_limit = 10
+                start_timeout_time = int(time.time())
+                while True:
+                    try:
+                        self.browser.find_element(By.CSS_SELECTOR, brute_conf['^USER^']).clear()
+                        self.browser.find_element(By.CSS_SELECTOR, brute_conf['^USER^']).send_keys(self.login)
+                        self.browser.find_element(By.CSS_SELECTOR, brute_conf['^PASS^']).clear()
+                        self.browser.find_element(By.CSS_SELECTOR, brute_conf['^PASS^']).send_keys(word)
+                        self.browser.find_element(By.CSS_SELECTOR, brute_conf['^SUBMIT^']).click()
+                        break
+                    except InvalidElementStateException as ex:
+                        if int(time.time()) < start_timeout_time + page_load_time_limit:
+                            time.sleep(1)
+                        else:
+                            raise ex
+
                 time.sleep(1)
 
                 positive_item = False

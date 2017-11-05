@@ -1,4 +1,5 @@
 0.4 dev
+ --reload-form-page option added for Selenium FormBruter (see docs)
  In masks generator fixed error which was in multithreading (>10) work mode.
  In DnsBrute added standart connection errors handling. It not put many trash in logs now.
  Possibility to DnsBrute for all hosts at once (see docs)
