@@ -87,7 +87,7 @@ class Logger(object):
                         symbol = codecs.encode(symbol, 'utf8', 'ignore')
                     except UnicodeDecodeError:
                         symbol = '?'
-                    decoded_content += symbol
+                    decoded_content += symbol.decode('utf8', 'ignore')
                 fh.write(decoded_content)
                 #codecs.encode(content, 'utf8', 'ignore') - not work!
             fh.close()
