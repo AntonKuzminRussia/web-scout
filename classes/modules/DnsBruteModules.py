@@ -30,7 +30,7 @@ class DnsBruteModules(WSModule):
     """ Common class for DnsBrute modules """
     logger_enable = True
     logger_name = 'dns'
-    logger_have_items = False
+    logger_have_items = True
 
     def validate_main(self):
         """ Check users params """

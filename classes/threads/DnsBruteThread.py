@@ -17,6 +17,7 @@ import dns.query
 import dns.message
 
 from classes.Registry import Registry
+from libs.common import is_binary_content_type
 
 class DnsBruteThread(threading.Thread):
     """ Thread class for DnsBrute* modules """
@@ -103,7 +104,12 @@ class DnsBruteThread(threading.Thread):
 
                                         if not self.http_nf_re.findall(resp.text.replace('\r', '').replace('\n', '')):
                                             self.result.append({'name': check_name, 'ip': ip, 'dns': self.dns_srv})
-
+                                            Registry().get('logger').item(
+                                                check_name,
+                                                resp.content if not resp is None else "",
+                                                self.is_response_content_binary(resp),
+                                                positive=True
+                                            )
                                         break
                                 else:
                                     self.result.append({'name': check_name, 'ip': ip, 'dns': self.dns_srv})
@@ -124,3 +130,7 @@ class DnsBruteThread(threading.Thread):
                 self.logger.log("Exception with {0}".format(self.dns_srv))
                 time.sleep(5)
 
+    def is_response_content_binary(self, resp):
+        return resp is not None \
+            and 'content-type' in resp.headers \
+            and is_binary_content_type(resp.headers['content-type'])
