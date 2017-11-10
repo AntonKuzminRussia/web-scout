@@ -118,6 +118,13 @@ class DnsBruteDict(DnsBruteModules):
                 False,
                 ['--http-protocol']
             ),
+            "http-retest-phrase": WSOption(
+                "http-retest-phrase",
+                "Phrase in HTTP(S) response for retest",
+                "",
+                False,
+                ['--http-retest-phrase']
+            ),
             "headers-file": WSOption(
                 "headers-file",
                 "File with list of HTTP headers",

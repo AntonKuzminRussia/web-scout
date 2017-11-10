@@ -124,6 +124,7 @@ class DnsBruteModules(WSModule):
                 self.options['delay'].value,
                 self.options['http-not-found-re'].value,
                 self.options['http-protocol'].value,
+                self.options['http-retest-phrase'].value,
                 self.options['ignore-words-re'].value,
                 result,
                 counter

@@ -22,7 +22,7 @@ class DnsBruteThread(threading.Thread):
     """ Thread class for DnsBrute* modules """
     done = False
 
-    def __init__(self, queue, domains, template, proto, msymbol, ignore_ip, dns_srv, delay, http_nf_re, http_protocol, ignore_words_re, result, counter):
+    def __init__(self, queue, domains, template, proto, msymbol, ignore_ip, dns_srv, delay, http_nf_re, http_protocol, http_retest_phrase, ignore_words_re, result, counter):
         threading.Thread.__init__(self)
         self.queue = queue
         self.domains = domains
@@ -39,6 +39,10 @@ class DnsBruteThread(threading.Thread):
         self.http_nf_re = re.compile(http_nf_re) if len(http_nf_re) else None
         self.ignore_words_re = False if not len(ignore_words_re) else re.compile(ignore_words_re)
         self.http_protocol = http_protocol
+        self.http_retest_phrase = http_retest_phrase
+
+        self.retest_delay = int(Registry().get('config')['dns']['retest_delay'])
+        self.retest_limit = int(Registry().get('config')['dns']['retest_limit'])
 
     def run(self):
         """ Run thread """
@@ -85,12 +89,22 @@ class DnsBruteThread(threading.Thread):
                         for ip in ip_re.findall(response.group('data')):
                             if not len(self.ignore_ip) or ip != self.ignore_ip:
                                 if self.http_nf_re is not None:
-                                    resp = Registry().get('http').get(
-                                        "{0}://{1}/".format(self.http_protocol, ip),
-                                        headers={'Host': check_name},
-                                        allow_redirects=False)
-                                    if not self.http_nf_re.findall(resp.text.replace('\r', '').replace('\n', '')):
-                                        self.result.append({'name': check_name, 'ip': ip, 'dns': self.dns_srv})
+                                    for i in range(self.retest_limit):
+                                        resp = Registry().get('http').get(
+                                            "{0}://{1}/".format(self.http_protocol, ip),
+                                            headers={'Host': check_name},
+                                            allow_redirects=False)
+
+                                        if len(self.http_retest_phrase) and resp.text.count(self.http_retest_phrase):
+                                            if i == 4:
+                                                self.logger.log("Too many retest actions for {0}".format(check_name))
+                                            time.sleep(self.retest_delay)
+                                            continue
+
+                                        if not self.http_nf_re.findall(resp.text.replace('\r', '').replace('\n', '')):
+                                            self.result.append({'name': check_name, 'ip': ip, 'dns': self.dns_srv})
+
+                                        break
                                 else:
                                     self.result.append({'name': check_name, 'ip': ip, 'dns': self.dns_srv})
                             break
