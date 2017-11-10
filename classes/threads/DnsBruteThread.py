@@ -96,7 +96,7 @@ class DnsBruteThread(threading.Thread):
                                             allow_redirects=False)
 
                                         if len(self.http_retest_phrase) and resp.text.count(self.http_retest_phrase):
-                                            if i == 4:
+                                            if i == self.retest_limit-1:
                                                 self.logger.log("Too many retest actions for {0}".format(check_name))
                                             time.sleep(self.retest_delay)
                                             continue
