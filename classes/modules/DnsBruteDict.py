@@ -111,6 +111,13 @@ class DnsBruteDict(DnsBruteModules):
                 False,
                 ['--http-not-found-re']
             ),
+            "http-protocol": WSOption(
+                "http-protocol",
+                "Protocol http or https (default - http)",
+                "http",
+                False,
+                ['--http-protocol']
+            ),
             "headers-file": WSOption(
                 "headers-file",
                 "File with list of HTTP headers",

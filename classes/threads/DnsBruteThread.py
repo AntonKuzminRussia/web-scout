@@ -22,7 +22,7 @@ class DnsBruteThread(threading.Thread):
     """ Thread class for DnsBrute* modules """
     done = False
 
-    def __init__(self, queue, domains, template, proto, msymbol, ignore_ip, dns_srv, delay, http_nf_re, ignore_words_re, result, counter):
+    def __init__(self, queue, domains, template, proto, msymbol, ignore_ip, dns_srv, delay, http_nf_re, http_protocol, ignore_words_re, result, counter):
         threading.Thread.__init__(self)
         self.queue = queue
         self.domains = domains
@@ -38,6 +38,7 @@ class DnsBruteThread(threading.Thread):
         self.ignore_ip = ignore_ip
         self.http_nf_re = re.compile(http_nf_re) if len(http_nf_re) else None
         self.ignore_words_re = False if not len(ignore_words_re) else re.compile(ignore_words_re)
+        self.http_protocol = http_protocol
 
     def run(self):
         """ Run thread """
@@ -85,19 +86,11 @@ class DnsBruteThread(threading.Thread):
                             if not len(self.ignore_ip) or ip != self.ignore_ip:
                                 if self.http_nf_re is not None:
                                     resp = Registry().get('http').get(
-                                        "http://{0}/".format(ip),
+                                        "{0}://{1}/".format(self.http_protocol, ip),
                                         headers={'Host': check_name},
                                         allow_redirects=False)
-                                    if not self.http_nf_re.findall(resp.text):
+                                    if not self.http_nf_re.findall(resp.text.replace('\r', '').replace('\n', '')):
                                         self.result.append({'name': check_name, 'ip': ip, 'dns': self.dns_srv})
-                                    else:
-                                        resp = Registry().get('http').get(
-                                            "https://{0}/".format(ip),
-                                            headers={'Host': check_name},
-                                            allow_redirects=False,
-                                            verify=False)
-                                        if not self.http_nf_re.findall(resp.text):
-                                            self.result.append({'name': check_name, 'ip': ip, 'dns': self.dns_srv})
                                 else:
                                     self.result.append({'name': check_name, 'ip': ip, 'dns': self.dns_srv})
                             break

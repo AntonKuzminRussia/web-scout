@@ -44,6 +44,12 @@ class DnsBruteModules(WSModule):
                 .format(self.options['protocol'].value)
             )
 
+        if self.options['http-protocol'].value not in ['http', 'https']:
+            raise WSException(
+                "HTTP Protocol mast be 'http' or 'https', but it is '{0}'"
+                .format(self.options['http-protocol'].value)
+            )
+
         if not self.options['template'].value.count(self.options['msymbol'].value):
             raise WSException(
                 "Brute template must contains msymbol ({0}), but it not ({1})"
@@ -117,6 +123,7 @@ class DnsBruteModules(WSModule):
                 next_server,
                 self.options['delay'].value,
                 self.options['http-not-found-re'].value,
+                self.options['http-protocol'].value,
                 self.options['ignore-words-re'].value,
                 result,
                 counter
