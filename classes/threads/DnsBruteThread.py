@@ -13,6 +13,7 @@ import Queue
 import re
 import threading
 
+import requests
 import dns.query
 import dns.message
 
@@ -91,26 +92,47 @@ class DnsBruteThread(threading.Thread):
                             if not len(self.ignore_ip) or ip != self.ignore_ip:
                                 if self.http_nf_re is not None:
                                     for i in range(self.retest_limit):
-                                        resp = Registry().get('http').get(
-                                            "{0}://{1}/".format(self.http_protocol, ip),
-                                            headers={'Host': check_name},
-                                            allow_redirects=False)
+                                        try:
+                                            resp = Registry().get('http').get(
+                                                "{0}://{1}/".format(self.http_protocol, ip),
+                                                headers={'Host': check_name},
+                                                allow_redirects=False)
 
-                                        if len(self.http_retest_phrase) and resp.text.count(self.http_retest_phrase):
-                                            if i == self.retest_limit-1:
-                                                self.logger.log("Too many retest actions for {0}".format(check_name))
-                                            time.sleep(self.retest_delay)
-                                            continue
+                                            text_for_search = ""
+                                            for header in resp.headers:
+                                                text_for_search += "{0}: {1}\r\n".format(header, resp.headers[header])
+                                            text_for_search += "\r\n"
+                                            text_for_search += resp.text
 
-                                        if not self.http_nf_re.findall(resp.text.replace('\r', '').replace('\n', '')):
+                                            if len(self.http_retest_phrase) and \
+                                                    text_for_search.replace('\r','').replace('\n', '')\
+                                                            .count(self.http_retest_phrase):
+                                                if i == self.retest_limit - 1:
+                                                    self.logger.log(
+                                                        "Too many retest actions for {0}".format(check_name))
+                                                time.sleep(self.retest_delay)
+                                                continue
+
+                                            if not self.http_nf_re.findall(
+                                                    text_for_search.replace('\r', '').replace('\n', '')):
+                                                self.result.append({'name': check_name, 'ip': ip, 'dns': self.dns_srv})
+                                                Registry().get('logger').item(
+                                                    check_name,
+                                                    text_for_search,
+                                                    self.is_response_content_binary(resp),
+                                                    positive=True
+                                                )
+                                            break
+                                        except (requests.exceptions.ConnectionError,
+                                                requests.exceptions.ChunkedEncodingError) as e:
                                             self.result.append({'name': check_name, 'ip': ip, 'dns': self.dns_srv})
                                             Registry().get('logger').item(
                                                 check_name,
-                                                resp.content if not resp is None else "",
-                                                self.is_response_content_binary(resp),
+                                                'ERROR: ' + str(e),
+                                                False,
                                                 positive=True
                                             )
-                                        break
+                                            break
                                 else:
                                     self.result.append({'name': check_name, 'ip': ip, 'dns': self.dns_srv})
                             break

@@ -1,5 +1,6 @@
 0.4 dev
  --reload-form-page option added for Selenium FormBruter (see docs)
+ In http-tests of DnsBrute, key phrases search in full web-server response (headers + body)
  In masks generator fixed error which was in multithreading (>10) work mode.
  In DnsBrute added standart connection errors handling. It not put many trash in logs now.
  Possibility to DnsBrute for all hosts at once (see docs)
