@@ -32,6 +32,10 @@ class DnsBruteModules(WSModule):
     logger_name = 'dns'
     logger_have_items = True
 
+    ZONE_CNAME = 'CNAME'
+    ZONE_A = 'A'
+    POSSIBLE_ZONES = [ZONE_A, ZONE_CNAME]
+
     def validate_main(self):
         """ Check users params """
         if 'host' in self.options.keys() and self.options['host'].value != 'all' and \
@@ -54,6 +58,12 @@ class DnsBruteModules(WSModule):
             raise WSException(
                 "Brute template must contains msymbol ({0}), but it not ({1})"
                 .format(self.options['msymbol'].value, self.options['template'].value)
+            )
+
+        if self.options['zone'].value.upper() not in self.POSSIBLE_ZONES:
+            raise WSException(
+                "Wrong DNS zone - '{0}', allowed: {1}"
+                .format(self.options['zone'].value, ", ".join(self.POSSIBLE_ZONES))
             )
 
     def load_objects(self, queue):
@@ -126,6 +136,7 @@ class DnsBruteModules(WSModule):
                 self.options['http-protocol'].value,
                 self.options['http-retest-phrase'].value,
                 self.options['ignore-words-re'].value,
+                self.options['zone'].value,
                 result,
                 counter
             )

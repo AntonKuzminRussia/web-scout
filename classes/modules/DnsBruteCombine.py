@@ -146,6 +146,13 @@ class DnsBruteCombine(DnsBruteModules):
                 False,
                 ['--headers-file']
             ),
+            "zone": WSOption(
+                "zone",
+                "Zone for check (A/CNAME)",
+                "A",
+                False,
+                ['--zone']
+            ),
         },
     }
 
