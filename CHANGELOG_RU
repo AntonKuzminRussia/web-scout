@@ -1,4 +1,5 @@
 0.4 dev
+ Добавлен параметр --http-proxies для модуля DNS Brute
  DNS Brute по зоне CNAME, не толко по A
  При http-тестах в DnsBrute поиск ключевых фраз происходит по полному ответу веб-сервера (заголовки + тело)
  В Selenium FormBruter добавлена опция --reload-form-page (смотрите документацию)

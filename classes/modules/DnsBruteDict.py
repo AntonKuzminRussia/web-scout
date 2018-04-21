@@ -125,6 +125,13 @@ class DnsBruteDict(DnsBruteModules):
                 False,
                 ['--http-retest-phrase']
             ),
+            "http-proxies": WSOption(
+                "http-proxies",
+                "Proxies list for http(s) requests",
+                "",
+                False,
+                ['--http-proxies']
+            ),
             "headers-file": WSOption(
                 "headers-file",
                 "File with list of HTTP headers",

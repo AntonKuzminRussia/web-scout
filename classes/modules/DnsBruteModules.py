@@ -9,6 +9,7 @@ Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pr
 Common class for DnsBrute modules
 """
 
+import os
 import time
 import socket
 
@@ -66,6 +67,13 @@ class DnsBruteModules(WSModule):
                 .format(self.options['zone'].value, ", ".join(self.POSSIBLE_ZONES))
             )
 
+        if 'http-proxies' in self.options.keys() and len(self.options['http-proxies'].value) and \
+                not os.path.exists(self.options['http-proxies'].value):
+            raise WSException(
+                "Proxy list not found: '{0}'".
+                format(self.options['http-proxies'].value)
+            )
+
     def load_objects(self, queue):
         """ Method for prepare test objects, here abstract """
         pass
@@ -75,6 +83,9 @@ class DnsBruteModules(WSModule):
         self.enable_logger()
         self.validate_main()
         self.pre_start_inf()
+
+        if self.options['http-proxies'].value:
+            Registry().get('proxies').load(self.options['http-proxies'].value)
 
         q = DnsBruteJob()
 
