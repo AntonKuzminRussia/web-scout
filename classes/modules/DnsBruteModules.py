@@ -249,7 +249,7 @@ class DnsBruteModules(WSModule):
 
             self.logger.log("\nFound {0} hosts, inserted in database (new) - {1}.".format(len(result), added))
         else:
-            self.logger.log("Found")
+            self.logger.log("Positive limit stop. Found:")
 
     def _insert_hosts(self, hosts):
         """ Add found hosts in db """
