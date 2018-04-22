@@ -12,6 +12,7 @@ import time
 import Queue
 import re
 import threading
+import copy
 
 import requests
 import dns.query
@@ -57,6 +58,7 @@ class DnsBruteThread(threading.Thread):
         }
 
         self.check_name = ""
+        self.http = copy.deepcopy(Registry().get('http'))
 
     def run(self):
         """ Run thread """
@@ -139,7 +141,7 @@ class DnsBruteThread(threading.Thread):
         """ Make HTTP(S) test for found ip """
         for i in range(self.retest_limit):
             try:
-                resp = Registry().get('http').get(
+                resp = self.http.get(
                     "{0}://{1}/".format(self.http_protocol, ip),
                     headers={'Host': self.check_name},
                     allow_redirects=False)
