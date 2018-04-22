@@ -34,12 +34,23 @@ class Http(object):
     current_proxy = None
     current_proxy_count = 0
     every_request_new_session = False
+    new_session_per_requests = 50
+    requests_counter = 0
 
     def __init__(self, verify=False, allow_redirects=False, headers=None):
         self.verify = verify
         self.allow_redirects = allow_redirects
         self.headers = {} if headers is None else headers
         self.session = requests.Session()
+
+    def up_requests_counter(self):
+        self.requests_counter += 1
+
+        if not self.every_request_new_session and \
+                self.new_session_per_requests and \
+                self.requests_counter >= self.new_session_per_requests:
+            self.requests_counter = 0
+            self.session = requests.Session()
 
     def load_headers_from_file(self, _file):
         if not os.path.exists(_file):
@@ -74,7 +85,6 @@ class Http(object):
             self.current_proxy_count = 0
 
         if not self.current_proxy:
-            #self.current_proxy = Registry().get('proxies').get_proxy()
             self.change_proxy()
 
         self.current_proxy_count += 1
@@ -86,6 +96,8 @@ class Http(object):
 
     def get(self, url, verify=None, allow_redirects=None, headers=None):
         """ HTTP GET request """
+        self.up_requests_counter()
+
         if self.every_request_new_session:
             self.session = requests.Session()
         verify = self.verify if verify is None else verify
@@ -141,6 +153,8 @@ class Http(object):
 
     def post(self, url, data=None, verify=None, allow_redirects=None, headers=None):
         """ HTTP POST request """
+        self.up_requests_counter()
+
         if self.every_request_new_session:
             self.session = requests.Session()
         verify = self.verify if verify is None else verify
@@ -175,6 +189,8 @@ class Http(object):
 
     def head(self, url, verify=None, allow_redirects=None, headers=None):
         """ HTTP HEAD request """
+        self.up_requests_counter()
+
         if self.every_request_new_session:
             self.session = requests.Session()
         verify = self.verify if verify is None else verify

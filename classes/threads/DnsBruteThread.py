@@ -59,6 +59,7 @@ class DnsBruteThread(threading.Thread):
 
         self.check_name = ""
         self.http = copy.deepcopy(Registry().get('http'))
+        self.http.every_request_new_session = True
 
     def run(self):
         """ Run thread """

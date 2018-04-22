@@ -1,4 +1,5 @@
 0.4 dev
+ Memory leak fixed in raw http work mechanism (thousands queries)
  --http-proxies param added for DNS Brute module
  DNS Brute by CNAME zone, not only by A
  --reload-form-page option added for Selenium FormBruter (see docs)
