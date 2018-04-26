@@ -24,6 +24,9 @@ class Proxies(object):
     def __init__(self):
         self.died_limit = int(Registry().get('config')['main']['proxies_died_limit'])
 
+    def count(self):
+        return len(self._proxies)
+
     def load(self, path):
         """ Load proxy-list from path """
         proxies = file_to_list(path)

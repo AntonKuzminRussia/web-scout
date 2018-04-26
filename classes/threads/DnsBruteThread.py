@@ -26,6 +26,12 @@ class DnsBruteThread(threading.Thread):
     """ Thread class for DnsBrute* modules """
     done = False
 
+    proxyErrors = [
+        "Cannot connect to proxy.",
+        "Connection aborted",
+        "Max retries exceeded with url",
+    ]
+
     def __init__(self, queue, domains, template, proto, msymbol, ignore_ip, dns_srv, delay, http_nf_re, http_protocol,
                  http_retest_phrase, ignore_words_re, zone, result, counter):
         threading.Thread.__init__(self)
@@ -174,6 +180,16 @@ class DnsBruteThread(threading.Thread):
                 break
             except (requests.exceptions.ConnectionError,
                     requests.exceptions.ChunkedEncodingError) as e:
+
+                if Registry().get('proxies').count() > 0:
+                    is_proxy_error = False
+                    for proxyError in self.proxyErrors:
+                        if str(e).count(proxyError):
+                            is_proxy_error = True
+                    if is_proxy_error:
+                        self.http.change_proxy()
+                        continue
+
                 self.result.append({'name': self.check_name, 'ip': ip, 'dns': self.dns_srv})
                 self.logger.item(
                     self.check_name,
