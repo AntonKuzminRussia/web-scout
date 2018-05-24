@@ -113,7 +113,8 @@ class Http(object):
             allow_redirects=allow_redirects,
             headers=headers,
             stream=True,
-            proxies=self.get_current_proxy()
+            proxies=self.get_current_proxy(),
+            timeout=int(Registry().get('config')['main']['http_timeout'])
         )
 
         if 'content-length' in resp.headers and \
@@ -171,7 +172,8 @@ class Http(object):
             allow_redirects=allow_redirects,
             headers=headers,
             stream=True,
-            proxies=self.get_current_proxy()
+            proxies=self.get_current_proxy(),
+            timeout=int(Registry().get('config')['main']['http_timeout'])
         )
         if 'content-length' in resp.headers and \
                         int(resp.headers['content-length']) > int(Registry().get('config')['main']['max_size']):
@@ -205,7 +207,8 @@ class Http(object):
             verify=verify,
             allow_redirects=allow_redirects,
             headers=headers,
-            proxies=self.get_current_proxy()
+            proxies=self.get_current_proxy(),
+            timeout=int(Registry().get('config')['main']['http_timeout'])
         )
 
         if 'content-length' in resp.headers and \

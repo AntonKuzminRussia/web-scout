@@ -1,4 +1,5 @@
 0.4 dev
+ Option http_timeout added in config.ini. Now possible set timeout for http-requests.
  Adding host with port (host.com:port, ip:port) is now possible
  Memory leak fixed in raw http work mechanism (thousands queries)
  --http-proxies param added for DNS Brute module
