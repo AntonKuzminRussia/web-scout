@@ -32,7 +32,7 @@ class FormBruterThread(HttpThread):
     last_action = 0
 
     def __init__(
-            self, queue, protocol, host, url, false_phrase, true_phrase, retest_codes, delay,
+            self, queue, protocol, host, url, false_phrase, false_size, true_phrase, retest_codes, delay,
             confstr, first_stop, login, pass_min_len, pass_max_len, pass_found, counter, result
     ):
         threading.Thread.__init__(self)
@@ -42,6 +42,7 @@ class FormBruterThread(HttpThread):
         self.host = host
         self.url = url
         self.false_phrase = false_phrase
+        self.false_size = int(false_size)
         self.true_phrase = true_phrase
         self.delay = int(delay)
         self.confstr = confstr
@@ -115,10 +116,12 @@ class FormBruterThread(HttpThread):
                     continue
 
                 positive_item = False
+
                 if (len(self.false_phrase) and
                         not resp.content.count(self.false_phrase)) or \
-                        (len(self.true_phrase) and resp.content.count(self.true_phrase)):
-                    self.result.append({'word': word, 'content': resp.content})
+                        (len(self.true_phrase) and resp.content.count(self.true_phrase) or
+                             (self.false_size and len(resp.content) != self.false_size)):
+                    self.result.append({'word': word, 'content': resp.content, 'size': len(resp.content)})
                     positive_item = True
 
                     self.check_positive_limit_stop(self.result)

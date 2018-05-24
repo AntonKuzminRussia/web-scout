@@ -1,4 +1,9 @@
 0.4 dev
+ Added config option run_without_host_in_db_check for fast ws use - target hosts no need to add if this setting=1
+ Added dictionary bases/dafs/files_wo_ext.txt with filenames without extensions
+ In FormBruter added param --false-size for detect false tries by response size
+ Option http_timeout added in config.ini. Now possible set timeout for http-requests.
+ Adding host with port (host.com:port, ip:port) is now possible
  Memory leak fixed in raw http work mechanism (thousands queries)
  --http-proxies param added for DNS Brute module
  DNS Brute by CNAME zone, not only by A

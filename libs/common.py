@@ -80,12 +80,12 @@ def main_help():
 
 def validate_ip(ip):
     """ Regex IPv4 validator """
-    return bool(re.match(r'^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$', ip))
+    return bool(re.match(r'^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(:\d+|)$', ip))
 
 
 def validate_host(host):
     """ Regex hostname validator """
-    return bool(re.match(r'^[\da-z\.-]+\.[a-z]{2,6}$', host))
+    return bool(re.match(r'^[\da-z\.-]+\.[a-z]{2,6}(:\d+|)$', host))
 
 
 def validate_uri_start(url):
