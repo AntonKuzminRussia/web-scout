@@ -88,7 +88,7 @@ class Hosts(WSModule):
 
         if ip == '':
             try:
-                ip = socket.gethostbyname(name)
+                ip = socket.gethostbyname(name if name.count(":") == 0 else name.split(":")[0])
                 print " IP for host '{0}' is '{1}'".format(name, ip)
             except socket.gaierror:
                 raise WSException("Can`t lookup hostname '{0}'. Check it or set ip-address in --ip param!".format(name))
