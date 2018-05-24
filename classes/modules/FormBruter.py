@@ -71,6 +71,13 @@ class FormBruter(WSModule):
                 False,
                 ['--false-phrase']
             ),
+            "false-size": WSOption(
+                "false-size",
+                "Response size for detect false answer (auth is wrong)",
+                "",
+                None,
+                ['--false-size']
+            ),
             "retest-codes": WSOption(
                 "retest-codes",
                 "Custom codes for re-test object after 5 sec",
@@ -241,9 +248,9 @@ class FormBruter(WSModule):
                     "--confstr must have a ^PASS^ fragment"
                 )
 
-        if not len(self.options['true-phrase'].value) and not len(self.options['false-phrase'].value):
+        if not len(self.options['true-phrase'].value) and not len(self.options['false-phrase'].value) and not self.options['false-size'].value:
             raise WSException(
-                "You must specify --false-phrase param or --true-phrase param!"
+                "You must specify --false-phrase param or --true-phrase param or --false-size param!"
             )
 
 
@@ -312,6 +319,7 @@ class FormBruter(WSModule):
                     self.options['host'].value,
                     self.options['url'].value,
                     self.options['false-phrase'].value,
+                    self.options['false-size'].value,
                     self.options['true-phrase'].value,
                     self.options['retest-codes'].value.lower(),
                     self.options['delay'].value,
