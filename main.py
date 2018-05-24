@@ -24,6 +24,7 @@ from classes.Registry import Registry
 from classes.kernel.WSException import WSException
 from classes.models.ProjectsModel import ProjectsModel
 from classes.Logger import Logger
+from classes.XmlOutput import XmlOutput
 
 if len(sys.argv) < 4:
     main_help()
@@ -81,6 +82,9 @@ args = vars(parser.parse_args(sys.argv[4:]))
 for option in args.keys():
     if args[option] is not None:
         module.options[option].value = args[option].strip()
+
+        if option == 'xml-report':
+            Registry().set('xml', XmlOutput(args[option].strip()))
 
         if option == 'headers-file':
             try:

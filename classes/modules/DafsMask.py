@@ -23,6 +23,13 @@ class DafsMask(DafsModules):
 
     options_sets = {
         "scan": {
+            "xml-report": WSOption(
+                "xml-report",
+                "XML report file",
+                "",
+                False,
+                ['--xml-report']
+            ),
             "threads": WSOption(
                 "threads",
                 "Threads count, default 10",

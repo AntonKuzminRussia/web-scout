@@ -13,6 +13,7 @@ import sys
 import time
 
 from libs.common import secs_to_text, nformat
+from classes.Registry import Registry
 
 
 class WSCounter(object):
@@ -45,14 +46,32 @@ class WSCounter(object):
                     time_now = int(time.time()) - self.start_time if int(time.time()) - self.start_time > 0 else 1
                     time_left = round((100-percents)*(time_now/percents))
 
+                    counter_str = nformat(self.counter)
+                    all_str = nformat(self.all)
+                    percent = round(self.counter/(self.all/100), 2)
+                    time_now_str = secs_to_text(time_now)
+                    time_left_str = secs_to_text(time_left)
+                    speed = round((self.counter - self.last_point_count) / (int(time.time()) - self.last_point_time), 2)
+
                     print "({0}/{1}/{2}%) | {3} | {4} | {5} o/s".format(
-                        nformat(self.counter),
-                        nformat(self.all),
-                        round(self.counter/(self.all/100), 2),
-                        secs_to_text(time_now),
-                        secs_to_text(time_left),
-                        round((self.counter - self.last_point_count) / (int(time.time()) - self.last_point_time), 2) #round(self.counter/time_now, 2)
+                        counter_str,
+                        all_str,
+                        percent,
+                        time_now_str,
+                        time_left_str,
+                        speed
                     )
+
+                    if Registry().isset('xml'):
+                        Registry().get('xml').put_progress(
+                            counter_str,
+                            all_str,
+                            percent,
+                            time_now_str,
+                            time_left_str,
+                            speed
+                        )
+
                     self.last_point_count = self.counter
                     self.last_point_time = int(time.time())
         except ZeroDivisionError:

@@ -26,6 +26,13 @@ class DafsDict(DafsModules):
     time_count = True
     options_sets = {
         "scan": {
+            "xml-report": WSOption(
+                "xml-report",
+                "XML report file",
+                "",
+                False,
+                ['--xml-report']
+            ),
             "threads": WSOption(
                 "threads",
                 "Threads count, default 10",

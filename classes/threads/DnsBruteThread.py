@@ -133,6 +133,9 @@ class DnsBruteThread(threading.Thread):
         answers = self.re['cname'].findall(dns_result.to_text())
         for answer in answers:
             self.result.append({'name': self.check_name, 'ip': answer, 'dns': self.dns_srv})
+            if Registry().isset('xml'):
+                Registry().get('xml').put_result({'name': self.check_name, 'ip': answer, 'dns': self.dns_srv})
+
 
     def parse_zone_a(self, response):
         """ Parsing A zone answer """
@@ -142,6 +145,8 @@ class DnsBruteThread(threading.Thread):
                     self.http_test(ip)
                 else:
                     self.result.append({'name': self.check_name, 'ip': ip, 'dns': self.dns_srv})
+                    if Registry().isset('xml'):
+                        Registry().get('xml').put_result({'name': self.check_name, 'ip': ip, 'dns': self.dns_srv})
             break
 
     def http_test(self, ip):
@@ -171,6 +176,8 @@ class DnsBruteThread(threading.Thread):
                 if not self.http_nf_re.findall(
                         text_for_search.replace('\r', '').replace('\n', '')):
                     self.result.append({'name': self.check_name, 'ip': ip, 'dns': self.dns_srv})
+                    if Registry().isset('xml'):
+                        Registry().get('xml').put_result({'name': self.check_name, 'ip': ip, 'dns': self.dns_srv})
                     self.logger.item(
                         self.check_name,
                         text_for_search,
@@ -191,6 +198,8 @@ class DnsBruteThread(threading.Thread):
                         continue
 
                 self.result.append({'name': self.check_name, 'ip': ip, 'dns': self.dns_srv})
+                if Registry().isset('xml'):
+                    Registry().get('xml').put_result({'name': self.check_name, 'ip': ip, 'dns': self.dns_srv})
                 self.logger.item(
                     self.check_name,
                     'ERROR: ' + str(e),

@@ -26,6 +26,13 @@ class DnsBruteCombine(DnsBruteModules):
     time_count = True
     options_sets = {
         "brute": {
+            "xml-report": WSOption(
+                "xml-report",
+                "XML report file",
+                "",
+                False,
+                ['--xml-report']
+            ),
             "threads": WSOption(
                 "threads",
                 "Threads count, default 10",

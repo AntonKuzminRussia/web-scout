@@ -116,3 +116,6 @@ class Logger(object):
         )
 
         self.log(log_str, _print=True)
+
+        if Registry().isset('xml'):
+            Registry().get('xml').put_error(str(_exception), trace_text)

@@ -111,11 +111,14 @@ class DafsThread(HttpThread):
 
                 positive_item = False
                 if self.is_response_right(resp):
-                    self.result.append({
+                    item_data = {
                         'url': url,
                         'code': resp.status_code,
                         'time': int(time.time()) - rtime
-                    })
+                    }
+                    self.result.append(item_data)
+                    if Registry().isset('xml'):
+                        Registry().get('xml').put_result(item_data)
                     positive_item = True
 
                 self.log_item(word, resp, positive_item)
