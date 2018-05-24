@@ -39,7 +39,8 @@ class DnsBruteModules(WSModule):
 
     def validate_main(self):
         """ Check users params """
-        if 'host' in self.options.keys() and self.options['host'].value != 'all' and \
+        if not int(Registry().get('config')['main']['run_without_host_in_db_check']) and \
+                        'host' in self.options.keys() and self.options['host'].value != 'all' and \
                 not HostsModel().exists(Registry().get('pData')['id'], self.options['host'].value):
             raise WSException("Host '{0}' not found in this project!".format(self.options['host'].value))
 

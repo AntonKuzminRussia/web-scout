@@ -1,4 +1,6 @@
 0.4 dev
+ В config.ini добавлена опция run_without_host_in_db_check для быстрого использования ws - если эта опция выставлена в 1, то целевой хост не проверяется на наличие в БД
+ Added config option run_without_host_in_db_check for fast ws use - target hosts no need to add if this setting=1
  Устранена проблема утечки памяти при длительной работе с сырым HTTP
  Добавлен параметр --http-proxies для модуля DNS Brute
  DNS Brute по зоне CNAME, не толко по A
