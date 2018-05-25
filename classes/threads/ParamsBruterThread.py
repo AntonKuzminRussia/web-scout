@@ -150,6 +150,17 @@ class ParamsBruterThread(HttpThread):
 
                     self.log_item(found_item, resp, positive_item)
 
+                if Registry().isset('tester'):
+                    Registry().get('tester').put(
+                        params_str,
+                        {
+                            'code': resp.status_code,
+                            'positive': positive_item,
+                            'size': len(resp.content),
+                            'content': resp.content,
+                        }
+                    )
+
                 self.check_positive_limit_stop(self.result)
 
                 need_retest = False
@@ -172,3 +183,7 @@ class ParamsBruterThread(HttpThread):
 
             finally:
                 pass
+
+            if Registry().isset('tester') and Registry().get('tester').done():
+                self.done = True
+                break

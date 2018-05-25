@@ -85,6 +85,17 @@ class BackupsFinderThread(HttpThread):
                     self.result.append(word)
                     positive_item = True
 
+                if Registry().isset('tester'):
+                    Registry().get('tester').put(
+                        word,
+                        {
+                            'code': resp.status_code,
+                            'positive': positive_item,
+                            'size': len(resp.content),
+                            'content': resp.content,
+                        }
+                    )
+
                 self.log_item(word, resp, positive_item)
 
                 self.check_positive_limit_stop(self.result)
@@ -98,3 +109,7 @@ class BackupsFinderThread(HttpThread):
             except BaseException as e:
                 self.logger.ex(e)
                 #self.queue.task_done(word)
+
+            if Registry().isset('tester') and Registry().get('tester').done():
+                self.done = True
+                break

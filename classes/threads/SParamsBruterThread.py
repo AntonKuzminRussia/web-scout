@@ -124,7 +124,17 @@ class SParamsBruterThread(SeleniumThread):
 
                     positive_item = True
 
-                    self.logger.item(found_item, self.browser.page_source, True, positive=positive_item)
+                self.logger.item(found_item, self.browser.page_source, True, positive=positive_item)
+
+                if Registry().isset('tester'):
+                    Registry().get('tester').put(
+                        params_str,
+                        {
+                            'positive': positive_item,
+                            'size': len(self.browser.page_source),
+                            'content': self.browser.page_source,
+                        }
+                    )
 
                 if len(self.result) >= int(Registry().get('config')['main']['positive_limit_stop']):
                     Registry().set('positive_limit_stop', True)
@@ -153,5 +163,9 @@ class SParamsBruterThread(SeleniumThread):
                 except UnicodeDecodeError:
                     need_retest = False
             self.up_requests_count()
+
+            if Registry().isset('tester') and Registry().get('tester').done():
+                self.done = True
+                break
 
         self.browser_close()

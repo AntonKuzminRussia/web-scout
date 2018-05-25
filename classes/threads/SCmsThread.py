@@ -92,6 +92,17 @@ class SCmsThread(SeleniumThread):
                     self.result.append(item_data)
                     positive_item = True
 
+                if Registry().isset('tester'):
+                    Registry().get('tester').put(
+                        path,
+                        {
+                            'code': 0,
+                            'positive': positive_item,
+                            'size': len(self.browser.page_source),
+                            'content': self.browser.page_source,
+                        }
+                    )
+
                 self.logger.item(
                     path,
                     self.browser.page_source,
@@ -123,5 +134,9 @@ class SCmsThread(SeleniumThread):
                     pass
                 self.queue.task_done()
             self.up_requests_count()
+
+            if Registry().isset('tester') and Registry().get('tester').done():
+                self.done = True
+                break
 
         self.browser_close()

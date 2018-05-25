@@ -99,6 +99,17 @@ class SDafsThread(SeleniumThread):
                     self.result.append(item_data)
                     positive_item = True
 
+                if Registry().isset('tester'):
+                    Registry().get('tester').put(
+                        url,
+                        {
+                            'code': 0,
+                            'positive': positive_item,
+                            'size': len(self.browser.page_source),
+                            'content': self.browser.page_source,
+                        }
+                    )
+
                 self.logger.item(word, self.browser.page_source, False, positive_item)
 
                 if len(self.result) >= int(Registry().get('config')['main']['positive_limit_stop']):
@@ -128,5 +139,9 @@ class SDafsThread(SeleniumThread):
                 except UnicodeDecodeError:
                     need_retest = False
             self.up_requests_count()
+
+            if Registry().isset('tester') and Registry().get('tester').done():
+                self.done = True
+                break
 
         self.browser_close()

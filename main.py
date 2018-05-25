@@ -24,6 +24,7 @@ from classes.Registry import Registry
 from classes.kernel.WSException import WSException
 from classes.models.ProjectsModel import ProjectsModel
 from classes.Logger import Logger
+from classes.Tester import Tester
 from classes.XmlOutput import XmlOutput
 
 if len(sys.argv) < 4:
@@ -83,8 +84,12 @@ for option in args.keys():
     if args[option] is not None:
         module.options[option].value = args[option].strip()
 
-        if option == 'xml-report':
+        if option == 'xml-report' and args[option].strip():
             Registry().set('xml', XmlOutput(args[option].strip()))
+
+        if option == 'test' and args[option].strip():
+            Registry().set('tester', Tester())
+            module.options["threads"].value = "1"
 
         if option == 'headers-file':
             try:
@@ -114,6 +119,8 @@ Registry().get('ndb').close()
 if Registry().isset('display'):
     Registry().get('display').stop()
 
-if module.time_count:
+if Registry().isset('tester'):
+    Registry().get('tester').dump()
+elif module.time_count:
     print "\nEnded module work at " + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
     print "Common work time: {0}".format(secs_to_text(int(time.time()) - start_time))

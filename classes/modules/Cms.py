@@ -42,6 +42,13 @@ class Cms(WSModule):
     time_count = True
     options_sets = {
         "scan": {
+            "test": WSOption(
+                "test",
+                "Test run with results dump",
+                "",
+                False,
+                ['--test']
+            ),
             "threads": WSOption(
                 "threads",
                 "Threads count, default 10",

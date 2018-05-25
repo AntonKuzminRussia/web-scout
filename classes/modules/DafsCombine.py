@@ -25,6 +25,13 @@ class DafsCombine(DafsModules):
     time_count = True
     options_sets = {
         "scan": {
+            "test": WSOption(
+                "test",
+                "Test run with results dump",
+                "",
+                False,
+                ['--test']
+            ),
             "xml-report": WSOption(
                 "xml-report",
                 "XML report file",

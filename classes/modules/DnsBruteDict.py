@@ -26,6 +26,13 @@ class DnsBruteDict(DnsBruteModules):
     time_count = True
     options_sets = {
         "brute": {
+            "test": WSOption(
+                "test",
+                "Test run with results dump",
+                "",
+                False,
+                ['--test']
+            ),
             "xml-report": WSOption(
                 "xml-report",
                 "XML report file",

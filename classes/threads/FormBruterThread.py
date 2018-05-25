@@ -131,6 +131,17 @@ class FormBruterThread(HttpThread):
 
                 self.log_item(word, resp, positive_item)
 
+                if Registry().isset('tester'):
+                    Registry().get('tester').put(
+                        word,
+                        {
+                            'code': resp.status_code,
+                            'positive': positive_item,
+                            'size': len(resp.content),
+                            'content': resp.content,
+                        }
+                    )
+
                 if positive_item and int(self.first_stop):
                     self.done = True
                     self.pass_found = True
@@ -154,3 +165,7 @@ class FormBruterThread(HttpThread):
                     self.logger.ex(e)
             finally:
                 pass
+
+            if Registry().isset('tester') and Registry().get('tester').done():
+                self.done = True
+                break

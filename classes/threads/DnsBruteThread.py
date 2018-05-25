@@ -112,6 +112,15 @@ class DnsBruteThread(threading.Thread):
                             self.parse_zone_cname(result)
                         else:
                             raise WSException("Wrong dns zone '{0}'".format(self.zone))
+                    elif Registry().isset('tester'):
+                            Registry().get('tester').put(
+                                self.check_name,
+                                {
+                                    'ip': '',
+                                    'dns': self.dns_srv,
+                                    'positive': False
+                                }
+                            )
 
                 if len(self.result) >= int(Registry().get('config')['main']['positive_limit_stop']):
                     Registry().set('positive_limit_stop', True)
@@ -128,28 +137,56 @@ class DnsBruteThread(threading.Thread):
                 self.logger.log("Exception with {0}".format(self.dns_srv))
                 time.sleep(5)
 
+            if Registry().isset('tester') and Registry().get('tester').done():
+                self.done = True
+                break
+
     def parse_zone_cname(self, dns_result):
         """ Parsing CNAME zone answer """
         answers = self.re['cname'].findall(dns_result.to_text())
+        positive_item = False
         for answer in answers:
+            positive_item = True
             item_data = {'name': self.check_name, 'ip': answer, 'dns': self.dns_srv}
             self.result.append(item_data)
             if Registry().isset('xml'):
                 Registry().get('xml').put_result(item_data)
 
+        if Registry().isset('tester'):
+            Registry().get('tester').put(
+                self.check_name,
+                {
+                    'ip': str(answers),
+                    'dns': self.dns_srv,
+                    'positive': positive_item
+                }
+            )
+
 
     def parse_zone_a(self, response):
         """ Parsing A zone answer """
+        positive_item = False
         for ip in self.re['ip'].findall(response.group('data')):
             if not len(self.ignore_ip) or ip != self.ignore_ip:
                 if self.http_nf_re is not None:
                     self.http_test(ip)
                 else:
+                    positive_item = True
                     item_data = {'name': self.check_name, 'ip': ip, 'dns': self.dns_srv}
                     self.result.append(item_data)
                     if Registry().isset('xml'):
                         Registry().get('xml').put_result(item_data)
             break
+
+        if self.http_nf_re is None and Registry().isset('tester'):
+            Registry().get('tester').put(
+                self.check_name,
+                {
+                    'ip': '',
+                    'dns': self.dns_srv,
+                    'positive': positive_item
+                }
+            )
 
     def http_test(self, ip):
         """ Make HTTP(S) test for found ip """
@@ -175,8 +212,10 @@ class DnsBruteThread(threading.Thread):
                     time.sleep(self.retest_delay)
                     continue
 
+                positive_item = False
                 if not self.http_nf_re.findall(
                         text_for_search.replace('\r', '').replace('\n', '')):
+                    positive_item = True
                     item_data = {'name': self.check_name, 'ip': ip, 'dns': self.dns_srv}
                     self.result.append(item_data)
                     if Registry().isset('xml'):
@@ -185,7 +224,16 @@ class DnsBruteThread(threading.Thread):
                         self.check_name,
                         text_for_search,
                         self.is_response_content_binary(resp),
-                        positive=True
+                        positive=positive_item
+                    )
+                if Registry().isset('tester'):
+                    Registry().get('tester').put(
+                        self.check_name,
+                        {
+                            'ip': ip,
+                            'dns': self.dns_srv,
+                            'positive': positive_item
+                        }
                     )
                 break
             except (requests.exceptions.ConnectionError,

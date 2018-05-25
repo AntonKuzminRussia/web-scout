@@ -23,6 +23,13 @@ class DafsMask(DafsModules):
 
     options_sets = {
         "scan": {
+            "test": WSOption(
+                "test",
+                "Test run with results dump",
+                "",
+                False,
+                ['--test']
+            ),
             "xml-report": WSOption(
                 "xml-report",
                 "XML report file",

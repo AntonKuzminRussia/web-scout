@@ -121,6 +121,17 @@ class DafsThread(HttpThread):
                         Registry().get('xml').put_result(item_data)
                     positive_item = True
 
+                if Registry().isset('tester'):
+                    Registry().get('tester').put(
+                        url,
+                        {
+                            'code': resp.status_code,
+                            'positive': positive_item,
+                            'size': len(resp.content),
+                            'content': resp.content,
+                        }
+                    )
+
                 self.log_item(word, resp, positive_item)
 
                 self.check_positive_limit_stop(self.result)
@@ -145,3 +156,7 @@ class DafsThread(HttpThread):
 
             finally:
                 pass
+
+            if Registry().isset('tester') and Registry().get('tester').done():
+                self.done = True
+                break

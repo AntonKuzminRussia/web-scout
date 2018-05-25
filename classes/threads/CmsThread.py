@@ -100,6 +100,17 @@ class CmsThread(HttpThread):
                         Registry().get('xml').put_result(item_data)
                     positive_item = True
 
+                if Registry().isset('tester'):
+                    Registry().get('tester').put(
+                        path,
+                        {
+                            'code': resp.status_code,
+                            'positive': positive_item,
+                            'size': len(resp.content),
+                            'content': resp.content,
+                        }
+                    )
+
                 self.log_item(path, resp, positive_item)
 
                 self.check_positive_limit_stop(self.result, 2)
@@ -124,3 +135,7 @@ class CmsThread(HttpThread):
                 except UnicodeDecodeError:
                     pass
                 self.queue.task_done()
+
+            if Registry().isset('tester') and Registry().get('tester').done():
+                self.done = True
+                break

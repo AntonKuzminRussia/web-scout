@@ -25,6 +25,13 @@ class ParamsBruterCombine(ParamsBruterModules):
     time_count = True
     options_sets = {
         "brute": {
+            "test": WSOption(
+                "test",
+                "Test run with results dump",
+                "",
+                False,
+                ['--test']
+            ),
             "threads": WSOption(
                 "threads",
                 "Threads count, default 10",

@@ -82,6 +82,17 @@ class SBackupsFinderThread(SeleniumThread):
                         Registry().get('xml').put_result({'word': word})
                     positive_item = True
 
+                if Registry().isset('tester'):
+                    Registry().get('tester').put(
+                        word,
+                        {
+                            'code': 0,
+                            'positive': positive_item,
+                            'size': len(self.browser.page_source),
+                            'content': self.browser.page_source,
+                        }
+                    )
+
                 self.logger.item(word, self.browser.page_source, True, positive=positive_item)
 
                 if len(self.result) >= int(Registry().get('config')['main']['positive_limit_stop']):
@@ -105,5 +116,9 @@ class SBackupsFinderThread(SeleniumThread):
                     self.browser_close()
                     self.browser_create()
             self.up_requests_count()
+
+            if Registry().isset('tester') and Registry().get('tester').done():
+                self.done = True
+                break
 
         self.browser_close()

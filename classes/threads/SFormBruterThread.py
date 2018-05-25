@@ -157,6 +157,16 @@ class SFormBruterThread(SeleniumThread):
                     if len(self.result) >= int(Registry().get('config')['main']['positive_limit_stop']):
                         Registry().set('positive_limit_stop', True)
 
+                if Registry().isset('tester'):
+                    Registry().get('tester').put(
+                        word,
+                        {
+                            'positive': positive_item,
+                            'size': len(self.browser.page_source),
+                            'content': self.browser.page_source,
+                        }
+                    )
+
                 self.logger.item(word, self.browser.page_source, False, positive_item)
 
                 if positive_item:
@@ -192,5 +202,9 @@ class SFormBruterThread(SeleniumThread):
                 except UnicodeDecodeError:
                     need_retest = False
             self.up_requests_count()
+
+            if Registry().isset('tester') and Registry().get('tester').done():
+                self.done = True
+                break
 
         self.browser_close()
