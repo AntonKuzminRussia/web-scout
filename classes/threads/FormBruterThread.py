@@ -121,7 +121,10 @@ class FormBruterThread(HttpThread):
                         not resp.content.count(self.false_phrase)) or \
                         (len(self.true_phrase) and resp.content.count(self.true_phrase) or
                              (self.false_size and len(resp.content) != self.false_size)):
-                    self.result.append({'word': word, 'content': resp.content, 'size': len(resp.content)})
+                    item_data = {'word': word, 'content': resp.content, 'size': len(resp.content)}
+                    self.result.append(item_data)
+                    if Registry().isset('xml'):
+                        Registry().get('xml').put_result(item_data)
                     positive_item = True
 
                     self.check_positive_limit_stop(self.result)

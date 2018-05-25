@@ -111,6 +111,8 @@ class HostsBruteThread(HttpThread):
                 positive_item = False
                 if resp is not None and not search_scope.count(self.false_phrase):
                     self.result.append(hostname)
+                    if Registry().isset('xml'):
+                        Registry().get('xml').put_result({'hostname': hostname})
                     positive_item = True
 
                 self.log_item(word, resp, positive_item)

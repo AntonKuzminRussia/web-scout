@@ -78,6 +78,8 @@ class SBackupsFinderThread(SeleniumThread):
                 positive_item = False
                 if not self.not_found_re.findall(self.browser.page_source):
                     self.result.append(word)
+                    if Registry().isset('xml'):
+                        Registry().get('xml').put_result({'word': word})
                     positive_item = True
 
                 self.logger.item(word, self.browser.page_source, True, positive=positive_item)

@@ -69,7 +69,10 @@ class SFuzzerUrlsThread(SeleniumThread):
                         found_words.append(bad_word)
 
                 if len(found_words):
-                    self.result.append({"url": url, "words": found_words})
+                    item_data = {"url": url, "words": found_words}
+                    if Registry().isset('xml'):
+                        Registry().get('xml').put_result(item_data)
+                    self.result.append(item_data)
 
                 self.counter.up()
             except Queue.Empty:

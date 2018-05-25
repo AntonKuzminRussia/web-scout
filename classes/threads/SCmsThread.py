@@ -86,10 +86,10 @@ class SCmsThread(SeleniumThread):
 
                 positive_item = False
                 if not self.not_found_re.findall(self.browser.page_source):
-                    self.result.append({
-                        'path': path,
-                        'code': 0,
-                    })
+                    item_data = {'path': path, 'code': 0}
+                    if Registry().isset('xml'):
+                        Registry().get('xml').put_result(item_data)
+                    self.result.append(item_data)
                     positive_item = True
 
                 self.logger.item(

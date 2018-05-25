@@ -132,9 +132,10 @@ class DnsBruteThread(threading.Thread):
         """ Parsing CNAME zone answer """
         answers = self.re['cname'].findall(dns_result.to_text())
         for answer in answers:
-            self.result.append({'name': self.check_name, 'ip': answer, 'dns': self.dns_srv})
+            item_data = {'name': self.check_name, 'ip': answer, 'dns': self.dns_srv}
+            self.result.append(item_data)
             if Registry().isset('xml'):
-                Registry().get('xml').put_result({'name': self.check_name, 'ip': answer, 'dns': self.dns_srv})
+                Registry().get('xml').put_result(item_data)
 
 
     def parse_zone_a(self, response):
@@ -144,9 +145,10 @@ class DnsBruteThread(threading.Thread):
                 if self.http_nf_re is not None:
                     self.http_test(ip)
                 else:
-                    self.result.append({'name': self.check_name, 'ip': ip, 'dns': self.dns_srv})
+                    item_data = {'name': self.check_name, 'ip': ip, 'dns': self.dns_srv}
+                    self.result.append(item_data)
                     if Registry().isset('xml'):
-                        Registry().get('xml').put_result({'name': self.check_name, 'ip': ip, 'dns': self.dns_srv})
+                        Registry().get('xml').put_result(item_data)
             break
 
     def http_test(self, ip):
@@ -175,9 +177,10 @@ class DnsBruteThread(threading.Thread):
 
                 if not self.http_nf_re.findall(
                         text_for_search.replace('\r', '').replace('\n', '')):
-                    self.result.append({'name': self.check_name, 'ip': ip, 'dns': self.dns_srv})
+                    item_data = {'name': self.check_name, 'ip': ip, 'dns': self.dns_srv}
+                    self.result.append(item_data)
                     if Registry().isset('xml'):
-                        Registry().get('xml').put_result({'name': self.check_name, 'ip': ip, 'dns': self.dns_srv})
+                        Registry().get('xml').put_result(item_data)
                     self.logger.item(
                         self.check_name,
                         text_for_search,
@@ -197,9 +200,10 @@ class DnsBruteThread(threading.Thread):
                         self.http.change_proxy()
                         continue
 
-                self.result.append({'name': self.check_name, 'ip': ip, 'dns': self.dns_srv})
+                item_data = {'name': self.check_name, 'ip': ip, 'dns': self.dns_srv}
+                self.result.append(item_data)
                 if Registry().isset('xml'):
-                    Registry().get('xml').put_result({'name': self.check_name, 'ip': ip, 'dns': self.dns_srv})
+                    Registry().get('xml').put_result(item_data)
                 self.logger.item(
                     self.check_name,
                     'ERROR: ' + str(e),

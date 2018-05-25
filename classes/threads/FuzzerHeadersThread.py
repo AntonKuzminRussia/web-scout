@@ -75,9 +75,10 @@ class FuzzerHeadersThread(threading.Thread):
                         continue
 
                     if resp.status_code > 499 and resp.status_code < 600:
-                        self.result.append(
-                            {"url": url, "words": ["{0} Status code".format(resp.status_code)], "header": header}
-                        )
+                        item_data = {"url": url, "words": ["{0} Status code".format(resp.status_code)], "header": header}
+                        self.result.append(item_data)
+                        if Registry().isset('xml'):
+                            Registry().get('xml').put_result(item_data)
                         continue
 
                     found_words = []
@@ -86,7 +87,10 @@ class FuzzerHeadersThread(threading.Thread):
                             found_words.append(bad_word)
 
                     if len(found_words):
+                        item_data = {"url": url, "words": found_words, "header": header}
                         self.result.append({"url": url, "words": found_words, "header": header})
+                        if Registry().isset('xml'):
+                            Registry().get('xml').put_result(item_data)
 
                 self.counter.up()
 

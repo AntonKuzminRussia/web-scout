@@ -1,4 +1,5 @@
 0.4 dev
+ Added param --xml-report for modules xml-output
  Added config option run_without_host_in_db_check for fast ws use - target hosts no need to add if this setting=1
  Added dictionary bases/dafs/files_wo_ext.txt with filenames without extensions
  In FormBruter added param --false-size for detect false tries by response size

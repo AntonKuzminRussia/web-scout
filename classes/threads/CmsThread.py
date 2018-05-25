@@ -94,10 +94,10 @@ class CmsThread(HttpThread):
 
                 positive_item = False
                 if self.is_response_right(resp):
-                    self.result.append({
-                        'path': path,
-                        'code': resp.status_code,
-                    })
+                    item_data = {'path': path, 'code': resp.status_code}
+                    self.result.append(item_data)
+                    if Registry().isset('xml'):
+                        Registry().get('xml').put_result(item_data)
                     positive_item = True
 
                 self.log_item(path, resp, positive_item)

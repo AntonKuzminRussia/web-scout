@@ -148,7 +148,10 @@ class SFormBruterThread(SeleniumThread):
                 positive_item = False
                 if ((len(self.false_phrase) and not self.browser.page_source.count(self.false_phrase)) or
                         (len(self.true_phrase) and self.browser.page_source.count(self.true_phrase))):
-                    self.result.append({'word': word, 'content': self.browser.page_source})
+                    item_data = {'word': word, 'content': self.browser.page_source}
+                    self.result.append(item_data)
+                    if Registry().isset('xml'):
+                        Registry().get('xml').put_result(item_data)
                     positive_item = True
 
                     if len(self.result) >= int(Registry().get('config')['main']['positive_limit_stop']):

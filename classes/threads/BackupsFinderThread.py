@@ -80,6 +80,8 @@ class BackupsFinderThread(HttpThread):
 
                 positive_item = False
                 if self.is_response_right(resp):
+                    if Registry().isset('xml'):
+                        Registry().get('xml').put_result({'word': word})
                     self.result.append(word)
                     positive_item = True
 

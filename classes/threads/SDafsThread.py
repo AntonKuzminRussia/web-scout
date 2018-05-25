@@ -93,11 +93,10 @@ class SDafsThread(SeleniumThread):
 
                 positive_item = False
                 if not self.not_found_re.findall(self.browser.page_source):
-                    self.result.append({
-                        'url': url,
-                        'code': 0,
-                        'time': int(time.time()) - rtime
-                    })
+                    item_data = {'url': url, 'code': 0, 'time': int(time.time()) - rtime}
+                    if Registry().isset('xml'):
+                        Registry().get('xml').put_result(item_data)
+                    self.result.append(item_data)
                     positive_item = True
 
                 self.logger.item(word, self.browser.page_source, False, positive_item)
