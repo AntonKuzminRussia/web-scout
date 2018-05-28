@@ -171,3 +171,10 @@ def is_binary_content_type(content_type):
 
 def md5sum(path):
     return hashlib.md5(open(path, 'rb').read()).hexdigest()
+
+def get_response_size(resp, url, method):
+    data = "{0} {1} HTTP/1.1\r\n".format(method, url)
+    for header in resp.headers:
+        data += "{0}: {1}\r\n".format(header, resp.headers[header])
+    data += "\r\n\r\n"
+    return len(data) + len(resp.content)

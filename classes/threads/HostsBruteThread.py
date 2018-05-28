@@ -18,6 +18,7 @@ import re
 
 from requests.exceptions import ChunkedEncodingError, ConnectionError
 
+from libs.common import get_response_size
 from classes.Registry import Registry
 from classes.threads.HttpThread import HttpThread
 
@@ -121,7 +122,7 @@ class HostsBruteThread(HttpThread):
                         {
                             'code': resp.status_code,
                             'positive': positive_item,
-                            'size': len(resp.content),
+                            'size': get_response_size(resp, "/", self.method),
                             'content': resp.content,
                         }
                     )

@@ -16,6 +16,7 @@ import copy
 
 from requests.exceptions import ChunkedEncodingError, ConnectionError
 
+from libs.common import get_response_size
 from classes.Registry import Registry
 from classes.threads.HttpThread import HttpThread
 
@@ -120,8 +121,8 @@ class FormBruterThread(HttpThread):
                 if (len(self.false_phrase) and
                         not resp.content.count(self.false_phrase)) or \
                         (len(self.true_phrase) and resp.content.count(self.true_phrase) or
-                             (self.false_size and len(resp.content) != self.false_size)):
-                    item_data = {'word': word, 'content': resp.content, 'size': len(resp.content)}
+                             (self.false_size and get_response_size(resp, self.url, "POST") != self.false_size)):
+                    item_data = {'word': word, 'content': resp.content, 'size': get_response_size(resp, self.url, "POST")}
                     self.result.append(item_data)
                     if Registry().isset('xml'):
                         Registry().get('xml').put_result(item_data)
@@ -137,7 +138,7 @@ class FormBruterThread(HttpThread):
                         {
                             'code': resp.status_code,
                             'positive': positive_item,
-                            'size': len(resp.content),
+                            'size': get_response_size(resp, self.url, "POST"),
                             'content': resp.content,
                         }
                     )

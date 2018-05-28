@@ -16,6 +16,7 @@ import copy
 import re
 import pprint
 
+from libs.common import get_response_size
 from requests.exceptions import ChunkedEncodingError, ConnectionError
 from classes.threads.HttpThread import HttpThread
 
@@ -156,7 +157,7 @@ class ParamsBruterThread(HttpThread):
                         {
                             'code': resp.status_code,
                             'positive': positive_item,
-                            'size': len(resp.content),
+                            'size': get_response_size(resp, self.url, self.method),
                             'content': resp.content,
                         }
                     )

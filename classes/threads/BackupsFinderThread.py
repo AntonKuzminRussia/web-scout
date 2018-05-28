@@ -15,7 +15,7 @@ import re
 
 from requests.exceptions import ChunkedEncodingError, ConnectionError
 
-from libs.common import is_binary_content_type
+from libs.common import get_response_size
 from classes.Registry import Registry
 from classes.threads.HttpThread import HttpThread
 
@@ -91,7 +91,7 @@ class BackupsFinderThread(HttpThread):
                         {
                             'code': resp.status_code,
                             'positive': positive_item,
-                            'size': len(resp.content),
+                            'size': get_response_size(resp, word, self.method),
                             'content': resp.content,
                         }
                     )
