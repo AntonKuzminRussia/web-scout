@@ -104,7 +104,7 @@ class FormBruterThread(HttpThread):
                 work_conf = self._fill_conf(dict(conf), self.login, word)
                 try:
                     resp = self.http.post(
-                        self.protocol + "://" + self.host + self.url, data=work_conf, allow_redirects=True
+                        self.protocol + "://" + self.host + self.url, data=work_conf
                     )
                 except ConnectionError:
                     need_retest = True
