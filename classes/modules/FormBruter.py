@@ -81,8 +81,8 @@ class FormBruter(WSModule):
             "false-size": WSOption(
                 "false-size",
                 "Response size for detect false answer (auth is wrong)",
-                "",
                 None,
+                False,
                 ['--false-size']
             ),
             "retest-codes": WSOption(

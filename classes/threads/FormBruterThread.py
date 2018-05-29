@@ -43,7 +43,7 @@ class FormBruterThread(HttpThread):
         self.host = host
         self.url = url
         self.false_phrase = false_phrase
-        self.false_size = int(false_size)
+        self.false_size = int(false_size) if false_size is not None else None
         self.true_phrase = true_phrase
         self.delay = int(delay)
         self.confstr = confstr
@@ -121,7 +121,7 @@ class FormBruterThread(HttpThread):
                 if (len(self.false_phrase) and
                         not resp.content.count(self.false_phrase)) or \
                         (len(self.true_phrase) and resp.content.count(self.true_phrase) or
-                             (self.false_size and get_response_size(resp, self.url, "POST") != self.false_size)):
+                             (self.false_size is not None and get_response_size(resp, self.url, "POST") != self.false_size)):
                     item_data = {'word': word, 'content': resp.content, 'size': get_response_size(resp, self.url, "POST")}
                     self.result.append(item_data)
                     if Registry().isset('xml'):
