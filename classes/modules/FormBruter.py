@@ -36,6 +36,13 @@ class FormBruter(WSModule):
     time_count = True
     options_sets = {
         "brute": {
+            "xml-report": WSOption(
+                "xml-report",
+                "XML report file",
+                "",
+                False,
+                ['--xml-report']
+            ),
             "test": WSOption(
                 "test",
                 "Test run with results dump",
