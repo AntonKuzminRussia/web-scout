@@ -60,7 +60,7 @@ class DnsBruteMask(DnsBruteModules):
                 ['--template']
             ),
             "protocol": WSOption(
-                "proto",
+                "protocol",
                 "TCP or UDP connection to DNS server (default - auto)",
                 "auto",
                 False,
