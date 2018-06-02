@@ -55,6 +55,6 @@ class XmlOutput:
         item = eTree.SubElement(self.errors_doc, "error")
         eTree.SubElement(item, "text").text = error_text
         eTree.SubElement(item, "trace").text = trace_str
-        eTree.SubElement(item, "timestamp").text = int(time.time())
+        eTree.SubElement(item, "timestamp").text = str(int(time.time()))
 
         eTree.ElementTree(self.errors_root).write(self.report_name + "-errors.xml")
