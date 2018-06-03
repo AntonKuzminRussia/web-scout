@@ -43,8 +43,6 @@ class HttpThread(threading.Thread):
 
     def check_positive_limit_stop(self, result, rate=1):
         import requests
-        requests.get('http://localhost/' + str(len(result)))
-        requests.get('http://localhost/' + str(int(Registry().get('config')['main']['positive_limit_stop']) * rate))
         if len(result) >= (int(Registry().get('config')['main']['positive_limit_stop']) * rate):
             Registry().set('positive_limit_stop', True)
 
