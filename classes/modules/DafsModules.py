@@ -205,7 +205,7 @@ class DafsModules(WSModule):
             self.logger.log("Last items:")
             for i in range(1, 5):
                 print result[-i]
-            exit(0)
+            exit(1)
 
         if int(Registry().get('config')['main']['put_data_into_db']):
             self.logger.log("\nInsert links in DB...")

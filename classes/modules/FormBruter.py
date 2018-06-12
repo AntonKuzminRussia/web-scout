@@ -429,7 +429,7 @@ class FormBruter(WSModule):
             self.logger.log("Last items:")
             for i in range(1, 5):
                 print result[-i]
-            exit(0)
+            exit(1)
 
         self.logger.log("")
         self.logger.log("Passwords found:")

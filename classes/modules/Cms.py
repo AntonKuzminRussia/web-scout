@@ -280,7 +280,7 @@ class Cms(WSModule):
             self.logger.log("Last items:")
             for i in range(1, 5):
                 print "{0} {1}".format(result[-i]['code'], result[-i]['path'])
-            exit(0)
+            exit(1)
 
         pid = Registry().get('pData')['id']
 
