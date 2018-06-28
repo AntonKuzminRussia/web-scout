@@ -121,6 +121,7 @@ class DafsModules(WSModule):
                     self.options['method'].value.lower(),
                     self.options['msymbol'].value,
                     self.options['not-found-re'].value,
+                    self.options['not-found-ex'].value,
                     self.options['not-found-size'].value,
                     self.options['not-found-codes'].value.lower(),
                     self.options['retest-codes'].value.lower(),

@@ -35,7 +35,7 @@ class DafsThread(HttpThread):
     ignore_words_re = None
 
     def __init__(
-            self, queue, protocol, host, template, method, mask_symbol, not_found_re,
+            self, queue, protocol, host, template, method, mask_symbol, not_found_re, not_found_ex,
             not_found_size, not_found_codes, retest_codes, delay, ignore_words_re,
             counter, result):
         threading.Thread.__init__(self)
@@ -51,6 +51,7 @@ class DafsThread(HttpThread):
         self.done = False
         self.ignore_words_re = False if not len(ignore_words_re) else re.compile(ignore_words_re)
         self.not_found_re = False if not len(not_found_re) else re.compile(not_found_re)
+        self.not_found_ex = False if not len(not_found_ex) else not_found_ex
         self.not_found_size = int(not_found_size)
         self.method = method
         if method == 'head' and (len(not_found_re) or self.not_found_size != -1):
@@ -98,11 +99,31 @@ class DafsThread(HttpThread):
                     continue
                 rtime = int(time.time())
 
+                positive_item = False
                 try:
                     resp = req_func(self.protocol + "://" + self.host + url)
-                except ConnectionError:
-                    need_retest = True
-                    self.http.change_proxy()
+                except ConnectionError as ex:
+                    if self.not_found_ex is not False and str(ex).count(self.not_found_ex):
+                        self.log_item(word, str(ex), positive_item)
+
+                        if Registry().isset('tester'):
+                            Registry().get('tester').put(
+                                url,
+                                {
+                                    'code': 0,
+                                    'positive': positive_item,
+                                    'size': 0,
+                                    'content': '',
+                                    'exception': str(ex),
+                                }
+                            )
+                            if Registry().isset('tester') and Registry().get('tester').done():
+                                self.done = True
+                                break
+                    else:
+                        need_retest = True
+                        self.http.change_proxy()
+
                     continue
 
                 if self.is_retest_need(word, resp):
@@ -110,7 +131,6 @@ class DafsThread(HttpThread):
                     need_retest = True
                     continue
 
-                positive_item = False
                 if self.is_response_right(resp):
                     item_data = {
                         'url': url,

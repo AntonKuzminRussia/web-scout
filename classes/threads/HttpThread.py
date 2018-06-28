@@ -34,10 +34,15 @@ class HttpThread(threading.Thread):
         return True
 
     def log_item(self, item_str, resp, is_positive):
+        if isinstance(resp, basestring):
+            log_content = resp
+        else:
+            log_content = resp.content if not resp is None else ""
+
         Registry().get('logger').item(
             item_str,
-            resp.content if not resp is None else "",
-            self.is_response_content_binary(resp),
+            log_content,
+            self.is_response_content_binary(resp) if not isinstance(resp, basestring) else False,
             positive=is_positive
         )
 

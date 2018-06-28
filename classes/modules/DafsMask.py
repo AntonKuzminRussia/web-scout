@@ -94,6 +94,13 @@ class DafsMask(DafsModules):
                 False,
                 ['--not-found-re']
             ),
+            "not-found-ex": WSOption(
+                "not-found-ex",
+                "Phrase for detect 'Not found' exception (perceived as 404)",
+                "",
+                False,
+                ['--not-found-ex']
+            ),
             "not-found-codes": WSOption(
                 "not-found-codes",
                 "Custom codes for detect 'Not found' response (404)",
