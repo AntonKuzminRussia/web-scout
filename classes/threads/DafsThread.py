@@ -104,25 +104,27 @@ class DafsThread(HttpThread):
                     resp = req_func(self.protocol + "://" + self.host + url)
                 except ConnectionError as ex:
                     if self.not_found_ex is not False and str(ex).count(self.not_found_ex):
+                        positive_item = False
                         self.log_item(word, str(ex), positive_item)
-
-                        if Registry().isset('tester'):
-                            Registry().get('tester').put(
-                                url,
-                                {
-                                    'code': 0,
-                                    'positive': positive_item,
-                                    'size': 0,
-                                    'content': '',
-                                    'exception': str(ex),
-                                }
-                            )
-                            if Registry().isset('tester') and Registry().get('tester').done():
-                                self.done = True
-                                break
-                    else:
+                    elif not Registry().isset('tester'):
                         need_retest = True
                         self.http.change_proxy()
+
+                    if Registry().isset('tester'):
+                        Registry().get('tester').put(
+                            url,
+                            {
+                                'code': 0,
+                                'positive': positive_item,
+                                'size': 0,
+                                'content': '',
+                                'exception': str(ex),
+                            }
+                        )
+
+                        if Registry().isset('tester') and Registry().get('tester').done():
+                            self.done = True
+                            break
 
                     continue
 
