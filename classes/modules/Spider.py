@@ -17,7 +17,6 @@ from classes.Registry import Registry
 from classes.SpiderCommon import SpiderCommon
 from classes.SpiderResult import SpiderResult
 from classes.SpiderRequestsCounter import SpiderRequestsCounter
-from classes.models.HostsModel import HostsModel
 from classes.kernel.WSModule import WSModule
 from classes.kernel.WSException import WSException
 from classes.kernel.WSOption import WSOption
@@ -69,13 +68,6 @@ class Spider(WSModule):
                 "",
                 True,
                 ['--host']
-            ),
-            "full-new": WSOption(
-                "full-new",
-                "full new scan",
-                "",
-                False,
-                ['--full-new']
             ),
             "not-found-re": WSOption(
                 "not-found-re",
@@ -140,12 +132,24 @@ class Spider(WSModule):
                 False,
                 ['--protocol']
             ),
+            "urls-file": WSOption(
+                "urls-file",
+                "File with list of URLs (if not, Spider started from /)",
+                "",
+                False,
+                ['--urls-file']
+            ),
         }
     }
 
     def validate_main(self):
         """ Check users params """
         super(Spider, self).validate_main()
+
+        if len(self.options['urls-file'].value) > 0 and not os.path.exists(self.options['urls-file'].value):
+            raise WSException(
+                "File with urls '{0}' not exists!".format(self.options['urls-file'].value)
+            )
 
     def _options_to_registry(self):
         if self.options['ignore'].value:
@@ -188,10 +192,9 @@ class Spider(WSModule):
         self.result = SpiderResult()
         self._options_to_registry()
 
-        if self.options['full-new'].value:
-            SpiderCommon.make_full_new_scan(Registry().get('pData')['id'])
-
-        SpiderCommon.prepare_first_pages(self.options['host'].value)
+        start_urls_file = self.options['urls-file'].value
+        start_urls = map(str.strip, open(start_urls_file).readlines()) if len(start_urls_file) else ['/']
+        SpiderCommon.prepare_first_pages(start_urls)
 
         if not os.path.exists(Registry().get('data_path') + self.options['host'].value):
             os.mkdir(Registry().get('data_path') + self.options['host'].value)
@@ -232,15 +235,6 @@ class Spider(WSModule):
 
         while not self.kernel.finished():
             time.sleep(2)
-
-        if int(Registry().get('config')['main']['put_data_into_db']):
-            self.logger.log("\nPut results into DB...")
-            SpiderCommon.links_in_database(
-                Registry().get('pData')['id'],
-                self.options['host'].value
-            )
-        else:
-            self.logger.log("\nResults NOT put into DB")
 
         self.logger.log("\nTotal links count: " + str(Registry().get('mongo').spider_urls.count()))
         self.logger.log(str(self.result))

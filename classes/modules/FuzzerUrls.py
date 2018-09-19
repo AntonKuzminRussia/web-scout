@@ -13,16 +13,12 @@ import time
 import os
 from urlparse import urlparse
 
-from libs.common import file_put_contents
 from classes.kernel.WSModule import WSModule
-from classes.models.HostsModel import HostsModel
 from classes.Registry import Registry
-from classes.models.UrlsModel import UrlsModel
 from classes.kernel.WSException import WSException
 from classes.kernel.WSCounter import WSCounter
 from classes.kernel.WSOption import WSOption
 from classes.threads.FuzzerUrlsThread import FuzzerUrlsThread
-from classes.models.RequestsModel import RequestsModel
 from classes.jobs.FuzzerUrlsJob import FuzzerUrlsJob
 from classes.threads.SFuzzerUrlsThread import SFuzzerUrlsThread
 from classes.FileGenerator import FileGenerator
@@ -116,12 +112,24 @@ class FuzzerUrls(WSModule):
                 False,
                 ['--headers-file']
             ),
+            "urls-file": WSOption(
+                "urls-file",
+                "File with list of URLs",
+                "",
+                True,
+                ['--urls-file']
+            ),
         },
     }
 
     def validate_main(self):
         """ Check users params """
         super(FuzzerUrls, self).validate_main()
+
+        if not os.path.exists(self.options['urls-file'].value):
+            raise WSException(
+                "File with urls '{0}' not exists!".format(self.options['urls-file'].value)
+            )
 
 
     def _parse_params(self, query):
@@ -166,17 +174,8 @@ class FuzzerUrls(WSModule):
         result = []
 
         q = FuzzerUrlsJob()
-        U = UrlsModel()
-        if os.path.exists('/tmp/fuzzer-urls.txt'):
-            os.remove('/tmp/fuzzer-urls.txt')
-        urls = U.list_by_host_name(Registry().get('pData')['id'], self.options['host'].value)
-        for url in urls:
-            if url['url'].count('?'):
-                to_add = self._generate_fuzz_urls(url['url'])
-                for item in to_add:
-                    file_put_contents('/tmp/fuzzer-urls.txt', item + "\n", True)
 
-        generator = FileGenerator('/tmp/fuzzer-urls.txt')
+        generator = FileGenerator(self.options['urls-file'].value)
         q.set_generator(generator)
         self.logger.log("Loaded {0} variants.".format(generator.lines_count))
 
@@ -260,14 +259,6 @@ class FuzzerUrls(WSModule):
 
             time.sleep(2)
 
-        if result:
-            self.logger.log("\nPut results into DB...")
-
-        Requests = RequestsModel()
-        Hosts = HostsModel()
-        project_id = Registry().get('pData')['id']
-        host_id = Hosts.get_id_by_name(project_id, self.options['host'].value)
-        added = 0
         for fuzz in result:
             self.logger.log("{0} {1}://{2}{3} (Word: {4})".format(
                 self.options['method'].value.upper(),
@@ -276,22 +267,5 @@ class FuzzerUrls(WSModule):
                 fuzz['url'],
                 ", ".join(fuzz['words'])
             ))
-
-            if int(Registry().get('config')['main']['put_data_into_db']):
-                _id = Requests.add(
-                    project_id,
-                    host_id,
-                    urlparse(fuzz['url']).path,
-                    urlparse(fuzz['url']).query,
-                    {},
-                    self.options['method'].value,
-                    self.options['protocol'].value.lower(),
-                    'fuzzer',
-                    'Found word: {0}'.format(", ".join(fuzz['words']))
-                )
-                added += 1 if _id else 0
-
-        self.logger.log("Added {0} new requests in database".format(added))
-
 
         self.done = True

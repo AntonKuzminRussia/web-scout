@@ -17,9 +17,6 @@ from classes.Registry import Registry
 from classes.kernel.WSModule import WSModule
 from classes.kernel.WSException import WSException
 from classes.kernel.WSCounter import WSCounter
-from classes.models.HostsModel import HostsModel
-from classes.models.UrlsBaseModel import UrlsBaseModel
-from classes.models.UrlsModel import UrlsModel
 from classes.jobs.DafsJob import DafsJob
 from classes.threads.DafsThread import DafsThread
 from classes.threads.SDafsThread import SDafsThread
@@ -33,28 +30,6 @@ class DafsModules(WSModule):
     def load_objects(self, queue):
         """ Method for prepare check objects, here abstract """
         pass
-
-    def _insert_urls(self, urls):
-        """ Add found urls in db """
-        UrlsBase = UrlsBaseModel()
-        pid = Registry().get('pData')['id']
-
-        host_id = HostsModel().get_id_by_name(pid, self.options['host'].value)
-        Urls = UrlsModel()
-
-        added = 0
-        for url in urls:
-            if Urls.add(pid, host_id, url['url'], '', url['code'], url['time'], 'dafs'):
-                added += 1
-
-            paths = urlparse(url['url']).path.split("/")
-            while len(paths) != 1:
-                del paths[-1]
-                if Urls.add(pid, host_id, "/".join(paths) + "/", '', 0, 0, 'dafs'):
-                    added += 1
-            UrlsBase.add_url(host_id, url['url'])
-
-        return added
 
     def validate_main(self):
         """ Check users params """
@@ -209,16 +184,8 @@ class DafsModules(WSModule):
                 print result[-i]
             exit(1)
 
-        if int(Registry().get('config')['main']['put_data_into_db']):
-            self.logger.log("\nInsert links in DB...")
-
-            added = self._insert_urls(result)
-            for result_row in result:
-                self.logger.log("{0} {1}".format(result_row['code'], result_row['url']))
-            self.logger.log("\nFound {0} URLs, inserted in database (new) - {1}.".format(len(result), added))
-        else:
-            self.logger.log("\n")
-            for result_row in result:
-                self.logger.log("{0} {1}".format(result_row['code'], result_row['url']))
+        self.logger.log("\n")
+        for result_row in result:
+            self.logger.log("{0} {1}".format(result_row['code'], result_row['url']))
 
         self.done = True

@@ -15,7 +15,6 @@ import os
 from classes.Registry import Registry
 from classes.FileGenerator import FileGenerator
 from classes.jobs.FormBruterJob import FormBruterJob
-from classes.models.HostsModel import HostsModel
 from classes.kernel.WSModule import WSModule
 from classes.kernel.WSException import WSException
 from classes.kernel.WSCounter import WSCounter

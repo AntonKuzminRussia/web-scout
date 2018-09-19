@@ -22,7 +22,6 @@ from libs.common import secs_to_text, main_help
 from classes.kernel.WSBase import WSBase
 from classes.Registry import Registry
 from classes.kernel.WSException import WSException
-from classes.models.ProjectsModel import ProjectsModel
 from classes.Logger import Logger
 from classes.Tester import Tester
 from classes.XmlOutput import XmlOutput
@@ -57,13 +56,6 @@ except WSException as e:
     print " " + str(e)
     exit(0)
 
-Projects = ProjectsModel()
-if not Projects.exists(project) and action not in ('add', 'list'):
-    print " ERROR: Project '{0}' not exists!".format(project)
-    exit(0)
-
-Registry().set('project', project)
-Registry().set('pData', Projects.get_by_name(project))
 Registry().set('module', module)
 Registry().set('action', action)
 
@@ -115,7 +107,6 @@ for k in Http.errors:
     for err_str in Http.errors[k]:
         print err_str
 
-Registry().get('ndb').close()
 if Registry().isset('display'):
     Registry().get('display').stop()
 

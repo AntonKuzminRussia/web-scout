@@ -123,6 +123,7 @@ class Test_DafsThread(Common):
             delay=0,
             counter=CounterMock(),
             result=result,
+            not_found_ex='',
             mask_symbol='@',
             retest_codes=[],
             ignore_words_re=''

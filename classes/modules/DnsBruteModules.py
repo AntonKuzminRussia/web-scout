@@ -21,8 +21,6 @@ from classes.Registry import Registry
 from classes.kernel.WSCounter import WSCounter
 from classes.kernel.WSModule import WSModule
 from classes.kernel.WSException import WSException
-from classes.models.HostsModel import HostsModel
-from classes.models.IpsModel import IpsModel
 from classes.jobs.DnsBruteJob import DnsBruteJob
 from classes.threads.DnsBruteThread import DnsBruteThread
 
@@ -39,11 +37,6 @@ class DnsBruteModules(WSModule):
 
     def validate_main(self):
         """ Check users params """
-        if not int(Registry().get('config')['main']['run_without_host_in_db_check']) and \
-                        'host' in self.options.keys() and self.options['host'].value != 'all' and \
-                not HostsModel().exists(Registry().get('pData')['id'], self.options['host'].value):
-            raise WSException("Host '{0}' not found in this project!".format(self.options['host'].value))
-
         if self.options['protocol'].value not in ['tcp', 'udp', 'auto']:
             raise WSException(
                 "Protocol mast be 'tcp', 'udp' or 'auto', but it is '{0}'"
@@ -130,11 +123,8 @@ class DnsBruteModules(WSModule):
                     we_need_server = True
 
             hosts = []
-            if self.options['host'].value == 'all':
-                hosts_model = HostsModel()
-                hosts.extend(hosts_model.list_of_names(Registry().get('pData')['id']))
-            else:
-                hosts.append(self.options['host'].value)
+            hosts.append(self.options['host'].value)
+
             worker = DnsBruteThread(
                 q,
                 hosts,
@@ -190,13 +180,7 @@ class DnsBruteModules(WSModule):
         for host in uniq_hosts:
             self.logger.log("\t" + host)
 
-        if not Registry().get('positive_limit_stop') and int(Registry().get('config')['main']['put_data_into_db']):
-            self.logger.log("Put found hosts into DB...")
-            added = self._insert_hosts(result)
-
-            self.logger.log("\nFound {0} hosts, inserted in database (new) - {1}.".format(len(result), added))
-        else:
-            self.logger.log("Found")
+        self.logger.log("\nFound {0} hosts.".format(len(result)))
 
     def _output_zones(self, result):
         zones = {}
@@ -243,26 +227,9 @@ class DnsBruteModules(WSModule):
         for host in uniq_hosts:
             self.logger.log("\t" + host)
 
-        if not Registry().get('positive_limit_stop') and int(Registry().get('config')['main']['put_data_into_db']):
-            self.logger.log("Put found hosts into DB...")
-            for zone in zones:
-                added = self._insert_hosts(zones[zone])
-
-            self.logger.log("\nFound {0} hosts, inserted in database (new) - {1}.".format(len(result), added))
-        else:
-            self.logger.log("Positive limit stop. Found:")
-
-    def _insert_hosts(self, hosts):
-        """ Add found hosts in db """
-        pid = Registry().get('pData')['id']
-
-        Hosts = HostsModel()
-        Ips = IpsModel()
-
-        added = 0
-        for host in hosts:
-            ip_id = Ips.get_id_or_add(pid, host['ip'])
-            if Hosts.add(pid, ip_id, host['name'], founder='dnsbrute'):
-                added += 1
-
-        return added
+        if Registry().get('positive_limit_stop'):
+            self.logger.log("\nMany positive detections. Please, look items logs")
+            self.logger.log("Last items:")
+            for i in range(1, 5):
+                print result[-i]
+            exit(1)

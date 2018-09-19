@@ -10,16 +10,14 @@ Class of FuzzerHeaders module
 """
 
 import time
-from urlparse import urlparse
+import os
 
 from classes.Registry import Registry
 from classes.jobs.FuzzerHeadersJob import FuzzerHeadersJob
 from classes.kernel.WSCounter import WSCounter
 from classes.kernel.WSOption import WSOption
 from classes.kernel.WSModule import WSModule
-from classes.models.HostsModel import HostsModel
-from classes.models.UrlsModel import UrlsModel
-from classes.models.RequestsModel import RequestsModel
+from classes.kernel.WSException import WSException
 from classes.threads.FuzzerHeadersThread import FuzzerHeadersThread
 
 
@@ -83,12 +81,24 @@ class FuzzerHeaders(WSModule):
                 False,
                 ['--headers-file']
             ),
+            "urls-file": WSOption(
+                "urls-file",
+                "File with list of URLs",
+                "",
+                True,
+                ['--urls-file']
+            ),
         },
     }
 
     def validate_main(self):
         """ Check users params """
         super(FuzzerHeaders, self).validate_main()
+
+        if not os.path.exists(self.options['urls-file'].value):
+            raise WSException(
+                "File with urls '{0}' not exists!".format(self.options['urls-file'].value)
+            )
 
     def scan_action(self):
         """ Scan action of module """
@@ -101,12 +111,9 @@ class FuzzerHeaders(WSModule):
 
         result = []
 
+        to_scan = map(str.strip, open(self.options['urls-file'].value).readlines())
+
         q = FuzzerHeadersJob()
-        U = UrlsModel()
-        urls = U.list_by_host_name(Registry().get('pData')['id'], self.options['host'].value)
-        to_scan = []
-        for url in urls:
-            to_scan.append(url['url'])
         q.load_dict(to_scan)
 
         self.logger.log("Loaded {0} variants.".format(len(to_scan)))
@@ -163,11 +170,6 @@ class FuzzerHeaders(WSModule):
 
             time.sleep(2)
 
-        Requests = RequestsModel()
-        Hosts = HostsModel()
-        project_id = Registry().get('pData')['id']
-        host_id = Hosts.get_id_by_name(project_id, self.options['host'].value)
-        added = 0
         for fuzz in result:
             self.logger.log("{0} {1}://{2}{3} (Word: {4}, Header: {5})".format(
                 self.options['method'].value.upper(),
@@ -177,20 +179,5 @@ class FuzzerHeaders(WSModule):
                 ", ".join(fuzz['words']),
                 fuzz['header']
             ))
-
-            if int(Registry().get('config')['main']['put_data_into_db']):
-                _id = Requests.add(
-                    project_id,
-                    host_id,
-                    urlparse(fuzz['url']).path,
-                    urlparse(fuzz['url']).query,
-                    {fuzz['header']: Registry().get('fuzzer_evil_value')},
-                    self.options['method'].value,
-                    self.options['protocol'].value.lower(),
-                    'fuzzer',
-                    'Found word(s): {0}'.format(", ".join(fuzz['words']))
-                )
-                added += 1 if _id else 0
-        self.logger.log("\nAdded {0} new requests in database".format(added))
 
         self.done = True

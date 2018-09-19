@@ -34,18 +34,6 @@ class WSBase(object):
         config.read(os.getcwd() + '/' + 'config.ini')
 
         try:
-            db = mysql.connector.connect(
-                host=config['db']['host'],
-                user=config['db']['user'],
-                password=config['db']['pass'],
-                database=config['db']['database']
-            )
-            db.autocommit = True
-        except mysql.connector.errors.ProgrammingError as e:
-            print " ERROR: Can`t connect to MySQL server! ({0})".format(str(e))
-            exit(0)
-
-        try:
             mc = MongoClient(host=config['mongo']['host'], port=int(config['mongo']['port']))
             mongo_collection = getattr(mc, config['mongo']['collection'])
         except pymongo.errors.ConnectionFailure as e:
@@ -54,17 +42,12 @@ class WSBase(object):
 
         R = Registry()
         R.set('config', config)
-        R.set('db', db)
         R.set('mongo', mongo_collection)
         R.set('wr_path', os.getcwd())
         R.set('data_path', os.getcwd() + '/data/')
         R.set('http', Http())
         R.set('ua', self.random_ua())
         R.set('proxies', Proxies())
-        R.set(
-            'ndb',
-            Database(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['database'])
-        )
         R.set(
             'fuzzer_evil_value',
             file_get_contents(Registry().get('wr_path') + "/bases/fuzzer-evil-value.txt").strip()

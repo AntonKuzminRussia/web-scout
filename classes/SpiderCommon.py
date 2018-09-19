@@ -10,7 +10,6 @@ Class with common functions for Spider module
 """
 
 import copy
-import time
 import hashlib
 import re
 import os
@@ -20,12 +19,8 @@ from urlparse import ParseResult
 
 import pymongo
 
-from libs.common import md5, mongo_result_to_list
+from libs.common import md5
 from classes.Registry import Registry
-from classes.models.UrlsBaseModel import UrlsBaseModel
-from classes.kernel.WSCounter import WSCounter
-from classes.models.UrlsModel import UrlsModel
-from classes.models.HostsModel import HostsModel
 
 
 class SpiderCommon(object):
@@ -45,11 +40,6 @@ class SpiderCommon(object):
     ignore_regexp = None
     _external_hosts = []
     denied_schemas = None
-
-    @staticmethod
-    def make_full_new_scan(project_id):
-        """ Mark all links as no scanned """
-        Registry().get('ndb').q("UPDATE urls SET spidered = 0 WHERE project_id = {0}".format(int(project_id)))
 
     @staticmethod
     def _clear_link_obj(link):
@@ -272,32 +262,21 @@ class SpiderCommon(object):
         return self._pages
 
     @staticmethod
-    def prepare_first_pages(host):
+    def prepare_first_pages(urls):
         """ Prepare link on first page in MongoDB. Add root url if urls for this host not exists.  """
-        pid = Registry().get('pData')['id']
-
         coll = Registry().get('mongo').spider_urls
         coll.drop()
 
-        Urls = UrlsModel()
-        urls = Urls.list_by_host_name_for_spider(pid, host)
-        if not len(urls):
-            Registry().get('logger').log("Spider: Root URL was added automaticaly")
-            Urls.add(
-                pid, HostsModel().get_id_by_name(pid, host), '/', who_add='spider'
-            )
-            urls = Urls.list_by_host_name_for_spider(pid, host)
-
         for url in urls:
-            url = urlparse(url['url'])
+            url = urlparse(url)
             data = {
                 'hash': md5(str(url.path + url.query)),
                 'path': url.path,
                 'query': url.query,
                 'time': 0,
-                'code':0,
+                'code': 0,
                 'checked': 0,
-                'getted' : 0,
+                'getted': 0,
                 'referer': '',
                 'size': 0,
                 'founder': 'spider'
@@ -307,99 +286,3 @@ class SpiderCommon(object):
 
         coll.create_index([('hash', 1)], unique=True, dropDups=True)
         coll.create_index([('checked', 1)])
-
-
-    @staticmethod
-    def links_in_spider_base(pid, host):
-        """ Put found links in MySQL """
-        links_per_time_limit = 50
-        c = WSCounter(1, 60, int(Registry().get('mongo').spider_urls.count()/links_per_time_limit))
-        Urls = UrlsModel()
-        host_id = HostsModel().get_id_by_name(pid, host)
-        urls_add = []
-
-        skip = 0
-        while True:
-            links = mongo_result_to_list(
-                Registry().get('mongo').spider_urls.find().skip(skip).limit(links_per_time_limit)
-            )
-
-            for link in links:
-                url = link['path'] + '?' + link['query'] if len(link['query']) else link['path']
-                urls_add.append({
-                    'url': url,
-                    'referer': link['referer'],
-                    'response_code': link['code'],
-                    'response_time': link['time'],
-                    'size': link['size'],
-                    'who_add': 'spider',
-                    'spidered': link['checked']
-                })
-            Urls.add_mass(pid, host_id, urls_add)
-
-            urls_add = []
-
-            to_update = {
-                'spidered': [],
-                'code': [],
-                'time': [],
-                'size': []
-            }
-
-            for link in links:
-                url = link['path'] + '?' + link['query'] if len(link['query']) else link['path']
-                if link['checked']:
-                    to_update['spidered'].append({'url': url, 'value': 1})
-                to_update['code'].append({'url': url, 'value': link['code']})
-                to_update['time'].append({'url': url, 'value': link['time']})
-                to_update['size'].append({'url': url, 'value': link['size']})
-
-            Urls.update_url_field_mass(pid, host, 'spidered', to_update['spidered'])
-            Urls.update_url_field_mass(pid, host, 'response_code', to_update['code'])
-            Urls.update_url_field_mass(pid, host, 'response_time', to_update['time'])
-            Urls.update_url_field_mass(pid, host, 'size', to_update['size'])
-
-            skip += len(links)
-
-            c.up()
-
-            if len(links) < links_per_time_limit:
-                break
-
-    @staticmethod
-    def links_in_urls_base(pid, host):
-        """ Put links in url_base table (MySQL) for site tree build """
-        links_per_time_limit = 50
-        c = WSCounter(1, 60, Registry().get('mongo').spider_urls.count()/links_per_time_limit)
-        UrlsBase = UrlsBaseModel()
-        host_id = HostsModel().get_id_by_name(pid, host)
-
-        skip = 0
-        while True:
-            links = mongo_result_to_list(
-                Registry().get('mongo').spider_urls.find().skip(skip).limit(links_per_time_limit)
-            )
-            for link in links:
-                url = link['path'] + '?' + link['query'] if len(link['query']) else link['path']
-                UrlsBase.add_url(
-                    host_id,
-                    url
-                )
-            skip += len(links)
-            c.up()
-
-            if len(links) < links_per_time_limit:
-                break
-
-    @staticmethod
-    def links_in_database(pid, host):
-        """ Method for insert all found links in MySQL in work end """
-        Registry().get('logger').log(
-            "\nInsert links in DB..." + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-        )
-        SpiderCommon.links_in_spider_base(pid, host)
-        Registry().get('logger').log(
-            "\nInsert links in DB (base)..." + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-        )
-        SpiderCommon.links_in_urls_base(pid, host)
-        #print "\nMysql Done " + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())

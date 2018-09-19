@@ -17,9 +17,6 @@ from classes.Registry import Registry
 from classes.kernel.WSModule import WSModule
 from classes.kernel.WSException import WSException
 from classes.kernel.WSCounter import WSCounter
-from classes.models.HostsModel import HostsModel
-from classes.models.UrlsBaseModel import UrlsBaseModel
-from classes.models.UrlsModel import UrlsModel
 from classes.jobs.ParamsBruterJob import ParamsBruterJob
 from classes.threads.ParamsBruterThread import ParamsBruterThread
 from classes.threads.SParamsBruterThread import SParamsBruterThread

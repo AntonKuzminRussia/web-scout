@@ -9,15 +9,11 @@ Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pr
 Common module class form HostsBrute* modules
 """
 import time
-from urlparse import urlparse
 
 from classes.Registry import Registry
 from classes.kernel.WSModule import WSModule
 from classes.kernel.WSException import WSException
 from classes.kernel.WSCounter import WSCounter
-from classes.models.HostsModel import HostsModel
-from classes.models.UrlsBaseModel import UrlsBaseModel
-from classes.models.UrlsModel import UrlsModel
 from classes.jobs.HostsBruteJob import HostsBruteJob
 from classes.threads.HostsBruteThread import HostsBruteThread
 
@@ -30,28 +26,6 @@ class HostsBruteModules(WSModule):
     def load_objects(self, queue):
         """ Method for prepare check objects, here abstract """
         pass
-
-    def _insert_urls(self, urls):
-        """ Add found urls in db """
-        UrlsBase = UrlsBaseModel()
-        pid = Registry().get('pData')['id']
-
-        host_id = HostsModel().get_id_by_name(pid, self.options['host'].value)
-        Urls = UrlsModel()
-
-        added = 0
-        for url in urls:
-            if Urls.add(pid, host_id, url['url'], '', url['code'], url['time'], 'dafs'):
-                added += 1
-
-            paths = urlparse(url['url']).path.split("/")
-            while len(paths) != 1:
-                del paths[-1]
-                if Urls.add(pid, host_id, "/".join(paths) + "/", '', 0, 0, 'dafs'):
-                    added += 1
-            UrlsBase.add_url(host_id, url['url'])
-
-        return added
 
     def validate_main(self):
         """ Check users params """

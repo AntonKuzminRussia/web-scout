@@ -9,9 +9,7 @@ Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pr
 Class of Pre module
 """
 
-import os
 import re
-import json
 import socket
 
 import requests
@@ -20,12 +18,7 @@ import dns.query
 
 from libs.common import file_to_list
 from classes.kernel.WSModule import WSModule
-from classes.models.HostsModel import HostsModel
-from classes.models.HostsInfoModel import HostsInfoModel
-from classes.models.IpsModel import IpsModel
 from classes.Registry import Registry
-from classes.models.UrlsModel import UrlsModel
-from classes.kernel.WSException import WSException
 from classes.kernel.WSOption import WSOption
 
 
@@ -116,19 +109,6 @@ class Pre(WSModule):
             self.logger.log('DNS protolol detected automaticaly: ' + self.dns_proto)
         return self.dns_proto
 
-    def _insert_infos(self, result):
-        """ Insert found infos in db """
-        h_id = HostsModel().get_id_by_name(Registry().get('pData')['id'], self.options['host'].value)
-        HI = HostsInfoModel()
-
-        for k in result:
-            HI.set_info(
-                Registry().get('pData')['id'],
-                h_id,
-                k,
-                json.dumps(result[k]) if result[k] and len(str(result[k])) else ''
-            )
-
     def check_ns_always_true(self):
         """ Check always good answer by dns zone """
         domain = self.options['host'].value
@@ -181,7 +161,6 @@ class Pre(WSModule):
 
         return {
             'links': map(str.strip, map(str, sitemap_links)),
-            'added': self._insert_urls(links)
         }
 
     def _response_404(self, resp):
@@ -246,14 +225,10 @@ class Pre(WSModule):
         result['encodings'] = self._get_encodings()
         result['headers'] = self.check_headers()
 
-        self._insert_infos(result)
-
         if len(result['ns']):
             self.logger.log("Found {0} hosts: ".format(len(result['ns'])))
             for ns_name in result['ns']:
                 self.logger.log("\t{0} ({1})".format(ns_name['name'], ns_name['ip']))
-            added = self._insert_hosts(result['ns'])
-            self.logger.log("\t{0} new hosts added".format(added))
 
         self.logger.log("Encodings:")
         self.logger.log("\tHTTP: " + result['encodings']['http'])
@@ -267,7 +242,6 @@ class Pre(WSModule):
         if result['robots_txt']:
             self.logger.log("Check robots.txt")
             self.logger.log("\t" + self.root_url + "robots.txt")
-            to_insert = []
             urls = self._get_urls_from_robots_txt(
                 requests.get(
                     self.root_url + "robots.txt",
@@ -276,17 +250,11 @@ class Pre(WSModule):
                 ).content
             )
             self.logger.log("\tExtracted {0} urls from robots.txt".format(len(urls)))
-            for url in urls:
-                self.logger.log("\t\t" + url)
-                to_insert.append({'url': url, 'time': 0, 'code': 0})
-            added = self._insert_urls(to_insert)
-            self.logger.log("\tAdded {0} new urls from robots.txt".format(added))
 
         if len(result['sitemap']['links']):
             self.logger.log("Found {0} sitemap(s):".format(len(result['sitemap']['links'])))
             for link in result['sitemap']['links']:
                 self.logger.log("\t" + link)
-            self.logger.log("Added new urls: {0}".format(result['sitemap']['added']))
 
         if len(result['backups']):
             self.logger.log("Found {0} backups".format(len(result['backups'])))
@@ -308,9 +276,8 @@ class Pre(WSModule):
             self.logger.log("\t{0} dirs found".format(len(result['dafs_dirs'])))
             for url in result['dafs_dirs']:
                 self.logger.log("\t\t{0} {1}".format(url['url'], url['code']))
-            added = self._insert_urls(result['dafs_dirs'])
             self.logger.log(
-                "\tFound {0} URLs, inserted in database (new) - {1}.".format(len(result['dafs_dirs']), added)
+                "\tFound {0} URLs".format(len(result['dafs_dirs']))
             )
 
         if len(result['dafs_files']):
@@ -318,9 +285,8 @@ class Pre(WSModule):
             self.logger.log("\t{0} files found".format(len(result['dafs_files'])))
             for url in result['dafs_files']:
                 self.logger.log("\t\t{0} {1}".format(url['url'], url['code']))
-            added = self._insert_urls(result['dafs_files'])
             self.logger.log(
-                "\tFound {0} URLs, inserted in database (new) - {1}.".format(len(result['dafs_files']), added)
+                "\tFound {0} URLs".format(len(result['dafs_files']))
             )
 
         self.done = True
@@ -367,21 +333,6 @@ class Pre(WSModule):
                 cut = 6 if line[:6].lower() == 'allow:' else 9
                 urls.append(line[cut:].strip())
         return urls
-
-    def _insert_hosts(self, hosts):
-        """ Insert found hosts in db """
-        pid = Registry().get('pData')['id']
-
-        H = HostsModel()
-        I = IpsModel()
-
-        added = 0
-        for host in hosts:
-            ip_id = I.get_id_or_add(pid, host['ip'])
-            if H.add(pid, ip_id, host['name'], founder='pre'):
-                added += 1
-
-        return added
 
     def check_ns(self):
         """ Simple brute subdomains """
@@ -449,21 +400,3 @@ class Pre(WSModule):
                 result.append({'url': "/" + obj, 'code': r.status_code, 'time': 0})
 
         return result
-
-    def _insert_urls(self, urls):
-        """ Insert found urls in DB """
-        pid = Registry().get('pData')['id']
-
-        host_id = HostsModel().get_id_by_name(pid, self.options['host'].value)
-        U = UrlsModel()
-
-        added = 0
-        for url in urls:
-            if isinstance(url, str) or isinstance(url, unicode):
-                if U.add(pid, host_id, url, '', 0, 0, 'pre'):
-                    added += 1
-            else:
-                if U.add(pid, host_id, url['url'], '', url['code'], url['time'], 'pre'):
-                    added += 1
-
-        return added
