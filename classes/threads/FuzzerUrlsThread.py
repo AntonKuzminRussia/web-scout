@@ -56,9 +56,7 @@ class FuzzerUrlsThread(threading.Thread):
                     url = self.queue.get()
 
                 try:
-                    resp = req_func(
-                        "{0}://{1}{2}".format(self.protocol, self.domain, url)
-                    )
+                    resp = req_func(url)
                 except ConnectionError:
                     need_retest = True
                     self.http.change_proxy()
@@ -76,7 +74,7 @@ class FuzzerUrlsThread(threading.Thread):
 
                 found_words = []
                 for bad_word in self.bad_words:
-                    if resp.content.count(bad_word):
+                    if resp.text.lower().count(bad_word):
                         found_words.append(bad_word)
 
                 if len(found_words):

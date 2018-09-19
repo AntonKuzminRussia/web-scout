@@ -159,7 +159,7 @@ class FuzzerUrls(WSModule):
                             path += template.replace("|name|", param['name']).replace("|value|", param['value']) + "&"
                         else:
                             path += "{0}={1}&".format(param['name'], param['value'])
-                    result.append(path)
+                    result.append("{0}://{1}{2}".format(url.scheme, url.netloc, path))
         return result
 
     def scan_action(self):
@@ -173,9 +173,21 @@ class FuzzerUrls(WSModule):
 
         result = []
 
+        fh_base = open(self.options['urls-file'].value, 'r')
+        fh_work = open('/tmp/fuzzer-urls.txt', 'w')
+        while True:
+            line = fh_base.readline()
+            if len(line) == 0:
+                break
+            urls_to_work = self._generate_fuzz_urls(line.strip())
+            for url_to_work in urls_to_work:
+                fh_work.write(url_to_work + "\n")
+        fh_work.close()
+        fh_base.close()
+
         q = FuzzerUrlsJob()
 
-        generator = FileGenerator(self.options['urls-file'].value)
+        generator = FileGenerator('/tmp/fuzzer-urls.txt')
         q.set_generator(generator)
         self.logger.log("Loaded {0} variants.".format(generator.lines_count))
 

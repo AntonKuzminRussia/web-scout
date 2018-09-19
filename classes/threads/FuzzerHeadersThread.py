@@ -62,7 +62,7 @@ class FuzzerHeadersThread(threading.Thread):
                 for header in self.headers:
                     try:
                         resp = req_func(
-                            "{0}://{1}{2}".format(self.protocol, self.domain, url),
+                            url,
                             headers={header.lower(): Registry().get('fuzzer_evil_value')},
                             #headers={header.lower(): Registry().get('config')['fuzzer']['headers_evil_value']},
                         )
