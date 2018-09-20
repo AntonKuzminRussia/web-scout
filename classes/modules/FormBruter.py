@@ -21,6 +21,7 @@ from classes.kernel.WSCounter import WSCounter
 from classes.kernel.WSOption import WSOption
 from classes.threads.FormBruterThread import FormBruterThread
 from classes.threads.SFormBruterThread import  SFormBruterThread
+from classes.threads.params.FormBruterThreadParams import FormBruterThreadParams
 
 
 class FormBruter(WSModule):
@@ -299,52 +300,14 @@ class FormBruter(WSModule):
         )
 
         counter = WSCounter(5, 300, loaded['all'] if not loaded['end'] else loaded['end']-loaded['start'])
-
+        params = FormBruterThreadParams(self.options)
         w_thrds = []
         pass_found = False
         for _ in range(int(self.options['threads'].value)):
             if self.options['selenium'].value:
-                worker = SFormBruterThread(
-                    q,
-                    self.options['protocol'].value,
-                    self.options['host'].value,
-                    self.options['url'].value,
-                    self.options['false-phrase'].value,
-                    self.options['true-phrase'].value,
-                    self.options['delay'].value,
-                    self.options['ddos-detect-phrase'].value,
-                    self.options['ddos-human-action'].value,
-                    self.options['browser-recreate-phrase'].value,
-                    self.options['conffile'].value,
-                    self.options['first-stop'].value.lower(),
-                    self.options['login'].value,
-                    self.options['reload-form-page'].value,
-                    self.options['pass-min-len'].value,
-                    self.options['pass-max-len'].value,
-                    pass_found,
-                    counter,
-                    result
-                )
+                worker = SFormBruterThread(q, pass_found, counter, result, params)
             else:
-                worker = FormBruterThread(
-                    q,
-                    self.options['protocol'].value,
-                    self.options['host'].value,
-                    self.options['url'].value,
-                    self.options['false-phrase'].value,
-                    self.options['false-size'].value,
-                    self.options['true-phrase'].value,
-                    self.options['retest-codes'].value.lower(),
-                    self.options['delay'].value,
-                    self.options['confstr'].value,
-                    self.options['first-stop'].value.lower(),
-                    self.options['login'].value,
-                    self.options['pass-min-len'].value,
-                    self.options['pass-max-len'].value,
-                    pass_found,
-                    counter,
-                    result
-                )
+                worker = FormBruterThread(q, pass_found, counter, result, params)
             worker.setDaemon(True)
             worker.start()
             w_thrds.append(worker)

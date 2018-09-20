@@ -18,6 +18,7 @@ from selenium.common.exceptions import TimeoutException
 
 from classes.Registry import Registry
 from classes.threads.SeleniumThread import SeleniumThread
+from classes.threads.params.DafsThreadParams import DafsThreadParams
 
 class SDafsThread(SeleniumThread):
     """ Thread class for Dafs modules (selenium) """
@@ -28,29 +29,30 @@ class SDafsThread(SeleniumThread):
     counter = None
     last_action = 0
 
-    def __init__(
-            self, queue, protocol, host, template, method, mask_symbol, not_found_re,
-            delay, ddos_phrase, ddos_human, recreate_re, ignore_words_re, counter, result
-    ):
+    def __init__(self, queue, counter, result, params):
+        """
+
+        :type params: DafsThreadParams
+        """
         super(SDafsThread, self).__init__()
         self.queue = queue
-        self.protocol = protocol.lower()
-        self.host = host
-        self.method = method if not (len(not_found_re) and method.lower() == 'head') else 'get'
-        self.template = template
-        self.mask_symbol = mask_symbol
+        self.protocol = params.protocol
+        self.host = params.host
+        self.method = params.method if not (len(params.not_found_re) and params.method.lower() == 'head') else 'get'
+        self.template = params.template
+        self.mask_symbol = params.mask_symbol
         self.counter = counter
         self.result = result
         self.done = False
-        self.not_found_re = False if not len(not_found_re) else re.compile(not_found_re)
-        self.recreate_re = False if not len(recreate_re) else re.compile(recreate_re)
+        self.not_found_re = False if not len(params.not_found_re) else re.compile(params.not_found_re)
+        self.recreate_re = False if not len(params.browser_recreate_re) else re.compile(params.browser_recreate_re)
         self.http = Registry().get('http')
-        self.delay = int(delay)
-        self.ddos_phrase = ddos_phrase
-        self.ddos_human = ddos_human
-        self.ignore_words_re = False if not len(ignore_words_re) else re.compile(ignore_words_re)
+        self.delay = int(params.delay)
+        self.ddos_phrase = params.ddos_detect_phrase
+        self.ddos_human = params.ddos_human_action
+        self.ignore_words_re = False if not len(params.ignore_words_re) else re.compile(params.ignore_words_re)
 
-        Registry().set('url_for_proxy_check', "{0}://{1}".format(protocol, host))
+        Registry().set('url_for_proxy_check', "{0}://{1}".format(self.protocol, self.host))
 
         self.browser_create()
 

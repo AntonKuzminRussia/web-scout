@@ -9,17 +9,15 @@ Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pr
 Thread class for Dafs modules
 """
 
-import threading
 import Queue
 import time
 import copy
 import re
-import pprint
 
 from libs.common import get_response_size
 from requests.exceptions import ChunkedEncodingError, ConnectionError
 from classes.threads.HttpThread import HttpThread
-
+from classes.threads.params.ParamsBruterThreadParams import ParamsBruterThreadParams
 from classes.Registry import Registry
 
 
@@ -36,34 +34,35 @@ class ParamsBruterThread(HttpThread):
     queue_is_empty = False
     last_word = ""
 
-    def __init__(
-            self, queue, protocol, host, url, max_params_length, value, method, mask_symbol, not_found_re,
-            not_found_size, not_found_codes, retest_codes, delay, ignore_words_re,
-            counter, result):
+    def __init__(self, queue, counter, result, params):
+        """
+
+        :type params: ParamsBruterThreadParams
+        """
         super(ParamsBruterThread, self).__init__()
         self.retested_words = {}
 
         self.queue = queue
-        self.protocol = protocol.lower()
-        self.host = host
-        self.url = url
-        self.mask_symbol = mask_symbol
+        self.protocol = params.protocol
+        self.host = params.host
+        self.url = params.url
+        self.mask_symbol = params.msymbol
         self.counter = counter
         self.result = result
-        self.value = value
+        self.value = params.value
         self.done = False
-        self.max_params_length = int(max_params_length)
-        self.ignore_words_re = False if not len(ignore_words_re) else re.compile(ignore_words_re)
-        self.not_found_re = False if not len(not_found_re) else re.compile(not_found_re)
-        self.not_found_size = int(not_found_size)
-        self.method = method.lower()
+        self.max_params_length = int(params.max_params_length)
+        self.ignore_words_re = False if not len(params.ignore_words_re) else re.compile(params.ignore_words_re)
+        self.not_found_re = False if not len(params.not_found_re) else re.compile(params.not_found_re)
+        self.not_found_size = int(params.not_found_size)
+        self.method = params.method
 
-        not_found_codes = not_found_codes.split(',')
+        not_found_codes = params.not_found_codes.split(',')
         not_found_codes.append('404')
         self.not_found_codes = list(set(not_found_codes))
-        self.retest_codes = list(set(retest_codes.split(','))) if len(retest_codes) else []
+        self.retest_codes = list(set(params.retest_codes.split(','))) if len(params.retest_codes) else []
 
-        self.delay = int(delay)
+        self.delay = int(params.delay)
         self.retest_delay = int(Registry().get('config')['params_bruter']['retest_delay'])
 
         self.http = copy.deepcopy(Registry().get('http'))
@@ -171,16 +170,16 @@ class ParamsBruterThread(HttpThread):
                     break
             except ChunkedEncodingError as e:
                 self.logger.ex(e)
-            except BaseException as e:
-                try:
-                    if str(e).count('Cannot connect to proxy'):
-                        need_retest = True
-                    else:
-                        self.logger.ex(e)
-                except UnicodeDecodeError:
-                    pass
-                except UnboundLocalError:
-                    self.logger.ex(e)
+            # except BaseException as e:
+            #     try:
+            #         if str(e).count('Cannot connect to proxy'):
+            #             need_retest = True
+            #         else:
+            #             self.logger.ex(e)
+            #     except UnicodeDecodeError:
+            #         pass
+            #     except UnboundLocalError:
+            #         self.logger.ex(e)
 
             finally:
                 pass

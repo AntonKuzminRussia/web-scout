@@ -21,6 +21,7 @@ from requests.exceptions import ChunkedEncodingError, ConnectionError
 from libs.common import get_response_size
 from classes.Registry import Registry
 from classes.threads.HttpThread import HttpThread
+from classes.threads.params.DafsThreadParams import DafsThreadParams
 
 
 class DafsThread(HttpThread):
@@ -34,35 +35,36 @@ class DafsThread(HttpThread):
     last_action = 0
     ignore_words_re = None
 
-    def __init__(
-            self, queue, protocol, host, template, method, mask_symbol, not_found_re, not_found_ex,
-            not_found_size, not_found_codes, retest_codes, delay, ignore_words_re,
-            counter, result):
+    def __init__(self, queue, counter, result, params):
+        """
+
+        :type params: DafsThreadParams
+        """
         threading.Thread.__init__(self)
         self.retested_words = {}
 
         self.queue = queue
-        self.protocol = protocol.lower()
-        self.host = host
-        self.template = template
-        self.mask_symbol = mask_symbol
+        self.protocol = params.protocol
+        self.host = params.host
+        self.template = params.template
+        self.mask_symbol = params.msymbol
         self.counter = counter
         self.result = result
         self.done = False
-        self.ignore_words_re = False if not len(ignore_words_re) else re.compile(ignore_words_re)
-        self.not_found_re = False if not len(not_found_re) else re.compile(not_found_re)
-        self.not_found_ex = False if not len(not_found_ex) else not_found_ex
-        self.not_found_size = int(not_found_size)
-        self.method = method
-        if method == 'head' and (len(not_found_re) or self.not_found_size != -1):
+        self.ignore_words_re = False if not len(params.ignore_words_re) else re.compile(params.ignore_words_re)
+        self.not_found_re = False if not len(params.not_found_re) else re.compile(params.not_found_re)
+        self.not_found_ex = False if not len(params.not_found_ex) else params.not_found_ex
+        self.not_found_size = int(params.not_found_size)
+        self.method = params.method
+        if self.method == 'head' and (len(params.not_found_re) or self.not_found_size != -1):
             self.method = 'get'
 
-        not_found_codes = not_found_codes.split(',')
+        not_found_codes = params.not_found_codes.split(',')
         not_found_codes.append('404')
         self.not_found_codes = list(set(not_found_codes))
-        self.retest_codes = list(set(retest_codes.split(','))) if len(retest_codes) else []
+        self.retest_codes = list(set(params.retest_codes.split(','))) if len(params.retest_codes) else []
 
-        self.delay = int(delay)
+        self.delay = int(params.delay)
         self.retest_delay = int(Registry().get('config')['dafs']['retest_delay'])
 
         self.http = copy.deepcopy(Registry().get('http'))

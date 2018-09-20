@@ -18,6 +18,7 @@ from selenium.common.exceptions import TimeoutException
 from classes.Registry import Registry
 from classes.threads.SeleniumThread import SeleniumThread
 from libs.common import file_to_list
+from classes.threads.params.FuzzerThreadParams import FuzzerThreadParams
 
 
 class SFuzzerUrlsThread(SeleniumThread):
@@ -28,25 +29,27 @@ class SFuzzerUrlsThread(SeleniumThread):
     counter = None
     last_action = 0
 
-    def __init__(
-            self, queue, domain, protocol, method, delay, ddos_phrase, ddos_human, recreate_phrase, counter, result
-    ):
+    def __init__(self, queue, counter, result, params):
+        """
+
+        :type params: FuzzerThreadParams
+        """
         super(SFuzzerUrlsThread, self).__init__()
         self.queue = queue
-        self.method = method.lower()
-        self.domain = domain
+        self.method = params.method
+        self.domain = params.host
         self.result = result
         self.counter = counter
-        self.protocol = protocol
+        self.protocol = params.protocol
         self.done = False
         self.bad_words = file_to_list(Registry().get('wr_path') + "/bases/bad-words.txt")
         self.http = Registry().get('http')
-        self.delay = int(delay)
-        self.ddos_phrase = ddos_phrase
-        self.ddos_human = ddos_human
-        self.recreate_phrase = recreate_phrase
+        self.delay = int(params.delay)
+        self.ddos_phrase = params.ddos_detect_phrase
+        self.ddos_human = params.ddos_human_action
+        self.recreate_phrase = params.browser_recreate_phrase
 
-        Registry().set('url_for_proxy_check', "{0}://{1}".format(protocol, domain))
+        Registry().set('url_for_proxy_check', "{0}://{1}".format(self.protocol, self.domain))
 
         self.browser_create()
 

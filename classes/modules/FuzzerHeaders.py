@@ -19,6 +19,7 @@ from classes.kernel.WSOption import WSOption
 from classes.kernel.WSModule import WSModule
 from classes.kernel.WSException import WSException
 from classes.threads.FuzzerHeadersThread import FuzzerHeadersThread
+from classes.threads.params.FuzzerThreadParams import FuzzerThreadParams
 
 
 class FuzzerHeaders(WSModule):
@@ -120,17 +121,11 @@ class FuzzerHeaders(WSModule):
 
         counter = WSCounter(1, 60, len(to_scan))
 
+        params = FuzzerThreadParams(self.options)
+
         w_thrds = []
         for _ in range(int(self.options['threads'].value)):
-            worker = FuzzerHeadersThread(
-                q,
-                self.options['host'].value,
-                self.options['protocol'].value.lower(),
-                self.options['method'].value.lower(),
-                self.options['delay'].value,
-                counter,
-                result
-            )
+            worker = FuzzerHeadersThread(q, counter, result, params)
             worker.setDaemon(True)
             worker.start()
             w_thrds.append(worker)
@@ -153,15 +148,7 @@ class FuzzerHeaders(WSModule):
                     del w_thrds[w_thrds.index(worker)]
 
                     if timeout_threads_count <= int(Registry().get('config')['main']['timeout_threads_resurect_max_count']):
-                        worker = FuzzerHeadersThread(
-                            q,
-                            self.options['host'].value,
-                            self.options['protocol'].value.lower(),
-                            self.options['method'].value.lower(),
-                            self.options['delay'].value,
-                            counter,
-                            result
-                        )
+                        worker = FuzzerHeadersThread(q, counter, result, params)
                         worker.setDaemon(True)
                         worker.start()
                         w_thrds.append(worker)

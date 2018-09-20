@@ -16,22 +16,26 @@ from classes.SpiderCommon import SpiderCommon
 from classes.kernel.WSThread import WSThread
 from classes.SpiderLinksParser import SpiderLinksParser
 from libs.common import file_put_contents, md5
-
+from classes.threads.params.SpiderThreadParams import SpiderThreadParams
 
 class SpiderThread(WSThread):
     """ Thread class for Spider module """
     last_action = 0
 
-    def __init__(self, job, host, protocol, src, delay, counter):
+    def __init__(self, job, src, counter, params):
+        """
+
+        :type params: SpiderThreadParams
+        """
         WSThread.__init__(self, None, None)
         self.job = job
-        self.host = host
-        self.protocol = protocol
+        self.host = params.host
+        self.protocol = params.protocol
         self.links_parser = SpiderLinksParser()
         #self.not_found_phrase = not_found_phrase
         self.http = Registry().get('http')
         self.src = src
-        self.delay = int(delay)
+        self.delay = int(params.delay)
         self.counter = counter
         self._db = Registry().get('mongo')
 

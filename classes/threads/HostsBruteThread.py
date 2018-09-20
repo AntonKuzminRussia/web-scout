@@ -21,6 +21,7 @@ from requests.exceptions import ChunkedEncodingError, ConnectionError
 from libs.common import get_response_size
 from classes.Registry import Registry
 from classes.threads.HttpThread import HttpThread
+from classes.threads.params.HostBruteThreadParams import HostBruteThreadParams
 
 
 class HostsBruteThread(HttpThread):
@@ -33,25 +34,27 @@ class HostsBruteThread(HttpThread):
     retested_words = None
     last_action = 0
 
-    def __init__(
-            self, queue, protocol, host, template, mask_symbol,
-            false_phrase, retest_codes, delay, ignore_words_re, counter, result):
+    def __init__(self, queue, counter, result, params):
+        """
+
+        :type params: HostBruteThreadParams
+        """
         threading.Thread.__init__(self)
         self.retested_words = {}
 
         self.queue = queue
-        self.protocol = protocol.lower()
-        self.host = host
-        self.template = template
-        self.mask_symbol = mask_symbol
+        self.protocol = params.protocol
+        self.host = params.host
+        self.template = params.template
+        self.mask_symbol = params.msymbol
         self.counter = counter
         self.result = result
         self.done = False
 
-        self.false_phrase = false_phrase
-        self.retest_codes = list(set(retest_codes.split(','))) if len(retest_codes) else []
+        self.false_phrase = params.false_phrase
+        self.retest_codes = list(set(params.retest_codes.split(','))) if len(params.retest_codes) else []
 
-        self.delay = int(delay)
+        self.delay = int(params.delay)
         self.retest_delay = int(Registry().get('config')['hosts_brute']['retest_delay'])
 
         self.http = copy.deepcopy(Registry().get('http'))
@@ -59,7 +62,7 @@ class HostsBruteThread(HttpThread):
 
         self.method = 'get'
 
-        self.ignore_words_re = False if not len(ignore_words_re) else re.compile(ignore_words_re)
+        self.ignore_words_re = False if not len(params.ignore_words_re) else re.compile(params.ignore_words_re)
 
         self.retest_limit = int(Registry().get('config')['hosts_brute']['retest_limit'])
 

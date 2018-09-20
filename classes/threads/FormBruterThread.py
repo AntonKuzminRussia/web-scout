@@ -19,6 +19,8 @@ from requests.exceptions import ChunkedEncodingError, ConnectionError
 from libs.common import get_response_size
 from classes.Registry import Registry
 from classes.threads.HttpThread import HttpThread
+from classes.threads.params.FormBruterThreadParams import FormBruterThreadParams
+
 
 class FormBruterThread(HttpThread):
     """ Thread class for FormBruter module """
@@ -32,33 +34,34 @@ class FormBruterThread(HttpThread):
     retested_words = None
     last_action = 0
 
-    def __init__(
-            self, queue, protocol, host, url, false_phrase, false_size, true_phrase, retest_codes, delay,
-            confstr, first_stop, login, pass_min_len, pass_max_len, pass_found, counter, result
-    ):
+    def __init__(self, queue, pass_found, counter, result, params):
+        """
+
+        :type params: FormBruterThreadParams
+        """
         threading.Thread.__init__(self)
         self.retested_words = {}
         self.queue = queue
-        self.protocol = protocol.lower()
-        self.host = host
-        self.url = url
-        self.false_phrase = false_phrase
-        self.false_size = int(false_size) if false_size is not None else None
-        self.true_phrase = true_phrase
-        self.delay = int(delay)
-        self.confstr = confstr
-        self.first_stop = first_stop
-        self.login = login
+        self.protocol = params.protocol
+        self.host = params.host
+        self.url = params.url
+        self.false_phrase = params.false_phrase
+        self.false_size = int(params.false_size) if params.false_size is not None else None
+        self.true_phrase = params.true_phrase
+        self.delay = int(params.delay)
+        self.confstr = params.confstr
+        self.first_stop = params.first_stop
+        self.login = params.login
         self.counter = counter
         self.result = result
-        self.retest_codes = list(set(retest_codes.split(','))) if len(retest_codes) else []
+        self.retest_codes = list(set(params.retest_codes.split(','))) if len(params.retest_codes) else []
         self.pass_found = pass_found
         self.done = False
         self.logger = Registry().get('logger')
         self.http = copy.deepcopy(Registry().get('http'))
         self.http.every_request_new_session = True
-        self.pass_min_len = int(pass_min_len)
-        self.pass_max_len = int(pass_max_len)
+        self.pass_min_len = int(params.pass_min_len)
+        self.pass_max_len = int(params.pass_max_len)
         self.retest_delay = int(Registry().get('config')['form_bruter']['retest_delay'])
         self.retest_limit = int(Registry().get('config')['form_bruter']['retest_limit'])
 

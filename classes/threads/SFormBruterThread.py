@@ -16,6 +16,8 @@ from selenium.common.exceptions import TimeoutException, InvalidElementStateExce
 
 from classes.Registry import Registry
 from classes.threads.SeleniumThread import SeleniumThread
+from classes.threads.params.FormBruterThreadParams import FormBruterThreadParams
+
 
 class SFormBruterThread(SeleniumThread):
     """ Thread class for FormBruter module (selenium) """
@@ -29,32 +31,32 @@ class SFormBruterThread(SeleniumThread):
     last_action = 0
     first_page_load = False
 
-    def __init__(
-            self, queue, protocol, host, url, false_phrase, true_phrase, delay, ddos_phrase, ddos_human,
-            recreate_phrase, conffile, first_stop, login, reload_form_page, pass_min_len, pass_max_len,
-            pass_found, counter, result
-    ):
+    def __init__(self, queue, pass_found, counter, result, params):
+        """
+
+        :type params: FormBruterThreadParams
+        """
         super(SFormBruterThread, self).__init__()
         self.retested_words = {}
 
         self.queue = queue
-        self.protocol = protocol.lower()
-        self.host = host
-        self.url = url
-        self.delay = int(delay)
-        self.ddos_phrase = ddos_phrase
-        self.ddos_human = ddos_human
-        self.recreate_phrase = recreate_phrase
-        self.conffile = conffile
-        self.false_phrase = false_phrase
-        self.true_phrase = true_phrase
-        self.first_stop = first_stop
-        self.login = login
+        self.protocol = params.protocol
+        self.host = params.host
+        self.url = params.url
+        self.delay = int(params.delay)
+        self.ddos_phrase = params.ddos_detect_phrase
+        self.ddos_human = params.ddos_human_action
+        self.recreate_phrase = params.browser_recreate_phrase
+        self.conffile = params.conffile
+        self.false_phrase = params.false_phrase
+        self.true_phrase = params.true_phrase
+        self.first_stop = params.first_stop
+        self.login = params.login
         self.pass_found = pass_found
         self.logger = Registry().get('logger')
-        self.reload_form_page = int(reload_form_page)
-        self.pass_min_len = int(pass_min_len)
-        self.pass_max_len = int(pass_max_len)
+        self.reload_form_page = int(params.reload_form_page)
+        self.pass_min_len = int(params.pass_min_len)
+        self.pass_max_len = int(params.pass_max_len)
 
         self.browser_create()
 
@@ -62,7 +64,7 @@ class SFormBruterThread(SeleniumThread):
         self.result = result
         self.done = False
 
-        Registry().set('url_for_proxy_check', "{0}://{1}".format(protocol, host))
+        Registry().set('url_for_proxy_check', "{0}://{1}".format(params.protocol, params.host))
 
     def parse_brute_config(self, path):
         """ Parse conf file to dict """

@@ -16,6 +16,7 @@ from classes.kernel.WSException import WSException
 from classes.kernel.WSCounter import WSCounter
 from classes.jobs.HostsBruteJob import HostsBruteJob
 from classes.threads.HostsBruteThread import HostsBruteThread
+from classes.threads.params.HostBruteThreadParams import HostBruteThreadParams
 
 class HostsBruteModules(WSModule):
     """ Common module class form HostsBrute* modules """
@@ -63,21 +64,11 @@ class HostsBruteModules(WSModule):
 
         counter = WSCounter(5, 300, loaded['all'] if not loaded['end'] else loaded['end']-loaded['start'])
 
+        params = HostBruteThreadParams(self.options)
+
         w_thrds = []
         for _ in range(int(self.options['threads'].value)):
-            worker = HostsBruteThread(
-                q,
-                self.options['protocol'].value,
-                self.options['host'].value,
-                self.options['template'].value,
-                self.options['msymbol'].value,
-                self.options['false-phrase'].value,
-                self.options['retest-codes'].value.lower(),
-                self.options['delay'].value,
-                self.options['ignore-words-re'].value,
-                counter,
-                result
-            )
+            worker = HostsBruteThread(q, counter, result, params)
 
             worker.setDaemon(True)
             worker.start()
@@ -108,18 +99,7 @@ class HostsBruteModules(WSModule):
                     del w_thrds[w_thrds.index(worker)]
 
                     if timeout_threads_count <= int(Registry().get('config')['main']['timeout_threads_resurect_max_count']):
-                        worker = HostsBruteThread(
-                            q,
-                            self.options['protocol'].value,
-                            self.options['host'].value,
-                            self.options['template'].value,
-                            self.options['msymbol'].value,
-                            self.options['false-phrase'].value,
-                            self.options['retest-codes'].value.lower(),
-                            self.options['delay'].value,
-                            counter,
-                            result
-                        )
+                        worker = HostsBruteThread(q, counter, result, params)
 
                         worker.setDaemon(True)
                         worker.start()

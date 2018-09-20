@@ -24,6 +24,7 @@ from classes.kernel.WSCounter import WSCounter
 from classes.threads.SpiderThread import SpiderThread
 from classes.threads.SSpiderThread import SSpiderThread
 from classes.jobs.SpiderJob import SpiderJob
+from classes.threads.params.SpiderThreadParams import SpiderThreadParams
 
 
 class SpiderException(Exception):
@@ -203,31 +204,14 @@ class Spider(WSModule):
         job = SpiderJob()
         src = SpiderRequestsCounter(int(Registry().get('config')['spider']['requests_limit']))
         counter = WSCounter(5, 300, 0)
+        params = SpiderThreadParams(self.options)
 
         workers = []
         for _ in range(int(self.options['threads'].value)):
             if self.options['selenium'].value:
-                worker = SSpiderThread(
-                    job,
-                    self.options['host'].value,
-                    self.options['protocol'].value,
-                    src,
-                    self.options['not-found-re'].value,
-                    self.options['delay'].value,
-                    self.options['ddos-detect-phrase'].value,
-                    self.options['ddos-human-action'].value,
-                    self.options['browser-recreate-re'].value,
-                    counter
-                )
+                worker = SSpiderThread(job, src, counter, params)
             else:
-                worker = SpiderThread(
-                    job,
-                    self.options['host'].value,
-                    self.options['protocol'].value,
-                    src,
-                    self.options['delay'].value,
-                    counter
-                )
+                worker = SpiderThread(job, src, counter, params)
             worker.setDaemon(True)
             workers.append(worker)
             time.sleep(1)

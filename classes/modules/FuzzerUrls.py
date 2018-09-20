@@ -22,6 +22,7 @@ from classes.threads.FuzzerUrlsThread import FuzzerUrlsThread
 from classes.jobs.FuzzerUrlsJob import FuzzerUrlsJob
 from classes.threads.SFuzzerUrlsThread import SFuzzerUrlsThread
 from classes.FileGenerator import FileGenerator
+from classes.threads.params.FuzzerThreadParams import FuzzerThreadParams
 
 
 class FuzzerUrls(WSModule):
@@ -193,31 +194,14 @@ class FuzzerUrls(WSModule):
 
         counter = WSCounter(1, 60, generator.lines_count)
 
+        params = FuzzerThreadParams(self.options)
+
         w_thrds = []
         for _ in range(int(self.options['threads'].value)):
             if self.options['selenium'].value:
-                worker = SFuzzerUrlsThread(
-                    q,
-                    self.options['host'].value,
-                    self.options['protocol'].value.lower(),
-                    self.options['method'].value.lower(),
-                    self.options['delay'].value,
-                    self.options['ddos-detect-phrase'].value,
-                    self.options['ddos-human-action'].value,
-                    self.options['browser-recreate-phrase'].value,
-                    counter,
-                    result
-                )
+                worker = SFuzzerUrlsThread(q, counter, result, params)
             else:
-                worker = FuzzerUrlsThread(
-                    q,
-                    self.options['host'].value,
-                    self.options['protocol'].value.lower(),
-                    self.options['method'].value.lower(),
-                    self.options['delay'].value,
-                    counter,
-                    result
-                )
+                worker = FuzzerUrlsThread(q, counter, result, params)
             worker.setDaemon(True)
             worker.start()
             w_thrds.append(worker)
@@ -241,28 +225,9 @@ class FuzzerUrls(WSModule):
 
                     if timeout_threads_count <= int(Registry().get('config')['main']['timeout_threads_resurect_max_count']):
                         if self.options['selenium'].value:
-                            worker = SFuzzerUrlsThread(
-                                q,
-                                self.options['host'].value,
-                                self.options['protocol'].value.lower(),
-                                self.options['method'].value.lower(),
-                                self.options['delay'].value,
-                                self.options['ddos-detect-phrase'].value,
-                                self.options['ddos-human-action'].value,
-                                self.options['browser-recreate-phrase'].value,
-                                counter,
-                                result
-                            )
+                            worker = SFuzzerUrlsThread(q, counter, result, params)
                         else:
-                            worker = FuzzerUrlsThread(
-                                q,
-                                self.options['host'].value,
-                                self.options['protocol'].value.lower(),
-                                self.options['method'].value.lower(),
-                                self.options['delay'].value,
-                                counter,
-                                result
-                            )
+                            worker = FuzzerUrlsThread(q, counter, result, params)
                         worker.setDaemon(True)
                         worker.start()
                         w_thrds.append(worker)

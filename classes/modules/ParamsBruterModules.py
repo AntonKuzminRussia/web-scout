@@ -9,9 +9,6 @@ Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pr
 Common module class form Dafs* modules
 """
 import time
-import re
-import os
-from urlparse import urlparse
 
 from classes.Registry import Registry
 from classes.kernel.WSModule import WSModule
@@ -20,6 +17,8 @@ from classes.kernel.WSCounter import WSCounter
 from classes.jobs.ParamsBruterJob import ParamsBruterJob
 from classes.threads.ParamsBruterThread import ParamsBruterThread
 from classes.threads.SParamsBruterThread import SParamsBruterThread
+from classes.threads.params.ParamsBruterThreadParams import ParamsBruterThreadParams
+
 
 class ParamsBruterModules(WSModule):
     """ Common module class form Dafs* modules """
@@ -62,47 +61,14 @@ class ParamsBruterModules(WSModule):
 
         counter = WSCounter(50, 3000, loaded['all'] if not loaded['end'] else loaded['end']-loaded['start'])
 
+        params = ParamsBruterThreadParams(self.options)
+
         w_thrds = []
         for _ in range(int(self.options['threads'].value)):
             if self.options['selenium'].value:
-                worker = SParamsBruterThread(
-                    q,
-                    self.options['protocol'].value,
-                    self.options['host'].value,
-                    self.options['url'].value,
-                    self.options['max-params-length'].value,
-                    self.options['value'].value,
-                    self.options['method'].value.lower(),
-                    self.options['msymbol'].value,
-                    self.options['not-found-re'].value,
-                    self.options['delay'].value,
-                    self.options['ddos-detect-phrase'].value,
-                    self.options['ddos-human-action'].value,
-                    self.options['browser-recreate-re'].value,
-                    self.options['ignore-words-re'].value,
-
-                    counter,
-                    result
-                )
+                worker = SParamsBruterThread(q, counter, result, params)
             else:
-                worker = ParamsBruterThread(
-                    q,
-                    self.options['protocol'].value,
-                    self.options['host'].value,
-                    self.options['url'].value,
-                    self.options['max-params-length'].value,
-                    self.options['value'].value,
-                    self.options['method'].value.lower(),
-                    self.options['msymbol'].value,
-                    self.options['not-found-re'].value,
-                    self.options['not-found-size'].value,
-                    self.options['not-found-codes'].value.lower(),
-                    self.options['retest-codes'].value.lower(),
-                    self.options['delay'].value,
-                    self.options['ignore-words-re'].value,
-                    counter,
-                    result
-                )
+                worker = ParamsBruterThread(q, counter, result, params)
             worker.setDaemon(True)
             worker.start()
             w_thrds.append(worker)
@@ -133,44 +99,9 @@ class ParamsBruterModules(WSModule):
 
                     if timeout_threads_count <= int(Registry().get('config')['main']['timeout_threads_resurect_max_count']):
                         if self.options['selenium'].value:
-                            worker = SParamsBruterThread(
-                                q,
-                                self.options['protocol'].value,
-                                self.options['host'].value,
-                                self.options['url'].value,
-                                self.options['max-params-length'].value,
-                                self.options['value'].value,
-                                self.options['method'].value.lower(),
-                                self.options['msymbol'].value,
-                                self.options['not-found-re'].value,
-                                self.options['delay'].value,
-                                self.options['ddos-detect-phrase'].value,
-                                self.options['ddos-human-action'].value,
-                                self.options['browser-recreate-re'].value,
-                                self.options['ignore-words-re'].value,
-
-                                counter,
-                                result
-                            )
+                            worker = SParamsBruterThread(q, counter, result, params)
                         else:
-                            worker = ParamsBruterThread(
-                                q,
-                                self.options['protocol'].value,
-                                self.options['host'].value,
-                                self.options['url'].value,
-                                self.options['max-params-length'].value,
-                                self.options['value'].value,
-                                self.options['method'].value.lower(),
-                                self.options['msymbol'].value,
-                                self.options['not-found-re'].value,
-                                self.options['not-found-size'].value,
-                                self.options['not-found-codes'].value.lower(),
-                                self.options['retest-codes'].value.lower(),
-                                self.options['delay'].value,
-                                self.options['ignore-words-re'].value,
-                                counter,
-                                result
-                            )
+                            worker = ParamsBruterThread(q, counter, result, params)
                         worker.setDaemon(True)
                         worker.start()
                         w_thrds.append(worker)

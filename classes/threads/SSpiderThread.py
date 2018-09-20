@@ -17,31 +17,35 @@ from classes.Registry import Registry
 from classes.SpiderCommon import SpiderCommon
 from classes.SpiderLinksParser import SpiderLinksParser
 from classes.threads.SeleniumThread import SeleniumThread
-
+from classes.threads.params.SpiderThreadParams import SpiderThreadParams
 
 class SSpiderThread(SeleniumThread):
     """ Thread class for Spider module (selenium) """
     last_action = 0
 
-    def __init__(self, job, host, protocol, src, not_found_re, delay, ddos_phrase, ddos_human, recreate_re, counter):
+    def __init__(self, job, src, counter, params):
+        """
+
+        :type params: SpiderThreadParams
+        """
         super(SSpiderThread, self).__init__()
 
         self._db = Registry().get('mongo')
         self.job = job
-        self.host = host
+        self.host = params.host
         self.links_parser = SpiderLinksParser()
-        self.not_found_re = False if not len(not_found_re) else re.compile(not_found_re)
+        self.not_found_re = False if not len(params.not_found_re) else re.compile(params.not_found_re)
         self.http = Registry().get('http')
-        self.delay = int(delay)
+        self.delay = int(params.delay)
         self.counter = counter
         self.src = src
-        self.protocol = protocol
+        self.protocol = params.protocol
         self.running = True
-        self.ddos_phrase = ddos_phrase
-        self.ddos_human = ddos_human
-        self.recreate_re = False if not len(recreate_re) else re.compile(recreate_re)
+        self.ddos_phrase = params.ddos_detect_phrase
+        self.ddos_human = params.ddos_human_action
+        self.recreate_re = False if not len(params.browser_recreate_re) else re.compile(params.browser_recreate_re)
 
-        Registry().set('url_for_proxy_check', "{0}://{1}".format('http', host))
+        Registry().set('url_for_proxy_check', "{0}://{1}".format('http', self.host))
 
         self.browser_create()
 

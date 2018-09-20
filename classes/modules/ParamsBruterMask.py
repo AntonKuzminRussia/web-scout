@@ -98,7 +98,7 @@ class ParamsBruterMask(ParamsBruterModules):
                 "not-found-re",
                 "Regex for detect 'Not found' response (404)",
                 "",
-                False,
+                True,
                 ['--not-found-re']
             ),
             "not-found-codes": WSOption(

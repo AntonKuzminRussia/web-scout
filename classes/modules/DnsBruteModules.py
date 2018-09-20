@@ -23,6 +23,7 @@ from classes.kernel.WSModule import WSModule
 from classes.kernel.WSException import WSException
 from classes.jobs.DnsBruteJob import DnsBruteJob
 from classes.threads.DnsBruteThread import DnsBruteThread
+from classes.threads.params.DnsBruteThreadParams import DnsBruteThreadParams
 
 
 class DnsBruteModules(WSModule):
@@ -124,24 +125,8 @@ class DnsBruteModules(WSModule):
 
             hosts = []
             hosts.append(self.options['host'].value)
-
-            worker = DnsBruteThread(
-                q,
-                hosts,
-                self.options['template'].value,
-                protocol,
-                self.options['msymbol'].value,
-                self.options['ignore-ip'].value,
-                next_server,
-                self.options['delay'].value,
-                self.options['http-not-found-re'].value,
-                self.options['http-protocol'].value,
-                self.options['http-retest-phrase'].value,
-                self.options['ignore-words-re'].value,
-                self.options['zone'].value,
-                result,
-                counter
-            )
+            params = DnsBruteThreadParams(self.options)
+            worker = DnsBruteThread(q, hosts, protocol, next_server, result, counter, params)
             worker.setDaemon(True)
             worker.start()
             w_thrds.append(worker)

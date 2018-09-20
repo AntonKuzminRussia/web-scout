@@ -21,6 +21,8 @@ import dns.message
 from classes.Registry import Registry
 from libs.common import is_binary_content_type
 from classes.kernel.WSException import WSException
+from classes.threads.params.DnsBruteThreadParams import DnsBruteThreadParams
+
 
 class DnsBruteThread(threading.Thread):
     """ Thread class for DnsBrute* modules """
@@ -32,30 +34,35 @@ class DnsBruteThread(threading.Thread):
         "Max retries exceeded with url",
     ]
 
-    def __init__(self, queue, domains, template, proto, msymbol, ignore_ip, dns_srv, delay, http_nf_re, http_protocol,
-                 http_retest_phrase, ignore_words_re, zone, result, counter):
+    def __init__(self, queue, domains, proto, dns_srv, result, counter, params):
+        """
+
+        :type params: DnsBruteThreadParams
+        """
         threading.Thread.__init__(self)
+
         self.queue = queue
         self.domains = domains
         self.proto = proto
         self.dns_srv = dns_srv
         self.counter = counter
-        self.msymbol = msymbol
-        self.template = template
         self.result = result
-        self.delay = int(delay)
-        self.done = False
+
+        self.msymbol = params.msymbol
+        self.template = params.template
+
+        self.delay = int(params.delay)
         self.logger = Registry().get('logger')
-        self.ignore_ip = ignore_ip
-        self.http_nf_re = re.compile(http_nf_re) if len(http_nf_re) else None
-        self.ignore_words_re = False if not len(ignore_words_re) else re.compile(ignore_words_re)
-        self.http_protocol = http_protocol
-        self.http_retest_phrase = http_retest_phrase
+        self.ignore_ip = params.ignore_ip
+        self.http_nf_re = re.compile(params.http_not_found_re) if len(params.http_not_found_re) else None
+        self.ignore_words_re = False if not len(params.ignore_words_re) else re.compile(params.ignore_words_re)
+        self.http_protocol = params.http_protocol
+        self.http_retest_phrase = params.http_retest_phrase
 
         self.retest_delay = int(Registry().get('config')['dns']['retest_delay'])
         self.retest_limit = int(Registry().get('config')['dns']['retest_limit'])
 
-        self.zone = zone.upper()
+        self.zone = params.zone.upper()
 
         self.re = {
             'ip': re.compile(r"(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})"),

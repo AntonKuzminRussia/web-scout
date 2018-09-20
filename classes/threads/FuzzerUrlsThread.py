@@ -18,6 +18,7 @@ from requests.exceptions import ConnectionError
 
 from classes.Registry import Registry
 from libs.common import file_to_list
+from classes.threads.params.FuzzerThreadParams import FuzzerThreadParams
 
 
 class FuzzerUrlsThread(threading.Thread):
@@ -28,18 +29,22 @@ class FuzzerUrlsThread(threading.Thread):
     counter = None
     last_action = 0
 
-    def __init__(self, queue, domain, protocol, method, delay, counter, result):
+    def __init__(self, queue, counter, result, params):
+        """
+
+        :type params: FuzzerThreadParams
+        """
         threading.Thread.__init__(self)
         self.queue = queue
-        self.method = method.lower()
-        self.domain = domain
+        self.method = params.method
+        self.domain = params.host
         self.result = result
         self.counter = counter
-        self.protocol = protocol
+        self.protocol = params.protocol
         self.done = False
         self.bad_words = file_to_list(Registry().get('wr_path') + "/bases/bad-words.txt")
         self.http = Registry().get('http')
-        self.delay = int(delay)
+        self.delay = int(params.delay)
 
     def run(self):
         """ Run thread """
