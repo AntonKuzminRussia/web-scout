@@ -26,12 +26,11 @@ from classes.Logger import Logger
 from classes.Tester import Tester
 from classes.XmlOutput import XmlOutput
 
-if len(sys.argv) < 4:
+if len(sys.argv) < 2:
     main_help()
 
-project = sys.argv[1]
-module_name = sys.argv[2]
-action = sys.argv[3]
+module_name = sys.argv[1]
+action = "main"
 
 base = WSBase()
 
@@ -61,7 +60,7 @@ Registry().set('action', action)
 
 parser = argparse.ArgumentParser(
     description=module.help(),
-    prog="{0} {1} {2} {3}".format(sys.argv[0], sys.argv[1], sys.argv[2], sys.argv[3])
+    prog="{0} {1}".format(sys.argv[0], sys.argv[1])
 )
 for option in module.options:
     parser.add_argument(
@@ -71,7 +70,7 @@ for option in module.options:
         dest=module.options[option].name
     )
 
-args = vars(parser.parse_args(sys.argv[4:]))
+args = vars(parser.parse_args(sys.argv[2:]))
 for option in args.keys():
     if args[option] is not None:
         module.options[option].value = args[option].strip()

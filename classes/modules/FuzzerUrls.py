@@ -34,7 +34,7 @@ class FuzzerUrls(WSModule):
     options = {}
     time_count = True
     options_sets = {
-        "scan": {
+        "main": {
             "threads": WSOption(
                 "threads",
                 "Threads count, default 10",
@@ -162,7 +162,7 @@ class FuzzerUrls(WSModule):
                     result.append("{0}://{1}{2}".format(url.scheme, url.netloc, path))
         return result
 
-    def scan_action(self):
+    def main_action(self):
         """ Scan action of module """
         self.enable_logger()
         self.validate_main()

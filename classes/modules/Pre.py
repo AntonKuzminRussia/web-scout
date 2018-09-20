@@ -34,7 +34,7 @@ class Pre(WSModule):
     logger_name = 'pre'
     logger_have_items = False
     options_sets = {
-        "scan": {
+        "main": {
             "host": WSOption(
                 "host",
                 "Traget host for scan",
@@ -200,7 +200,7 @@ class Pre(WSModule):
 
         return result
 
-    def scan_action(self):
+    def main_action(self):
         """ Scan action of module """
         self.enable_logger()
         self.validate_main()

@@ -25,7 +25,7 @@ class DnsBruteDict(DnsBruteModules):
     options = {}
     time_count = True
     options_sets = {
-        "brute": {
+        "main": {
             "test": WSOption(
                 "test",
                 "Test run with results dump",

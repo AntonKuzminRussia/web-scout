@@ -22,7 +22,7 @@ class DafsMask(DafsModules):
     time_count = True
 
     options_sets = {
-        "scan": {
+        "main": {
             "test": WSOption(
                 "test",
                 "Test run with results dump",

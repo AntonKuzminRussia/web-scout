@@ -34,7 +34,7 @@ class FormBruter(WSModule):
     options = {}
     time_count = True
     options_sets = {
-        "brute": {
+        "main": {
             "xml-report": WSOption(
                 "xml-report",
                 "XML report file",
@@ -277,7 +277,7 @@ class FormBruter(WSModule):
         queue.set_generator(generator)
         return {'all': generator.lines_count, 'start': generator.first_border, 'end': generator.second_border}
 
-    def brute_action(self):
+    def main_action(self):
         """ Brute action of module """
         self.enable_logger()
         self.validate_main()

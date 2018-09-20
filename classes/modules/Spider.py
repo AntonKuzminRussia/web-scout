@@ -40,7 +40,7 @@ class Spider(WSModule):
     logger_name = 'spider'
     logger_have_items = False
     options_sets = {
-        "scan": {
+        "main": {
             "threads": WSOption(
                 "threads",
                 "Threads count, default 10",
@@ -178,7 +178,7 @@ class Spider(WSModule):
             parse_split_conf(Registry().get('config')['spider']['noscan_content_types'])
         )
 
-    def scan_action(self):
+    def main_action(self):
         """ Scan action of module """
         self.enable_logger()
         self.validate_main()

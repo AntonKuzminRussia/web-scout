@@ -72,7 +72,7 @@ class DnsBruteModules(WSModule):
         """ Method for prepare test objects, here abstract """
         pass
 
-    def brute_action(self):
+    def main_action(self):
         """ Action brute of module """
         self.enable_logger()
         self.validate_main()

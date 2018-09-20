@@ -39,7 +39,7 @@ class HostsBruteModules(WSModule):
                 )
             )
 
-    def brute_action(self):
+    def main_action(self):
         """ Brute action of module """
         self.enable_logger()
         self.validate_main()

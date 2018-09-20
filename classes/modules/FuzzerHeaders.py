@@ -31,7 +31,7 @@ class FuzzerHeaders(WSModule):
     logger_name = 'fuzzer-headers'
     logger_have_items = False
     options_sets = {
-        "scan": {
+        "main": {
             "threads": WSOption(
                 "threads",
                 "Threads count, default 10",
@@ -100,7 +100,7 @@ class FuzzerHeaders(WSModule):
                 "File with urls '{0}' not exists!".format(self.options['urls-file'].value)
             )
 
-    def scan_action(self):
+    def main_action(self):
         """ Scan action of module """
         self.enable_logger()
         self.validate_main()
