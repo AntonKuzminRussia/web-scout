@@ -9,24 +9,20 @@ Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pr
 Class of WS Module for DNS Brute by dict+mask
 """
 
-import os
-
 from classes.kernel.WSOption import WSOption
-from classes.kernel.WSException import WSException
 from classes.modules.DnsBruteModules import DnsBruteModules
 from classes.Registry import Registry
 from classes.CombineGenerator import CombineGenerator
+
 
 class DnsBruteCombine(DnsBruteModules):
     """ Class of WS Module for DNS Brute by dict+mask """
     model = None
     mode = 'dict'
     log_path = '/dev/null'
-    options = {}
     time_count = True
-    options_sets = {
-        "main": {
-            "test": WSOption(
+    options = {
+        "test": WSOption(
                 "test",
                 "Test run with results dump",
                 "",
@@ -174,7 +170,6 @@ class DnsBruteCombine(DnsBruteModules):
                 False,
                 ['--zone']
             ),
-        },
     }
 
     def load_objects(self, queue):

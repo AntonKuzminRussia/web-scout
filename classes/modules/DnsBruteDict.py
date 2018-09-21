@@ -17,16 +17,15 @@ from classes.modules.DnsBruteModules import DnsBruteModules
 from classes.Registry import Registry
 from classes.FileGenerator import FileGenerator
 
+
 class DnsBruteDict(DnsBruteModules):
     """ Class of WS Module for DNS Brute by dict """
     model = None
     mode = 'dict'
     log_path = '/dev/null'
-    options = {}
     time_count = True
-    options_sets = {
-        "main": {
-            "test": WSOption(
+    options = {
+        "test": WSOption(
                 "test",
                 "Test run with results dump",
                 "",
@@ -160,7 +159,6 @@ class DnsBruteDict(DnsBruteModules):
                 False,
                 ['--zone']
             ),
-        },
     }
 
     def load_objects(self, queue):

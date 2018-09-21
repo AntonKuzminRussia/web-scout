@@ -33,58 +33,56 @@ class Pre(WSModule):
     logger_enable = True
     logger_name = 'pre'
     logger_have_items = False
-    options_sets = {
-        "main": {
-            "host": WSOption(
-                "host",
-                "Traget host for scan",
-                "",
-                True,
-                ['--host']
-            ),
-            "dns": WSOption(
-                "dns",
-                "DNS server for domains search",
-                "8.8.8.8",
-                False,
-                ['--dns']
-            ),
-            "protocol": WSOption(
-                "protocol",
-                "Protocol http or https (default - http)",
-                "http",
-                False,
-                ['--protocol']
-            ),
-            "not-found-phrase": WSOption(
-                "not-found-phrase",
-                "Phrase for detect 'Not found' response (404)",
-                "",
-                False,
-                ['--not-found-phrase']
-            ),
-            "not-found-codes": WSOption(
-                "not-found-codes",
-                "Custom codes for detect 'Not found' response (404)",
-                "",
-                False,
-                ['--not-found-codes']
-            ),
-            "proxies": WSOption(
-                "proxies",
-                "File with list of proxies",
-                "",
-                False,
-                ['--proxies']
-            ),
-            "headers-file": WSOption(
-                "headers-file",
-                "File with list of HTTP headers",
-                "",
-                False,
-                ['--headers-file']
-            ),
-        },
+    options = {
+        "host": WSOption(
+            "host",
+            "Traget host for scan",
+            "",
+            True,
+            ['--host']
+        ),
+        "dns": WSOption(
+            "dns",
+            "DNS server for domains search",
+            "8.8.8.8",
+            False,
+            ['--dns']
+        ),
+        "protocol": WSOption(
+            "protocol",
+            "Protocol http or https (default - http)",
+            "http",
+            False,
+            ['--protocol']
+        ),
+        "not-found-phrase": WSOption(
+            "not-found-phrase",
+            "Phrase for detect 'Not found' response (404)",
+            "",
+            False,
+            ['--not-found-phrase']
+        ),
+        "not-found-codes": WSOption(
+            "not-found-codes",
+            "Custom codes for detect 'Not found' response (404)",
+            "",
+            False,
+            ['--not-found-codes']
+        ),
+        "proxies": WSOption(
+            "proxies",
+            "File with list of proxies",
+            "",
+            False,
+            ['--proxies']
+        ),
+        "headers-file": WSOption(
+            "headers-file",
+            "File with list of HTTP headers",
+            "",
+            False,
+            ['--headers-file']
+        ),
     }
 
     def validate_main(self):
@@ -200,7 +198,7 @@ class Pre(WSModule):
 
         return result
 
-    def main_action(self):
+    def do_work(self):
         """ Scan action of module """
         self.enable_logger()
         self.validate_main()

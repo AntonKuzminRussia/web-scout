@@ -18,11 +18,8 @@ from classes.Registry import Registry
 from classes.kernel.WSException import WSException
 from classes.kernel.WSCounter import WSCounter
 from classes.kernel.WSOption import WSOption
-from classes.threads.FuzzerUrlsThread import FuzzerUrlsThread
 from classes.jobs.FuzzerUrlsJob import FuzzerUrlsJob
-from classes.threads.SFuzzerUrlsThread import SFuzzerUrlsThread
 from classes.FileGenerator import FileGenerator
-from classes.threads.params.FuzzerThreadParams import FuzzerThreadParams
 from classes.threads.pools.FuzzerUrlsThreadPool import FuzzerUrlsThreadsPool
 
 
@@ -33,11 +30,9 @@ class FuzzerUrls(WSModule):
     logger_name = 'fuzzer-urls'
     logger_have_items = False
     log_path = '/dev/null'
-    options = {}
     time_count = True
-    options_sets = {
-        "main": {
-            "threads": WSOption(
+    options = {
+        "threads": WSOption(
                 "threads",
                 "Threads count, default 10",
                 int(Registry().get('config')['main']['default_threads']),
@@ -121,7 +116,6 @@ class FuzzerUrls(WSModule):
                 True,
                 ['--urls-file']
             ),
-        },
     }
 
     def validate_main(self):
@@ -132,7 +126,6 @@ class FuzzerUrls(WSModule):
             raise WSException(
                 "File with urls '{0}' not exists!".format(self.options['urls-file'].value)
             )
-
 
     def _parse_params(self, query):
         """ Parse url params string to dict """
@@ -164,7 +157,7 @@ class FuzzerUrls(WSModule):
                     result.append("{0}://{1}{2}".format(url.scheme, url.netloc, path))
         return result
 
-    def main_action(self):
+    def do_work(self):
         """ Scan action of module """
         self.enable_logger()
         self.validate_main()

@@ -18,8 +18,6 @@ from classes.kernel.WSCounter import WSCounter
 from classes.kernel.WSOption import WSOption
 from classes.kernel.WSModule import WSModule
 from classes.kernel.WSException import WSException
-from classes.threads.FuzzerHeadersThread import FuzzerHeadersThread
-from classes.threads.params.FuzzerThreadParams import FuzzerThreadParams
 from classes.threads.pools.FuzzerHeadersThreadPool import FuzzerHeadersThreadsPool
 
 
@@ -27,70 +25,67 @@ class FuzzerHeaders(WSModule):
     """ Class of FuzzerHeaders module """
     model = None
     log_path = '/dev/null'
-    options = {}
     time_count = True
     logger_enable = True
     logger_name = 'fuzzer-headers'
     logger_have_items = False
-    options_sets = {
-        "main": {
-            "threads": WSOption(
-                "threads",
-                "Threads count, default 10",
-                int(Registry().get('config')['main']['default_threads']),
-                False,
-                ['--threads']
-            ),
-            "host": WSOption(
-                "host",
-                "Traget host for scan",
-                "",
-                True,
-                ['--host']
-            ),
-            "method": WSOption(
-                "method",
-                "Requests method (default - GET)",
-                "GET",
-                False,
-                ['--method']
-            ),
-            "protocol": WSOption(
-                "protocol",
-                "Protocol http or https (default - http)",
-                "http",
-                False,
-                ['--protocol']
-            ),
-            "delay": WSOption(
-                "delay",
-                "Deley for every thread between requests (secs)",
-                "0",
-                False,
-                ['--delay']
-            ),
-            "proxies": WSOption(
-                "proxies",
-                "File with list of proxies",
-                "",
-                False,
-                ['--proxies']
-            ),
-            "headers-file": WSOption(
-                "headers-file",
-                "File with list of HTTP headers",
-                "",
-                False,
-                ['--headers-file']
-            ),
-            "urls-file": WSOption(
-                "urls-file",
-                "File with list of URLs",
-                "",
-                True,
-                ['--urls-file']
-            ),
-        },
+    options = {
+        "threads": WSOption(
+            "threads",
+            "Threads count, default 10",
+            int(Registry().get('config')['main']['default_threads']),
+            False,
+            ['--threads']
+        ),
+        "host": WSOption(
+            "host",
+            "Traget host for scan",
+            "",
+            True,
+            ['--host']
+        ),
+        "method": WSOption(
+            "method",
+            "Requests method (default - GET)",
+            "GET",
+            False,
+            ['--method']
+        ),
+        "protocol": WSOption(
+            "protocol",
+            "Protocol http or https (default - http)",
+            "http",
+            False,
+            ['--protocol']
+        ),
+        "delay": WSOption(
+            "delay",
+            "Deley for every thread between requests (secs)",
+            "0",
+            False,
+            ['--delay']
+        ),
+        "proxies": WSOption(
+            "proxies",
+            "File with list of proxies",
+            "",
+            False,
+            ['--proxies']
+        ),
+        "headers-file": WSOption(
+            "headers-file",
+            "File with list of HTTP headers",
+            "",
+            False,
+            ['--headers-file']
+        ),
+        "urls-file": WSOption(
+            "urls-file",
+            "File with list of URLs",
+            "",
+            True,
+            ['--urls-file']
+        ),
     }
 
     def validate_main(self):
@@ -102,7 +97,7 @@ class FuzzerHeaders(WSModule):
                 "File with urls '{0}' not exists!".format(self.options['urls-file'].value)
             )
 
-    def main_action(self):
+    def do_work(self):
         """ Scan action of module """
         self.enable_logger()
         self.validate_main()

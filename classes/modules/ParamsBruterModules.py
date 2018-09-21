@@ -35,7 +35,7 @@ class ParamsBruterModules(WSModule):
         if self.options['url'].value[0] != '/':
             raise WSException("URL must start from the root ('/') !")
 
-    def main_action(self):
+    def do_work(self):
         """ Scan action of module """
         self.enable_logger()
         self.validate_main()

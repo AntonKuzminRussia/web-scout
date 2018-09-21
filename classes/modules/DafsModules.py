@@ -35,7 +35,7 @@ class DafsModules(WSModule):
         if self.options['template'].value[0] != '/':
             raise WSException("Template must start from the root ('/') !")
 
-    def main_action(self):
+    def do_work(self):
         """ Scan action of module """
         self.enable_logger()
         self.validate_main()

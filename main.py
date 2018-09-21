@@ -30,7 +30,6 @@ if len(sys.argv) < 2:
     main_help()
 
 module_name = sys.argv[1]
-action = "main"
 
 base = WSBase()
 
@@ -49,14 +48,7 @@ if module.time_count:
     print "Started module work at " + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
     start_time = int(time.time())
 
-try:
-    module.prepare(action)
-except WSException as e:
-    print " " + str(e)
-    exit(0)
-
 Registry().set('module', module)
-Registry().set('action', action)
 
 parser = argparse.ArgumentParser(
     description=module.help(),
@@ -90,7 +82,7 @@ for option in args.keys():
                 exit(0)
 
 try:
-    module.run(action)
+    module.do_work()
 
     while not module.finished():
         try:

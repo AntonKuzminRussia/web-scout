@@ -56,9 +56,9 @@ class WSModule(object):
 
         self.logger.log(log_str + '\n', new_str=False, _print=False)
 
-    def run(self, action):
+    def do_work(self):
         """ Run module """
-        getattr(self, action + "_action")()
+        raise Exception("This method must be declared in child classes")
 
     def help(self):
         """ Display module help """
@@ -68,16 +68,9 @@ class WSModule(object):
         """ Is module finished? """
         return self.done
 
-    def prepare(self, action):
-        """ Prepare module for work """
-        if action not in self.options_sets:
-            raise WSException("Action '{0}' not exists! See help for actions list of this module.".format(action))
-        self.options = self.options_sets[action]
-        self.action = action
-
     def validate_main(self):
         """ Common user params validate functions """
-        options = self.options_sets[self.action].keys()
+        options = self.options_sets.keys()
 
         if 'selenium' in self.options.keys() and self.options['selenium'].value:
             if 'not-found-re' in options and not self.options['not-found-re'].value:

@@ -22,11 +22,9 @@ class DafsDict(DafsModules):
     model = None
     mode = 'dict'
     log_path = '/dev/null'
-    options = {}
     time_count = True
-    options_sets = {
-        "main": {
-            "test": WSOption(
+    options = {
+        "test": WSOption(
                 "test",
                 "Test run with results dump",
                 "",
@@ -195,7 +193,6 @@ class DafsDict(DafsModules):
                 False,
                 ['--headers-file']
             ),
-        },
     }
 
     def load_objects(self, queue):
