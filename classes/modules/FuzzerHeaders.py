@@ -15,10 +15,10 @@ import os
 from classes.Registry import Registry
 from classes.jobs.FuzzerHeadersJob import FuzzerHeadersJob
 from classes.kernel.WSCounter import WSCounter
-from classes.kernel.WSOption import WSOption
 from classes.kernel.WSModule import WSModule
 from classes.kernel.WSException import WSException
 from classes.threads.pools.FuzzerHeadersThreadPool import FuzzerHeadersThreadsPool
+from classes.modules.params.FuzzerHeadersModuleParams import FuzzerHeadersModuleParams
 
 
 class FuzzerHeaders(WSModule):
@@ -29,64 +29,7 @@ class FuzzerHeaders(WSModule):
     logger_enable = True
     logger_name = 'fuzzer-headers'
     logger_have_items = False
-    options = {
-        "threads": WSOption(
-            "threads",
-            "Threads count, default 10",
-            int(Registry().get('config')['main']['default_threads']),
-            False,
-            ['--threads']
-        ),
-        "host": WSOption(
-            "host",
-            "Traget host for scan",
-            "",
-            True,
-            ['--host']
-        ),
-        "method": WSOption(
-            "method",
-            "Requests method (default - GET)",
-            "GET",
-            False,
-            ['--method']
-        ),
-        "protocol": WSOption(
-            "protocol",
-            "Protocol http or https (default - http)",
-            "http",
-            False,
-            ['--protocol']
-        ),
-        "delay": WSOption(
-            "delay",
-            "Deley for every thread between requests (secs)",
-            "0",
-            False,
-            ['--delay']
-        ),
-        "proxies": WSOption(
-            "proxies",
-            "File with list of proxies",
-            "",
-            False,
-            ['--proxies']
-        ),
-        "headers-file": WSOption(
-            "headers-file",
-            "File with list of HTTP headers",
-            "",
-            False,
-            ['--headers-file']
-        ),
-        "urls-file": WSOption(
-            "urls-file",
-            "File with list of URLs",
-            "",
-            True,
-            ['--urls-file']
-        ),
-    }
+    options = FuzzerHeadersModuleParams.options
 
     def validate_main(self):
         """ Check users params """

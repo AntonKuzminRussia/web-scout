@@ -17,10 +17,10 @@ from classes.kernel.WSModule import WSModule
 from classes.Registry import Registry
 from classes.kernel.WSException import WSException
 from classes.kernel.WSCounter import WSCounter
-from classes.kernel.WSOption import WSOption
 from classes.jobs.FuzzerUrlsJob import FuzzerUrlsJob
 from classes.FileGenerator import FileGenerator
 from classes.threads.pools.FuzzerUrlsThreadPool import FuzzerUrlsThreadsPool
+from classes.modules.params.FuzzerUrlsModuleParams import FuzzerUrlsModuleParams
 
 
 class FuzzerUrls(WSModule):
@@ -31,92 +31,7 @@ class FuzzerUrls(WSModule):
     logger_have_items = False
     log_path = '/dev/null'
     time_count = True
-    options = {
-        "threads": WSOption(
-                "threads",
-                "Threads count, default 10",
-                int(Registry().get('config')['main']['default_threads']),
-                False,
-                ['--threads']
-            ),
-            "host": WSOption(
-                "host",
-                "Traget host for scan",
-                "",
-                True,
-                ['--host']
-            ),
-            "method": WSOption(
-                "method",
-                "Requests method (default - GET)",
-                "GET",
-                False,
-                ['--method']
-            ),
-            "protocol": WSOption(
-                "protocol",
-                "Protocol http or https (default - http)",
-                "http",
-                False,
-                ['--protocol']
-            ),
-            "delay": WSOption(
-                "delay",
-                "Deley for every thread between requests (secs)",
-                "0",
-                False,
-                ['--delay']
-            ),
-            "proxies": WSOption(
-                "proxies",
-                "File with list of proxies",
-                "",
-                False,
-                ['--proxies']
-            ),
-            "ddos-detect-phrase": WSOption(
-                "ddos-detect-phrase",
-                "Phrase for detect DDoS protection",
-                "",
-                False,
-                ['--ddos-detect-phrase']
-            ),
-            "ddos-human-action": WSOption(
-                "ddos-human-action",
-                "Phrase for detect human action need",
-                "",
-                False,
-                ['--ddos-human-action']
-            ),
-            "browser-recreate-phrase": WSOption(
-                "browser-recreate-phrase",
-                "Phrase for recreate browser with new proxy",
-                "",
-                False,
-                ['--browser-recreate-phrase']
-            ),
-            "selenium": WSOption(
-                "selenium",
-                "Use Selenium for scanning",
-                "",
-                False,
-                ['--selenium']
-            ),
-            "headers-file": WSOption(
-                "headers-file",
-                "File with list of HTTP headers",
-                "",
-                False,
-                ['--headers-file']
-            ),
-            "urls-file": WSOption(
-                "urls-file",
-                "File with list of URLs",
-                "",
-                True,
-                ['--urls-file']
-            ),
-    }
+    options = FuzzerUrlsModuleParams.options
 
     def validate_main(self):
         """ Check users params """

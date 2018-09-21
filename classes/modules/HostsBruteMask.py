@@ -9,11 +9,10 @@ Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pr
 Class of module for HostsBrute by Mask
 """
 
-from classes.kernel.WSOption import WSOption
-from classes.Registry import Registry
-
 from classes.modules.HostsBruteModules import HostsBruteModules
 from classes.DictOfMask import DictOfMask
+from classes.modules.params.HostsBruteMaskModuleParams import HostsBruteMaskModuleParams
+
 
 class HostsBruteMask(HostsBruteModules):
     """ Class of module for HostsBrute by Mask """
@@ -21,114 +20,7 @@ class HostsBruteMask(HostsBruteModules):
     mode = 'dict'
     log_path = '/dev/null'
     time_count = True
-    options = {
-        "test": WSOption(
-            "test",
-            "Test run with results dump",
-            "",
-            False,
-            ['--test']
-        ),
-        "threads": WSOption(
-            "threads",
-            "Threads count, default 10",
-            int(Registry().get('config')['main']['default_threads']),
-            False,
-            ['--threads']
-        ),
-        "host": WSOption(
-            "host",
-            "Traget host name",
-            "",
-            True,
-            ['--host']
-        ),
-        "msymbol": WSOption(
-            "msymbol",
-            "Symbol of mask position in target URL (default {0})"
-                .format(Registry().get('config')['main']['standart_msymbol']),
-            Registry().get('config')['main']['standart_msymbol'],
-            False,
-            ['--msymbol']
-        ),
-        "protocol": WSOption(
-            "protocol",
-            "Protocol http or https (default - http)",
-            "http",
-            False,
-            ['--protocol']
-        ),
-        "mask": WSOption(
-            "mask",
-            "Mask for work",
-            "",
-            True,
-            ['--mask']
-        ),
-        "false-phrase": WSOption(
-            "false-phrase",
-            "Phrase for detect 'Host not found' response",
-            "",
-            True,
-            ['--false-phrase']
-        ),
-        "retest-codes": WSOption(
-            "retest-codes",
-            "Custom codes for re-test object after 5 sec",
-            "",
-            False,
-            ['--retest-codes']
-        ),
-        "delay": WSOption(
-            "delay",
-            "Deley for every thread between requests (secs)",
-            "0",
-            False,
-            ['--delay']
-        ),
-        "parts": WSOption(
-            "parts",
-            "How many parts will be create from current source (dict/mask)",
-            "0",
-            False,
-            ['--parts']
-        ),
-        "part": WSOption(
-            "part",
-            "Number of part for use from --parts",
-            "0",
-            False,
-            ['--part']
-        ),
-        "proxies": WSOption(
-            "proxies",
-            "File with list of proxies",
-            "",
-            False,
-            ['--proxies']
-        ),
-        "template": WSOption(
-            "template",
-            "Template for brute",
-            "",
-            True,
-            ['--template']
-        ),
-        "headers-file": WSOption(
-            "headers-file",
-            "File with list of HTTP headers",
-            "",
-            False,
-            ['--headers-file']
-        ),
-        "ignore-words-re": WSOption(
-            "ignore-words-re",
-            "Regex for ignore some words from dict or mask",
-            "",
-            False,
-            ['--ignore-words-re']
-        ),
-    }
+    options = HostsBruteMaskModuleParams.options
 
     def load_objects(self, queue):
         """ Prepare generator for work """
