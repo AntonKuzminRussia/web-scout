@@ -82,7 +82,7 @@ class DnsBruteThread(threading.Thread):
 
         need_retest = False
 
-        while True:
+        while not self.done:
             if self.delay:
                 time.sleep(self.delay)
             try:
