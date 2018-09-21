@@ -19,8 +19,7 @@ from classes.kernel.WSModule import WSModule
 from classes.kernel.WSException import WSException
 from classes.kernel.WSCounter import WSCounter
 from classes.kernel.WSOption import WSOption
-from classes.threads.FormBruterThread import FormBruterThread
-from classes.threads.SFormBruterThread import  SFormBruterThread
+from classes.threads.pools.FormBruterThreadsPool import FormBruterThreadsPool
 from classes.threads.params.FormBruterThreadParams import FormBruterThreadParams
 
 
@@ -289,8 +288,8 @@ class FormBruter(WSModule):
 
         result = []
 
-        q = FormBruterJob()
-        loaded = self.load_objects(q)
+        queue = FormBruterJob()
+        loaded = self.load_objects(queue)
 
         self.logger.log(
             "Loaded {0} words ({1}-{2}) from all {3}.".format(
@@ -300,52 +299,19 @@ class FormBruter(WSModule):
         )
 
         counter = WSCounter(5, 300, loaded['all'] if not loaded['end'] else loaded['end']-loaded['start'])
-        params = FormBruterThreadParams(self.options)
-        w_thrds = []
-        pass_found = False
-        for _ in range(int(self.options['threads'].value)):
-            if self.options['selenium'].value:
-                worker = SFormBruterThread(q, pass_found, counter, result, params)
-            else:
-                worker = FormBruterThread(q, pass_found, counter, result, params)
-            worker.start()
-            w_thrds.append(worker)
 
+        pass_found = False
+
+        pool = FormBruterThreadsPool(queue, counter, result, pass_found, self.options, self.logger)
+        pool.start()
+
+        while pool.isAlive():
+            if Registry().get('positive_limit_stop'):
+                pool.kill_all()
             time.sleep(1)
 
-        timeout_threads_count = 0
-        while len(w_thrds):
-            if Registry().get('proxy_many_died'):
-                self.logger.log("Proxy many died, stop scan")
-
-            for worker in w_thrds:
-                if Registry().get('proxy_many_died') or Registry().get('positive_limit_stop'):
-                    worker.done = True
-                    time.sleep(3)
-
-                if worker.done:
-                    del w_thrds[w_thrds.index(worker)]
-
-                if int(time.time()) - worker.last_action > int(Registry().get('config')['main']['kill_thread_after_secs']):
-                    self.logger.log(
-                        "Thread killed by time, resurected {0} times from {1}".format(
-                            timeout_threads_count,
-                            Registry().get('config')['main']['timeout_threads_resurect_max_count']
-                        )
-                    )
-                    del w_thrds[w_thrds.index(worker)]
-
-                    if timeout_threads_count <= int(Registry().get('config')['main']['timeout_threads_resurect_max_count']):
-                        if self.options['selenium'].value:
-                            worker = SFormBruterThread(q, pass_found, counter, result, params)
-                        else:
-                            worker = FormBruterThread(q, pass_found, counter, result, params)
-                        worker.start()
-                        w_thrds.append(worker)
-
-                        timeout_threads_count += 1
-
-            time.sleep(2)
+        if Registry().get('proxy_many_died'):
+            self.logger.log("Proxy many died, stop scan")
 
         if Registry().get('positive_limit_stop'):
             self.logger.log("\nMany positive detections. Please, look items logs")

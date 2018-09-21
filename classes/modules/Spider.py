@@ -21,10 +21,8 @@ from classes.kernel.WSModule import WSModule
 from classes.kernel.WSException import WSException
 from classes.kernel.WSOption import WSOption
 from classes.kernel.WSCounter import WSCounter
-from classes.threads.SpiderThread import SpiderThread
-from classes.threads.SSpiderThread import SSpiderThread
 from classes.jobs.SpiderJob import SpiderJob
-from classes.threads.params.SpiderThreadParams import SpiderThreadParams
+from classes.threads.pools.SpiderThreadsPool import SpiderThreadsPool
 
 
 class SpiderException(Exception):
@@ -201,23 +199,18 @@ class Spider(WSModule):
             os.mkdir(Registry().get('data_path') + self.options['host'].value)
             os.chmod(Registry().get('data_path') + self.options['host'].value, 0o777)
 
-        job = SpiderJob()
+        queue = SpiderJob()
         src = SpiderRequestsCounter(int(Registry().get('config')['spider']['requests_limit']))
         counter = WSCounter(5, 300, 0)
-        params = SpiderThreadParams(self.options)
 
-        workers = []
-        for _ in range(int(self.options['threads'].value)):
-            if self.options['selenium'].value:
-                worker = SSpiderThread(job, src, counter, params)
-            else:
-                worker = SpiderThread(job, src, counter, params)
-            workers.append(worker)
+        pool = SpiderThreadsPool(queue, counter, src, self.options, self.logger)
+        pool.start()
+
+        while pool.isAlive():
+            if Registry().get('positive_limit_stop'):
+                pool.kill_all()
             time.sleep(1)
-        self.kernel.create_threads(workers)
 
-        while not self.kernel.finished():
-            time.sleep(2)
 
         self.logger.log("\nTotal links count: " + str(Registry().get('mongo').spider_urls.count()))
         self.logger.log(str(self.result))

@@ -15,8 +15,8 @@ from classes.kernel.WSModule import WSModule
 from classes.kernel.WSException import WSException
 from classes.kernel.WSCounter import WSCounter
 from classes.jobs.HostsBruteJob import HostsBruteJob
-from classes.threads.HostsBruteThread import HostsBruteThread
-from classes.threads.params.HostBruteThreadParams import HostBruteThreadParams
+from classes.threads.pools.HostsBruteThreadsPool import HostsBruteThreadsPool
+
 
 class HostsBruteModules(WSModule):
     """ Common module class form HostsBrute* modules """
@@ -51,9 +51,9 @@ class HostsBruteModules(WSModule):
 
         result = []
 
-        q = HostsBruteJob()
+        queue = HostsBruteJob()
 
-        loaded = self.load_objects(q)
+        loaded = self.load_objects(queue)
 
         self.logger.log(
             "Loaded {0} words ({1}-{2}) from all {3}.".format(
@@ -64,45 +64,17 @@ class HostsBruteModules(WSModule):
 
         counter = WSCounter(5, 300, loaded['all'] if not loaded['end'] else loaded['end']-loaded['start'])
 
-        params = HostBruteThreadParams(self.options)
+        pool = HostsBruteThreadsPool(queue, counter, result, self.options, self.logger)
+        pool.start()
 
-        w_thrds = []
-        for _ in range(int(self.options['threads'].value)):
-            worker = HostsBruteThread(q, counter, result, params)
-            worker.start()
-            w_thrds.append(worker)
-
+        while pool.isAlive():
+            if Registry().get('positive_limit_stop'):
+                pool.kill_all()
             time.sleep(1)
 
-        timeout_threads_count = 0
-        while len(w_thrds):
-            if Registry().get('proxy_many_died'):
-                self.logger.log("Proxy many died, stop scan")
+        if Registry().get('proxy_many_died'):
+            self.logger.log("Proxy many died, stop scan")
 
-            if Registry().get('proxy_many_died') or Registry().get('positive_limit_stop'):
-                worker.done = True
-                time.sleep(3)
-
-            for worker in w_thrds:
-                if worker.done:
-                    del w_thrds[w_thrds.index(worker)]
-
-                if int(time.time()) - worker.last_action > int(Registry().get('config')['main']['kill_thread_after_secs']):
-                    self.logger.log(
-                        "Thread killed by time, resurected {0} times from {1}".format(
-                            timeout_threads_count,
-                            Registry().get('config')['main']['timeout_threads_resurect_max_count']
-                        )
-                    )
-                    del w_thrds[w_thrds.index(worker)]
-
-                    if timeout_threads_count <= int(Registry().get('config')['main']['timeout_threads_resurect_max_count']):
-                        worker = HostsBruteThread(q, counter, result, params)
-                        worker.start()
-                        w_thrds.append(worker)
-
-                        timeout_threads_count += 1
-            time.sleep(2)
 
         if Registry().get('positive_limit_stop'):
             self.logger.log("\nMany positive detections. Please, look items logs")

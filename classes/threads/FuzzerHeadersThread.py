@@ -57,7 +57,7 @@ class FuzzerHeadersThread(threading.Thread):
         req_func = getattr(self.http, self.method)
         need_retest = False
 
-        while True:
+        while not self.done:
             self.last_action = int(time.time())
 
             if self.delay:

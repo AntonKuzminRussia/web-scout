@@ -15,9 +15,7 @@ from classes.kernel.WSModule import WSModule
 from classes.kernel.WSException import WSException
 from classes.kernel.WSCounter import WSCounter
 from classes.jobs.ParamsBruterJob import ParamsBruterJob
-from classes.threads.ParamsBruterThread import ParamsBruterThread
-from classes.threads.SParamsBruterThread import SParamsBruterThread
-from classes.threads.params.ParamsBruterThreadParams import ParamsBruterThreadParams
+from classes.threads.pools.ParamsBruterThreadsPool import ParamsBruterThreadsPool
 
 
 class ParamsBruterModules(WSModule):
@@ -48,9 +46,9 @@ class ParamsBruterModules(WSModule):
 
         result = []
 
-        q = ParamsBruterJob()
+        queue = ParamsBruterJob()
 
-        loaded = self.load_objects(q)
+        loaded = self.load_objects(queue)
 
         self.logger.log(
             "Loaded {0} words ({1}-{2}) from all {3}.".format(
@@ -61,52 +59,14 @@ class ParamsBruterModules(WSModule):
 
         counter = WSCounter(50, 3000, loaded['all'] if not loaded['end'] else loaded['end']-loaded['start'])
 
-        params = ParamsBruterThreadParams(self.options)
+        pool = ParamsBruterThreadsPool(queue, counter, result, self.options, self.logger)
+        pool.start()
 
-        w_thrds = []
-        for _ in range(int(self.options['threads'].value)):
-            if self.options['selenium'].value:
-                worker = SParamsBruterThread(q, counter, result, params)
-            else:
-                worker = ParamsBruterThread(q, counter, result, params)
-            worker.start()
-            w_thrds.append(worker)
-
+        while pool.isAlive():
+            if Registry().get('positive_limit_stop'):
+                pool.kill_all()
             time.sleep(1)
 
-        timeout_threads_count = 0
-        while len(w_thrds):
-            if Registry().get('proxy_many_died'):
-                self.logger.log("Proxy many died, stop scan")
-
-            if Registry().get('proxy_many_died') or Registry().get('positive_limit_stop'):
-                worker.done = True
-                time.sleep(3)
-
-            for worker in w_thrds:
-                if worker.done:
-                    del w_thrds[w_thrds.index(worker)]
-
-                if int(time.time()) - worker.last_action > int(Registry().get('config')['main']['kill_thread_after_secs']):
-                    self.logger.log(
-                        "Thread killed by time, resurected {0} times from {1}".format(
-                            timeout_threads_count,
-                            Registry().get('config')['main']['timeout_threads_resurect_max_count']
-                        )
-                    )
-                    del w_thrds[w_thrds.index(worker)]
-
-                    if timeout_threads_count <= int(Registry().get('config')['main']['timeout_threads_resurect_max_count']):
-                        if self.options['selenium'].value:
-                            worker = SParamsBruterThread(q, counter, result, params)
-                        else:
-                            worker = ParamsBruterThread(q, counter, result, params)
-                        worker.start()
-                        w_thrds.append(worker)
-
-                        timeout_threads_count += 1
-
-            time.sleep(2)
 
         if Registry().get('positive_limit_stop'):
             self.logger.log("\nMany positive detections. Please, look items logs")

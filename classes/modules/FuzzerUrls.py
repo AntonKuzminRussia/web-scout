@@ -23,6 +23,7 @@ from classes.jobs.FuzzerUrlsJob import FuzzerUrlsJob
 from classes.threads.SFuzzerUrlsThread import SFuzzerUrlsThread
 from classes.FileGenerator import FileGenerator
 from classes.threads.params.FuzzerThreadParams import FuzzerThreadParams
+from classes.threads.pools.FuzzerUrlsThreadPool import FuzzerUrlsThreadsPool
 
 
 class FuzzerUrls(WSModule):
@@ -186,53 +187,24 @@ class FuzzerUrls(WSModule):
         fh_work.close()
         fh_base.close()
 
-        q = FuzzerUrlsJob()
+        queue = FuzzerUrlsJob()
 
         generator = FileGenerator('/tmp/fuzzer-urls.txt')
-        q.set_generator(generator)
+        queue.set_generator(generator)
         self.logger.log("Loaded {0} variants.".format(generator.lines_count))
 
         counter = WSCounter(1, 60, generator.lines_count)
 
-        params = FuzzerThreadParams(self.options)
+        pool = FuzzerUrlsThreadsPool(queue, counter, result, self.options, self.logger)
+        pool.start()
 
-        w_thrds = []
-        for _ in range(int(self.options['threads'].value)):
-            if self.options['selenium'].value:
-                worker = SFuzzerUrlsThread(q, counter, result, params)
-            else:
-                worker = FuzzerUrlsThread(q, counter, result, params)
-            worker.start()
-            w_thrds.append(worker)
-
+        while pool.isAlive():
+            if Registry().get('positive_limit_stop'):
+                pool.kill_all()
             time.sleep(1)
 
-        timeout_threads_count = 0
-        while len(w_thrds):
-            for worker in w_thrds:
-                if worker.done or Registry().get('proxy_many_died'):
-                    del w_thrds[w_thrds.index(worker)]
-
-                if int(time.time()) - worker.last_action > int(Registry().get('config')['main']['kill_thread_after_secs']):
-                    self.logger.log(
-                        "Thread killed by time, resurected {0} times from {1}".format(
-                            timeout_threads_count,
-                            Registry().get('config')['main']['timeout_threads_resurect_max_count']
-                        )
-                    )
-                    del w_thrds[w_thrds.index(worker)]
-
-                    if timeout_threads_count <= int(Registry().get('config')['main']['timeout_threads_resurect_max_count']):
-                        if self.options['selenium'].value:
-                            worker = SFuzzerUrlsThread(q, counter, result, params)
-                        else:
-                            worker = FuzzerUrlsThread(q, counter, result, params)
-                        worker.start()
-                        w_thrds.append(worker)
-
-                        timeout_threads_count += 1
-
-            time.sleep(2)
+        if Registry().get('proxy_many_died'):
+            self.logger.log("Proxy many died, stop scan")
 
         for fuzz in result:
             self.logger.log("{0} {1}://{2}{3} (Word: {4})".format(

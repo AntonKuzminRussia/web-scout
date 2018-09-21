@@ -85,7 +85,10 @@ class FormBruterThread(HttpThread):
 
         conf = self._make_conf_from_str(self.confstr)
 
-        while not self.pass_found and not self.done:
+        while not self.done:
+            if self.pass_found:
+                break
+
             try:
                 self.last_action = int(time.time())
 

@@ -20,6 +20,7 @@ from classes.kernel.WSModule import WSModule
 from classes.kernel.WSException import WSException
 from classes.threads.FuzzerHeadersThread import FuzzerHeadersThread
 from classes.threads.params.FuzzerThreadParams import FuzzerThreadParams
+from classes.threads.pools.FuzzerHeadersThreadPool import FuzzerHeadersThreadsPool
 
 
 class FuzzerHeaders(WSModule):
@@ -114,46 +115,23 @@ class FuzzerHeaders(WSModule):
 
         to_scan = map(str.strip, open(self.options['urls-file'].value).readlines())
 
-        q = FuzzerHeadersJob()
-        q.load_dict(to_scan)
+        queue = FuzzerHeadersJob()
+        queue.load_dict(to_scan)
 
         self.logger.log("Loaded {0} variants.".format(len(to_scan)))
 
         counter = WSCounter(1, 60, len(to_scan))
 
-        params = FuzzerThreadParams(self.options)
+        pool = FuzzerHeadersThreadsPool(queue, counter, result, self.options, self.logger)
+        pool.start()
 
-        w_thrds = []
-        for _ in range(int(self.options['threads'].value)):
-            worker = FuzzerHeadersThread(q, counter, result, params)
-            worker.start()
-            w_thrds.append(worker)
-
+        while pool.isAlive():
+            if Registry().get('positive_limit_stop'):
+                pool.kill_all()
             time.sleep(1)
 
-        timeout_threads_count = 0
-        while len(w_thrds):
-            for worker in w_thrds:
-                if worker.done or Registry().get('proxy_many_died'):
-                    del w_thrds[w_thrds.index(worker)]
-
-                if int(time.time()) - worker.last_action > int(Registry().get('config')['main']['kill_thread_after_secs']):
-                    self.logger.log(
-                        "Thread killed by time, resurected {0} times from {1}".format(
-                            timeout_threads_count,
-                            Registry().get('config')['main']['timeout_threads_resurect_max_count']
-                        )
-                    )
-                    del w_thrds[w_thrds.index(worker)]
-
-                    if timeout_threads_count <= int(Registry().get('config')['main']['timeout_threads_resurect_max_count']):
-                        worker = FuzzerHeadersThread(q, counter, result, params)
-                        worker.start()
-                        w_thrds.append(worker)
-
-                        timeout_threads_count += 1
-
-            time.sleep(2)
+        if Registry().get('proxy_many_died'):
+            self.logger.log("Proxy many died, stop scan")
 
         for fuzz in result:
             self.logger.log("{0} {1}://{2}{3} (Word: {4}, Header: {5})".format(

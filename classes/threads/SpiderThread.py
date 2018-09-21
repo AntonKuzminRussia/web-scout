@@ -21,6 +21,7 @@ from classes.threads.params.SpiderThreadParams import SpiderThreadParams
 class SpiderThread(WSThread):
     """ Thread class for Spider module """
     last_action = 0
+    done = False
 
     def __init__(self, job, src, counter, params):
         """
@@ -41,7 +42,7 @@ class SpiderThread(WSThread):
 
     def run(self):
         """ Run thread """
-        while self.src.allowed():
+        while self.src.allowed() and not self.done:
             self.counter.all = self.job.qsize()
             try:
                 links = self.job.get_many()

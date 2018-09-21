@@ -22,8 +22,7 @@ from classes.kernel.WSCounter import WSCounter
 from classes.kernel.WSModule import WSModule
 from classes.kernel.WSException import WSException
 from classes.jobs.DnsBruteJob import DnsBruteJob
-from classes.threads.DnsBruteThread import DnsBruteThread
-from classes.threads.params.DnsBruteThreadParams import DnsBruteThreadParams
+from classes.threads.pools.DnsBruteThreadsPool import DnsBruteThreadsPool
 
 
 class DnsBruteModules(WSModule):
@@ -82,9 +81,9 @@ class DnsBruteModules(WSModule):
         if self.options['http-proxies'].value:
             Registry().get('proxies').load(self.options['http-proxies'].value)
 
-        q = DnsBruteJob()
+        queue = DnsBruteJob()
 
-        loaded = self.load_objects(q)
+        loaded = self.load_objects(queue)
         self.logger.log(
             "Loaded {0} words ({1}-{2}) from all {3}.".format(
                 (loaded['end'] - loaded['start']), loaded['start'], loaded['end'], loaded['all'])
@@ -95,48 +94,13 @@ class DnsBruteModules(WSModule):
 
         result = []
 
-        w_thrds = []
-        DnsRoller = Roller()
-        DnsRoller.load_file(Registry().get('wr_path') + '/bases/dns-servers.txt')
-        for _ in range(int(self.options['threads'].value)):
-            we_need_server = True
-            while we_need_server:
-                we_need_server = False
-                try:
-                    next_server = DnsRoller.get()
-                    #print "Next DNS " + next_server
-                    if self.options['protocol'].value == 'auto':
-                        try:
-                            dns.query.tcp(dns.message.make_query('test.com', 'A'), next_server, timeout=5)
-                            protocol = 'tcp'
-                        except socket.error:
-                            try:
-                                dns.query.udp(dns.message.make_query('test.com', 'A'), next_server, timeout=5)
-                                protocol = 'udp'
-                            except socket.error:
-                                #raise Exception('Can`t detect DNS-server protocol. Check addr.')
-                                we_need_server = True
-                        #print 'DNS protolol detected automaticaly: ' + protocol
-                    else:
-                        protocol = self.options['protocol'].value
-                except dns.exception.Timeout:
-                    self.logger.log("Check server {0}. Don`t work.".format(next_server))
-                    we_need_server = True
+        pool = DnsBruteThreadsPool(queue, counter, result, self.options, self.logger)
+        pool.start()
 
-            hosts = []
-            hosts.append(self.options['host'].value)
-            params = DnsBruteThreadParams(self.options)
-            worker = DnsBruteThread(q, hosts, protocol, next_server, result, counter, params)
-            worker.start()
-            w_thrds.append(worker)
-
+        while pool.isAlive():
+            if Registry().get('proxy_many_died') or Registry().get('positive_limit_stop'):
+                pool.kill_all()
             time.sleep(1)
-
-        while len(w_thrds):
-            for worker in w_thrds:
-                if worker.done or Registry().get('positive_limit_stop'):
-                    del w_thrds[w_thrds.index(worker)]
-            time.sleep(2)
 
         if self.options['host'].value == 'all':
             self._output_zones(result)
