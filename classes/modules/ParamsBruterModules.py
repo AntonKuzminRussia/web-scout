@@ -69,7 +69,6 @@ class ParamsBruterModules(WSModule):
                 worker = SParamsBruterThread(q, counter, result, params)
             else:
                 worker = ParamsBruterThread(q, counter, result, params)
-            worker.setDaemon(True)
             worker.start()
             w_thrds.append(worker)
 
@@ -102,7 +101,6 @@ class ParamsBruterModules(WSModule):
                             worker = SParamsBruterThread(q, counter, result, params)
                         else:
                             worker = ParamsBruterThread(q, counter, result, params)
-                        worker.setDaemon(True)
                         worker.start()
                         w_thrds.append(worker)
 

@@ -202,7 +202,6 @@ class FuzzerUrls(WSModule):
                 worker = SFuzzerUrlsThread(q, counter, result, params)
             else:
                 worker = FuzzerUrlsThread(q, counter, result, params)
-            worker.setDaemon(True)
             worker.start()
             w_thrds.append(worker)
 
@@ -228,7 +227,6 @@ class FuzzerUrls(WSModule):
                             worker = SFuzzerUrlsThread(q, counter, result, params)
                         else:
                             worker = FuzzerUrlsThread(q, counter, result, params)
-                        worker.setDaemon(True)
                         worker.start()
                         w_thrds.append(worker)
 

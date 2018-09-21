@@ -126,7 +126,6 @@ class FuzzerHeaders(WSModule):
         w_thrds = []
         for _ in range(int(self.options['threads'].value)):
             worker = FuzzerHeadersThread(q, counter, result, params)
-            worker.setDaemon(True)
             worker.start()
             w_thrds.append(worker)
 
@@ -149,7 +148,6 @@ class FuzzerHeaders(WSModule):
 
                     if timeout_threads_count <= int(Registry().get('config')['main']['timeout_threads_resurect_max_count']):
                         worker = FuzzerHeadersThread(q, counter, result, params)
-                        worker.setDaemon(True)
                         worker.start()
                         w_thrds.append(worker)
 

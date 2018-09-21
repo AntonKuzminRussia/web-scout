@@ -212,7 +212,6 @@ class Spider(WSModule):
                 worker = SSpiderThread(job, src, counter, params)
             else:
                 worker = SpiderThread(job, src, counter, params)
-            worker.setDaemon(True)
             workers.append(worker)
             time.sleep(1)
         self.kernel.create_threads(workers)

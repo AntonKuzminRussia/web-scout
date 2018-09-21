@@ -24,6 +24,8 @@ from classes.SeleniumBrowser import SeleniumBrowser
 
 class SeleniumThread(threading.Thread):
     """ Common thread class for selenium threads """
+    daemon = True
+
     requests_count = 0
     proxy_using = False
     browser = None

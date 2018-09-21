@@ -23,6 +23,8 @@ from classes.threads.params.FuzzerThreadParams import FuzzerThreadParams
 
 class FuzzerHeadersThread(threading.Thread):
     """ Thread class for FuzzerHeaders module """
+    daemon = True
+
     queue = None
     method = None
     url = None

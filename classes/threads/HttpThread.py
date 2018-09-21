@@ -5,6 +5,8 @@ from classes.Registry import Registry
 
 
 class HttpThread(threading.Thread):
+    daemon = True
+
     def is_response_content_binary(self, resp):
         return resp is not None \
             and 'content-type' in resp.headers \

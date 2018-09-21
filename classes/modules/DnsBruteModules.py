@@ -127,7 +127,6 @@ class DnsBruteModules(WSModule):
             hosts.append(self.options['host'].value)
             params = DnsBruteThreadParams(self.options)
             worker = DnsBruteThread(q, hosts, protocol, next_server, result, counter, params)
-            worker.setDaemon(True)
             worker.start()
             w_thrds.append(worker)
 

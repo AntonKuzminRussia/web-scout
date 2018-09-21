@@ -75,7 +75,6 @@ class DafsModules(WSModule):
                 worker = SDafsThread(q, counter, result, params)
             else:
                 worker = DafsThread(q, counter, result, params)
-            worker.setDaemon(True)
             worker.start()
             w_thrds.append(worker)
 
@@ -108,7 +107,6 @@ class DafsModules(WSModule):
                             worker = SDafsThread(q, counter, result, params)
                         else:
                             worker = DafsThread(q, counter, result, params)
-                        worker.setDaemon(True)
                         worker.start()
                         w_thrds.append(worker)
 

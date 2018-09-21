@@ -26,6 +26,8 @@ from classes.threads.params.DnsBruteThreadParams import DnsBruteThreadParams
 
 class DnsBruteThread(threading.Thread):
     """ Thread class for DnsBrute* modules """
+    daemon = True
+
     done = False
 
     proxyErrors = [

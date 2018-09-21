@@ -39,7 +39,7 @@ class HostsBruteThread(HttpThread):
 
         :type params: HostBruteThreadParams
         """
-        threading.Thread.__init__(self)
+        HttpThread.__init__(self)
         self.retested_words = {}
 
         self.queue = queue

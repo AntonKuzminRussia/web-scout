@@ -69,8 +69,6 @@ class HostsBruteModules(WSModule):
         w_thrds = []
         for _ in range(int(self.options['threads'].value)):
             worker = HostsBruteThread(q, counter, result, params)
-
-            worker.setDaemon(True)
             worker.start()
             w_thrds.append(worker)
 
@@ -100,8 +98,6 @@ class HostsBruteModules(WSModule):
 
                     if timeout_threads_count <= int(Registry().get('config')['main']['timeout_threads_resurect_max_count']):
                         worker = HostsBruteThread(q, counter, result, params)
-
-                        worker.setDaemon(True)
                         worker.start()
                         w_thrds.append(worker)
 
