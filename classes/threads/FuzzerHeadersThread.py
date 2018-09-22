@@ -17,7 +17,6 @@ import time
 from requests.exceptions import ConnectionError
 
 from classes.Registry import Registry
-from libs.common import file_to_list
 from classes.threads.params.FuzzerThreadParams import FuzzerThreadParams
 
 
@@ -44,13 +43,10 @@ class FuzzerHeadersThread(threading.Thread):
         self.counter = counter
         self.protocol = params.protocol
         self.done = False
-        self.bad_words = file_to_list(Registry().get('wr_path') + "/bases/bad-words.txt")
-        self.headers = self._get_headers()
+        self.bad_words = params.bad_words
+        self.headers = params.headers
         self.http = Registry().get('http')
-        self.delay = int(params.delay)
-
-    def _get_headers(self):
-        return file_to_list(Registry().get('wr_path') + "/bases/fuzzer-headers.txt")
+        self.delay = params.delay
 
     def run(self):
         """ Run thread """

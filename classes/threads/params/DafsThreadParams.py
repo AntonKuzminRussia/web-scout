@@ -8,6 +8,7 @@ Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pr
 
 Common module class form Dafs* modules
 """
+import re
 
 
 class DafsThreadParams:
@@ -31,15 +32,22 @@ class DafsThreadParams:
         self.protocol = options['protocol'].value.lower()
         self.host = options['host'].value
         self.template = options['template'].value
-        self.method = options['method'].value.lower()
         self.msymbol = options['msymbol'].value
-        self.delay = options['delay'].value
-        self.not_found_re = options['not-found-re'].value
-        self.not_found_ex = options['not-found-ex'].value
+        self.delay = int(options['delay'].value)
+        self.not_found_re = False if not len(options['not-found-re'].value) else re.compile(options['not-found-re'].value)
+        self.not_found_ex = False if not len(options['not-found-ex'].value) else options['not-found-ex'].value
         self.not_found_size = options['not-found-size'].value
-        self.not_found_codes = options['not-found-codes'].value
         self.ddos_detect_phrase = options['ddos-detect-phrase'].value
         self.ddos_human_action = options['ddos-human-action'].value
         self.browser_recreate_re = options['browser-recreate-re'].value
-        self.ignore_words_re = options['ignore-words-re'].value
-        self.retest_codes = options['retest-codes'].value
+        self.ignore_words_re = False if not len(options['ignore-words-re'].value) else re.compile(options['ignore-words-re'].value)
+        self.method = options['method'].value.lower()
+
+        if self.method == 'head' and ((self.not_found_re and len(self.not_found_re)) or self.not_found_size != -1):
+            self.method = 'get'
+
+        not_found_codes = options['not-found-codes'].value.split(',')
+        not_found_codes.append('404')
+        self.not_found_codes = list(set(not_found_codes))
+
+        self.retest_codes = list(set(options['retest-codes'].value.split(','))) if len(options['retest-codes'].value) else []

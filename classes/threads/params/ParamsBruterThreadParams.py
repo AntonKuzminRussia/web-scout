@@ -8,6 +8,7 @@ Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pr
 
 Common module class form Dafs* modules
 """
+import re
 
 
 class ParamsBruterThreadParams:
@@ -32,17 +33,21 @@ class ParamsBruterThreadParams:
         self.protocol = options['protocol'].value
         self.host = options['host'].value
         self.url = options['url'].value
-        self.max_params_length = options['max-params-length'].value
+        self.max_params_length = int(options['max-params-length'].value)
         self.value = options['value'].value
         self.method = options['method'].value.lower()
         self.msymbol = options['msymbol'].value
         self.not_found_re = options['not-found-re'].value
-        self.delay = options['delay'].value
+        self.delay = int(options['delay'].value)
         self.ddos_detect_phrase = options['ddos-detect-phrase'].value
         self.ddos_human_action = options['ddos-human-action'].value
         self.browser_recreate_re = options['browser-recreate-re'].value
-        self.ignore_words_re = options['ignore-words-re'].value
-        self.not_found_re = options['not-found-re'].value
-        self.not_found_size = options['not-found-size'].value
-        self.not_found_codes = options['not-found-codes'].value.lower()
-        self.retest_codes = options['retest-codes'].value.lower()
+        self.ignore_words_re = False if not len(options['ignore-words-re'].value) else re.compile(options['ignore-words-re'].value)
+        self.not_found_re = False if not len(options['not-found-re'].value) else re.compile(options['not-found-re'].value)
+        self.not_found_size = int(options['not-found-size'].value)
+
+        not_found_codes = options['not-found-codes'].value.split(',')
+        not_found_codes.append('404')
+        self.not_found_codes = list(set(not_found_codes))
+
+        self.retest_codes = list(set(options['retest-codes'].value.split(','))) if len(options['retest-codes'].value) else []

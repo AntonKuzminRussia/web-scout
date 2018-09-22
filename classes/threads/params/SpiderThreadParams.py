@@ -8,6 +8,7 @@ Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pr
 
 Common module class form Dafs* modules
 """
+import re
 
 
 class SpiderThreadParams:
@@ -22,8 +23,8 @@ class SpiderThreadParams:
     def __init__(self, options):
         self.host = options['host'].value
         self.protocol = options['protocol'].value
-        self.not_found_re = options['not-found-re'].value
-        self.delay = options['delay'].value
+        self.not_found_re = False if not len(options['not-found-re'].value) else re.compile(options['not-found-re'].value)
+        self.delay = int(options['delay'].value)
         self.ddos_human_action = options['ddos-human-action'].value
         self.ddos_detect_phrase = options['ddos-detect-phrase'].value
-        self.browser_recreate_re = options['browser-recreate-re'].value
+        self.browser_recreate_re = False if not len(options['browser-recreate-re'].value) else re.compile(options['browser-recreate-re'].value)

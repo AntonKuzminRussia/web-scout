@@ -11,12 +11,12 @@ Thread class for Dafs modules (selenium)
 
 import Queue
 import time
-import re
 
 from selenium.common.exceptions import TimeoutException
 from classes.threads.params.ParamsBruterThreadParams import ParamsBruterThreadParams
 from classes.Registry import Registry
 from classes.threads.SeleniumThread import SeleniumThread
+
 
 class SParamsBruterThread(SeleniumThread):
     """ Thread class for Dafs modules (selenium) """
@@ -40,19 +40,19 @@ class SParamsBruterThread(SeleniumThread):
         self.host = params.host
         self.method = 'get'
         self.url = params.url
-        self.max_params_length = int(params.max_params_length)
-        self.mask_symbol = params.mask_symbol
+        self.max_params_length = params.max_params_length
+        self.mask_symbol = params.msymbol
         self.counter = counter
         self.result = result
         self.value = params.value
         self.done = False
-        self.not_found_re = False if not len(params.not_found_re) else re.compile(params.not_found_re)
-        self.recreate_re = False if not len(params.browser_recreate_re) else re.compile(params.browser_recreate_re)
+        self.not_found_re = params.not_found_re
+        self.recreate_re = params.browser_recreate_re
         self.http = Registry().get('http')
-        self.delay = int(params.delay)
+        self.delay = params.delay
         self.ddos_phrase = params.ddos_detect_phrase
         self.ddos_human = params.ddos_human_action
-        self.ignore_words_re = False if not len(params.ignore_words_re) else re.compile(params.ignore_words_re)
+        self.ignore_words_re = params.ignore_words_re
 
         Registry().set('url_for_proxy_check', "{0}://{1}".format(self.protocol, self.host))
 

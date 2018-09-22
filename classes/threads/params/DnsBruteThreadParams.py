@@ -8,6 +8,7 @@ Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pr
 
 Common module class form Dafs* modules
 """
+import re
 
 
 class DnsBruteThreadParams:
@@ -26,9 +27,9 @@ class DnsBruteThreadParams:
         self.template = options['template'].value
         self.msymbol = options['msymbol'].value
         self.ignore_ip = options['ignore-ip'].value
-        self.delay = options['delay'].value
-        self.http_not_found_re = options['http-not-found-re'].value
+        self.delay = int(options['delay'].value)
+        self.http_not_found_re = re.compile(options['http-not-found-re'].value) if len(options['http-not-found-re'].value) else None
         self.http_protocol = options['http-protocol'].value
         self.http_retest_phrase = options['http-retest-phrase'].value
-        self.ignore_words_re = options['ignore-words-re'].value
-        self.zone = options['zone'].value
+        self.ignore_words_re = False if not len(options['ignore-words-re'].value) else re.compile(options['ignore-words-re'].value)
+        self.zone = options['zone'].value.upper()

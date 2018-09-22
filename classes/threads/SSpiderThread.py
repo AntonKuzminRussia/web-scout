@@ -34,16 +34,16 @@ class SSpiderThread(SeleniumThread):
         self.job = job
         self.host = params.host
         self.links_parser = SpiderLinksParser()
-        self.not_found_re = False if not len(params.not_found_re) else re.compile(params.not_found_re)
+        self.not_found_re = params.not_found_re
         self.http = Registry().get('http')
-        self.delay = int(params.delay)
+        self.delay = params.delay
         self.counter = counter
         self.src = src
         self.protocol = params.protocol
         self.running = True
         self.ddos_phrase = params.ddos_detect_phrase
         self.ddos_human = params.ddos_human_action
-        self.recreate_re = False if not len(params.browser_recreate_re) else re.compile(params.browser_recreate_re)
+        self.recreate_re = params.browser_recreate_re
 
         Registry().set('url_for_proxy_check', "{0}://{1}".format('http', self.host))
 

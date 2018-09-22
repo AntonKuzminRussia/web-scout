@@ -46,22 +46,24 @@ class FormBruterThread(HttpThread):
         self.host = params.host
         self.url = params.url
         self.false_phrase = params.false_phrase
-        self.false_size = int(params.false_size) if params.false_size is not None else None
+        self.false_size = params.false_size
         self.true_phrase = params.true_phrase
-        self.delay = int(params.delay)
+        self.delay = params.delay
         self.confstr = params.confstr
         self.first_stop = params.first_stop
         self.login = params.login
         self.counter = counter
         self.result = result
-        self.retest_codes = list(set(params.retest_codes.split(','))) if len(params.retest_codes) else []
+        self.retest_codes = params.retest_codes
         self.pass_found = pass_found
         self.done = False
+
         self.logger = Registry().get('logger')
         self.http = copy.deepcopy(Registry().get('http'))
         self.http.every_request_new_session = True
-        self.pass_min_len = int(params.pass_min_len)
-        self.pass_max_len = int(params.pass_max_len)
+        self.pass_min_len = params.pass_min_len
+        self.pass_max_len = params.pass_max_len
+
         self.retest_delay = int(Registry().get('config')['form_bruter']['retest_delay'])
         self.retest_limit = int(Registry().get('config')['form_bruter']['retest_limit'])
 

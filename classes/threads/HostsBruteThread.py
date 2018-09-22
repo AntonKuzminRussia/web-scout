@@ -50,21 +50,17 @@ class HostsBruteThread(HttpThread):
         self.counter = counter
         self.result = result
         self.done = False
-
         self.false_phrase = params.false_phrase
-        self.retest_codes = list(set(params.retest_codes.split(','))) if len(params.retest_codes) else []
-
-        self.delay = int(params.delay)
-        self.retest_delay = int(Registry().get('config')['hosts_brute']['retest_delay'])
+        self.retest_codes = params.retest_codes
+        self.delay = params.delay
+        self.method = 'get'
+        self.ignore_words_re = params.ignore_words_re
 
         self.http = copy.deepcopy(Registry().get('http'))
         self.logger = Registry().get('logger')
 
-        self.method = 'get'
-
-        self.ignore_words_re = False if not len(params.ignore_words_re) else re.compile(params.ignore_words_re)
-
         self.retest_limit = int(Registry().get('config')['hosts_brute']['retest_limit'])
+        self.retest_delay = int(Registry().get('config')['hosts_brute']['retest_delay'])
 
     def run(self):
         """ Run thread """

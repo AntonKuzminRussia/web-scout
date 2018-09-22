@@ -8,6 +8,7 @@ Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pr
 
 Common module class form Dafs* modules
 """
+import re
 
 
 class HostBruteThreadParams:
@@ -26,6 +27,6 @@ class HostBruteThreadParams:
         self.template = options['template'].value
         self.msymbol = options['msymbol'].value
         self.false_phrase = options['false-phrase'].value
-        self.retest_codes = options['retest-codes'].value.lower()
-        self.delay = options['delay'].value
-        self.ignore_words_re = options['ignore-words-re'].value
+        self.retest_codes = list(set(options['retest-codes'].value.lower().split(','))) if len(options['retest-codes'].value.lower()) else []
+        self.delay = int(options['delay'].value)
+        self.ignore_words_re = False if not len(options['ignore-words-re'].value) else re.compile(options['ignore-words-re'].value)

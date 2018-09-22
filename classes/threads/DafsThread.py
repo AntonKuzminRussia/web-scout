@@ -51,26 +51,20 @@ class DafsThread(HttpThread):
         self.counter = counter
         self.result = result
         self.done = False
-        self.ignore_words_re = False if not len(params.ignore_words_re) else re.compile(params.ignore_words_re)
-        self.not_found_re = False if not len(params.not_found_re) else re.compile(params.not_found_re)
-        self.not_found_ex = False if not len(params.not_found_ex) else params.not_found_ex
+        self.ignore_words_re = params.ignore_words_re
+        self.not_found_re = params.not_found_re
+        self.not_found_ex = params.not_found_ex
         self.not_found_size = int(params.not_found_size)
         self.method = params.method
-        if self.method == 'head' and (len(params.not_found_re) or self.not_found_size != -1):
-            self.method = 'get'
+        self.not_found_codes = params.not_found_codes
+        self.retest_codes = params.retest_codes
+        self.delay = params.delay
 
-        not_found_codes = params.not_found_codes.split(',')
-        not_found_codes.append('404')
-        self.not_found_codes = list(set(not_found_codes))
-        self.retest_codes = list(set(params.retest_codes.split(','))) if len(params.retest_codes) else []
-
-        self.delay = int(params.delay)
         self.retest_delay = int(Registry().get('config')['dafs']['retest_delay'])
+        self.retest_limit = int(Registry().get('config')['dafs']['retest_limit'])
 
         self.http = copy.deepcopy(Registry().get('http'))
         self.logger = Registry().get('logger')
-
-        self.retest_limit = int(Registry().get('config')['dafs']['retest_limit'])
 
     def run(self):
         """ Run thread """

@@ -52,26 +52,23 @@ class DnsBruteThread(threading.Thread):
 
         self.msymbol = params.msymbol
         self.template = params.template
-
-        self.delay = int(params.delay)
-        self.logger = Registry().get('logger')
+        self.delay = params.delay
         self.ignore_ip = params.ignore_ip
-        self.http_nf_re = re.compile(params.http_not_found_re) if len(params.http_not_found_re) else None
-        self.ignore_words_re = False if not len(params.ignore_words_re) else re.compile(params.ignore_words_re)
+        self.http_nf_re = params.http_not_found_re
+        self.ignore_words_re = params.ignore_words_re
         self.http_protocol = params.http_protocol
         self.http_retest_phrase = params.http_retest_phrase
+        self.zone = params.zone
 
         self.retest_delay = int(Registry().get('config')['dns']['retest_delay'])
         self.retest_limit = int(Registry().get('config')['dns']['retest_limit'])
-
-        self.zone = params.zone.upper()
 
         self.re = {
             'ip': re.compile(r"(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})"),
             'ns_resp': re.compile(r";ANSWER\s(?P<data>(.|\s)*)\s;AUTHORITY", re.M),
             'cname': re.compile("IN CNAME (.*?)\.$", re.MULTILINE)
         }
-
+        self.logger = Registry().get('logger')
         self.check_name = ""
         self.http = copy.deepcopy(Registry().get('http'))
         self.http.every_request_new_session = True

@@ -42,9 +42,9 @@ class SFuzzerUrlsThread(SeleniumThread):
         self.counter = counter
         self.protocol = params.protocol
         self.done = False
-        self.bad_words = file_to_list(Registry().get('wr_path') + "/bases/bad-words.txt")
+        self.bad_words = params.bad_words
         self.http = Registry().get('http')
-        self.delay = int(params.delay)
+        self.delay = params.delay
         self.ddos_phrase = params.ddos_detect_phrase
         self.ddos_human = params.ddos_human_action
         self.recreate_phrase = params.browser_recreate_phrase

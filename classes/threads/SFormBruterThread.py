@@ -43,7 +43,7 @@ class SFormBruterThread(SeleniumThread):
         self.protocol = params.protocol
         self.host = params.host
         self.url = params.url
-        self.delay = int(params.delay)
+        self.delay = params.delay
         self.ddos_phrase = params.ddos_detect_phrase
         self.ddos_human = params.ddos_human_action
         self.recreate_phrase = params.browser_recreate_phrase
@@ -54,9 +54,9 @@ class SFormBruterThread(SeleniumThread):
         self.login = params.login
         self.pass_found = pass_found
         self.logger = Registry().get('logger')
-        self.reload_form_page = int(params.reload_form_page)
-        self.pass_min_len = int(params.pass_min_len)
-        self.pass_max_len = int(params.pass_max_len)
+        self.reload_form_page = params.reload_form_page
+        self.pass_min_len = params.pass_min_len
+        self.pass_max_len = params.pass_max_len
 
         self.browser_create()
 

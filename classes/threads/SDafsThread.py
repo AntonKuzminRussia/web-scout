@@ -11,7 +11,6 @@ Thread class for Dafs modules (selenium)
 
 import Queue
 import time
-import re
 import pprint
 
 from selenium.common.exceptions import TimeoutException
@@ -19,6 +18,7 @@ from selenium.common.exceptions import TimeoutException
 from classes.Registry import Registry
 from classes.threads.SeleniumThread import SeleniumThread
 from classes.threads.params.DafsThreadParams import DafsThreadParams
+
 
 class SDafsThread(SeleniumThread):
     """ Thread class for Dafs modules (selenium) """
@@ -38,25 +38,25 @@ class SDafsThread(SeleniumThread):
         self.queue = queue
         self.protocol = params.protocol
         self.host = params.host
-        self.method = params.method if not (len(params.not_found_re) and params.method.lower() == 'head') else 'get'
+        self.method = params.method
         self.template = params.template
-        self.mask_symbol = params.mask_symbol
+        self.mask_symbol = params.msymbol
         self.counter = counter
         self.result = result
         self.done = False
-        self.not_found_re = False if not len(params.not_found_re) else re.compile(params.not_found_re)
-        self.recreate_re = False if not len(params.browser_recreate_re) else re.compile(params.browser_recreate_re)
-        self.http = Registry().get('http')
-        self.delay = int(params.delay)
+        self.not_found_re = params.not_found_re
+        self.recreate_re = params.browser_recreate_re
+        self.delay = params.delay
         self.ddos_phrase = params.ddos_detect_phrase
         self.ddos_human = params.ddos_human_action
-        self.ignore_words_re = False if not len(params.ignore_words_re) else re.compile(params.ignore_words_re)
+        self.ignore_words_re = params.ignore_words_re
 
         Registry().set('url_for_proxy_check', "{0}://{1}".format(self.protocol, self.host))
 
         self.browser_create()
 
         self.logger = Registry().get('logger')
+        self.http = Registry().get('http')
 
     def run(self):
         """ Run thread """

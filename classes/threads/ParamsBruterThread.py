@@ -51,23 +51,20 @@ class ParamsBruterThread(HttpThread):
         self.result = result
         self.value = params.value
         self.done = False
-        self.max_params_length = int(params.max_params_length)
-        self.ignore_words_re = False if not len(params.ignore_words_re) else re.compile(params.ignore_words_re)
-        self.not_found_re = False if not len(params.not_found_re) else re.compile(params.not_found_re)
-        self.not_found_size = int(params.not_found_size)
+        self.max_params_length = params.max_params_length
+        self.ignore_words_re = params.ignore_words_re
+        self.not_found_re = params.not_found_re
+        self.not_found_size = params.not_found_size
         self.method = params.method
-
-        not_found_codes = params.not_found_codes.split(',')
-        not_found_codes.append('404')
-        self.not_found_codes = list(set(not_found_codes))
-        self.retest_codes = list(set(params.retest_codes.split(','))) if len(params.retest_codes) else []
-
-        self.delay = int(params.delay)
-        self.retest_delay = int(Registry().get('config')['params_bruter']['retest_delay'])
+        self.not_found_codes = params.not_found_codes
+        self.retest_codes = params.retest_codes
+        self.delay = params.delay
 
         self.http = copy.deepcopy(Registry().get('http'))
         self.logger = Registry().get('logger')
+
         self.retest_limit = int(Registry().get('config')['dafs']['retest_limit'])
+        self.retest_delay = int(Registry().get('config')['params_bruter']['retest_delay'])
 
     def build_params_str(self):
         params_str = "" if not len(self.last_word) else "{0}={1}&".format(self.last_word, self.value)

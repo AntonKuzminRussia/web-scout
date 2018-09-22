@@ -33,10 +33,9 @@ class SpiderThread(WSThread):
         self.host = params.host
         self.protocol = params.protocol
         self.links_parser = SpiderLinksParser()
-        #self.not_found_phrase = not_found_phrase
         self.http = Registry().get('http')
         self.src = src
-        self.delay = int(params.delay)
+        self.delay = params.delay
         self.counter = counter
         self._db = Registry().get('mongo')
 
