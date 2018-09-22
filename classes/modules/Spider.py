@@ -25,11 +25,6 @@ from classes.threads.pools.SpiderThreadsPool import SpiderThreadsPool
 from classes.modules.params.SpiderModuleParams import SpiderModuleParams
 
 
-class SpiderException(Exception):
-    """ Class of Spider exceptions """
-    pass
-
-
 class Spider(WSModule):
     """ Class of Spider module """
     model = None
