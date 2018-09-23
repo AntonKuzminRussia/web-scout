@@ -9,10 +9,11 @@ Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pr
 Job class for FuzzerHeaders module
 """
 
-from classes.jobs.MongoJob import MongoJob
+from classes.jobs.GeneratorJob import GeneratorJob
 
-class FuzzerHeadersJob(MongoJob):
+
+class FuzzerHeadersJob(GeneratorJob):
     """ Job class for FuzzerHeaders module """
-    collection_name = 'fuzzer_headers'
+    pass
 
 

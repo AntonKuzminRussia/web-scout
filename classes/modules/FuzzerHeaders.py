@@ -19,6 +19,7 @@ from classes.kernel.WSModule import WSModule
 from classes.kernel.WSException import WSException
 from classes.threads.pools.FuzzerHeadersThreadPool import FuzzerHeadersThreadsPool
 from classes.modules.params.FuzzerHeadersModuleParams import FuzzerHeadersModuleParams
+from classes.FileGenerator import FileGenerator
 
 
 class FuzzerHeaders(WSModule):
@@ -54,9 +55,9 @@ class FuzzerHeaders(WSModule):
         to_scan = map(str.strip, open(self.options['urls-file'].value).readlines())
 
         queue = FuzzerHeadersJob()
-        queue.load_dict(to_scan)
-
-        self.logger.log("Loaded {0} variants.".format(len(to_scan)))
+        generator = FileGenerator(self.options['urls-file'].value)
+        queue.set_generator(generator)
+        self.logger.log("Loaded {0} variants.".format(generator.lines_count))
 
         counter = WSCounter(1, 60, len(to_scan))
         pool = FuzzerHeadersThreadsPool(queue, counter, result, self.options, self.logger)

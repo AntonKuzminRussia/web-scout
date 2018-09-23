@@ -79,7 +79,7 @@ class FuzzerHeadersThread(threading.Thread):
                     if resp is None:
                         continue
 
-                    if resp.status_code > 499 and resp.status_code < 600:
+                    if 499 < resp.status_code < 600:
                         item_data = {"url": url, "words": ["{0} Status code".format(resp.status_code)], "header": header}
                         self.result.append(item_data)
                         if Registry().isset('xml'):
@@ -99,11 +99,9 @@ class FuzzerHeadersThread(threading.Thread):
 
                 self.counter.up()
 
-                self.queue.task_done(url)
                 need_retest = False
             except Queue.Empty:
                 self.done = True
                 break
             except BaseException as e:
                 print url + " " + str(e)
-                self.queue.task_done(url)
