@@ -52,10 +52,15 @@ class AbstractPool(threading.Thread):
         for thrd in self.pool:
             thrd.done = True
 
+    def is_selenium(self):
+        return 'selenium' in self.options and self.options['selenium'].value
+
     def run(self):
         for _ in range(int(self.options['threads'].value)):
             self.pool.append(self.born_thread())
-            time.sleep(1)
+
+            if self.is_selenium():
+                time.sleep(1)
 
         timeout_threads_count = 0
 
