@@ -67,7 +67,6 @@ class ParamsBruterModules(WSModule):
                 pool.kill_all()
             time.sleep(1)
 
-
         if Registry().get('positive_limit_stop'):
             self.logger.log("\nMany positive detections. Please, look items logs")
             self.logger.log("Last items:")

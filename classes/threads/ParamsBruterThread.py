@@ -74,6 +74,8 @@ class ParamsBruterThread(HttpThread):
                 word = self.queue.get()
             except Queue.Empty:
                 self.queue_is_empty = True
+                if params_str == "":
+                    raise Queue.Empty
                 break
 
             if not len(word.strip()) or (self.ignore_words_re and self.ignore_words_re.findall(word)):
@@ -89,7 +91,7 @@ class ParamsBruterThread(HttpThread):
 
     def request_params(self, params):
         full_url = self.protocol + "://" + self.host + self.url
-        return self.http.get(full_url + params) if \
+        return self.http.get(full_url + "?" + params) if \
             self.method == 'get' else \
             self.http.post(full_url, data=params, headers={'Content-Type': 'application/x-www-form-urlencoded'})
 
@@ -162,21 +164,21 @@ class ParamsBruterThread(HttpThread):
 
                 need_retest = False
 
-                if self.queue_is_empty:
-                    self.done = True
-                    break
+            except Queue.Empty:
+                self.done = True
+                break
             except ChunkedEncodingError as e:
                 self.logger.ex(e)
-            # except BaseException as e:
-            #     try:
-            #         if str(e).count('Cannot connect to proxy'):
-            #             need_retest = True
-            #         else:
-            #             self.logger.ex(e)
-            #     except UnicodeDecodeError:
-            #         pass
-            #     except UnboundLocalError:
-            #         self.logger.ex(e)
+            except BaseException as e:
+                try:
+                    if str(e).count('Cannot connect to proxy'):
+                        need_retest = True
+                    else:
+                        self.logger.ex(e)
+                except UnicodeDecodeError:
+                    pass
+                except UnboundLocalError:
+                    self.logger.ex(e)
 
             finally:
                 pass
