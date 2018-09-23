@@ -63,9 +63,6 @@ class SFormBruterThread(SeleniumThread):
     def parse_brute_config(self, path):
         """ Parse conf file to dict """
         to_return = {}
-        have_user = False
-        have_pass = False
-        have_submit = False
 
         fh = open(path)
         for line in fh.readlines():
@@ -73,13 +70,6 @@ class SFormBruterThread(SeleniumThread):
                 continue
 
             point, selector = line.strip().split("    ")
-            if point == "^USER^":
-                have_user = True
-            if point == "^PASS^":
-                have_pass = True
-            if point == "^SUBMIT^":
-                have_submit = True
-
             to_return[point] = selector
         return to_return
 
