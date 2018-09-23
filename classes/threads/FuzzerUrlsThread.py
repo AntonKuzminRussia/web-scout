@@ -72,7 +72,7 @@ class FuzzerUrlsThread(threading.Thread):
                 if resp is None:
                     continue
 
-                if resp.status_code > 499 and resp.status_code < 600:
+                if 499 < resp.status_code < 600:
                     item_data = {"url": url, "words": ["{0} Status code".format(resp.status_code)]}
                     self.result.append(item_data)
                     if Registry().isset('xml'):
