@@ -129,7 +129,6 @@ class SpiderCommon(object):
         path = path.strip()
         query = query.strip()
         url = str(path + query).decode('utf-8', errors='ignore')
-        #url = url.encode()
         return hashlib.md5(url.encode('utf-8')).hexdigest()
 
     @staticmethod

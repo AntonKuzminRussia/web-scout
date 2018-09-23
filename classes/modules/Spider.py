@@ -105,7 +105,6 @@ class Spider(WSModule):
                 pool.kill_all()
             time.sleep(1)
 
-
         self.logger.log("\nTotal links count: " + str(Registry().get('mongo').spider_urls.count()))
         self.logger.log(str(self.result))
 
