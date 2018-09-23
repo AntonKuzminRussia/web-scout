@@ -71,11 +71,9 @@ class FuzzerHeaders(WSModule):
         if Registry().get('proxy_many_died'):
             self.logger.log("Proxy many died, stop scan")
 
+        self.logger.log("\n")
         for fuzz in result:
-            self.logger.log("{0} {1}://{2}{3} (Word: {4}, Header: {5})".format(
-                self.options['method'].value.upper(),
-                self.options['protocol'].value.lower(),
-                self.options['host'].value,
+            self.logger.log("{0} (Word(s): {1}, Header: {2})".format(
                 fuzz['url'],
                 ", ".join(fuzz['words']),
                 fuzz['header']
