@@ -11,7 +11,6 @@ Thread class for Dafs modules
 
 import Queue
 import time
-import copy
 import pprint
 
 from requests.exceptions import ChunkedEncodingError, ConnectionError

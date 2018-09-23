@@ -87,7 +87,11 @@ class FuzzerHeadersThread(HttpThread):
                         if Registry().isset('xml'):
                             Registry().get('xml').put_result(item_data)
 
+                #self.log_item(str(found_words), resp, len(found_words) > 0)
+
                 self.counter.up()
+
+                self.check_positive_limit_stop(self.result)
 
                 need_retest = False
             except Queue.Empty:
