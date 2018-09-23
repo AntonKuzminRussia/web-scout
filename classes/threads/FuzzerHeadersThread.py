@@ -24,6 +24,8 @@ class FuzzerHeadersThread(threading.Thread):
     """ Thread class for FuzzerHeaders module """
     daemon = True
 
+    done = False
+
     queue = None
     method = None
     url = None

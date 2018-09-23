@@ -59,7 +59,6 @@ class FuzzerHeaders(WSModule):
         self.logger.log("Loaded {0} variants.".format(len(to_scan)))
 
         counter = WSCounter(1, 60, len(to_scan))
-
         pool = FuzzerHeadersThreadsPool(queue, counter, result, self.options, self.logger)
         pool.start()
 

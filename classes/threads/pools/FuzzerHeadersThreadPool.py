@@ -19,5 +19,7 @@ class FuzzerHeadersThreadsPool(AbstractPool):
         return FuzzerThreadParams(self.options)
 
     def born_thread(self):
-        return FuzzerHeadersThread(self.queue, self.counter, self.result, self.threads_params)
+        thrd = FuzzerHeadersThread(self.queue, self.counter, self.result, self.threads_params)
+        thrd.start()
+        return thrd
 
