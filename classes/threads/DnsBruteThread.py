@@ -27,6 +27,7 @@ from classes.threads.params.DnsBruteThreadParams import DnsBruteThreadParams
 class DnsBruteThread(threading.Thread):
     """ Thread class for DnsBrute* modules """
     daemon = True
+    last_action = None
 
     done = False
 
@@ -36,7 +37,7 @@ class DnsBruteThread(threading.Thread):
         "Max retries exceeded with url",
     ]
 
-    def __init__(self, queue, domains, proto, dns_srv, result, counter, params):
+    def __init__(self, queue, proto, dns_srv, result, counter, params):
         """
 
         :type params: DnsBruteThreadParams
@@ -44,12 +45,12 @@ class DnsBruteThread(threading.Thread):
         threading.Thread.__init__(self)
 
         self.queue = queue
-        self.domains = domains
         self.proto = proto
         self.dns_srv = dns_srv
         self.counter = counter
         self.result = result
 
+        self.host = params.host
         self.msymbol = params.msymbol
         self.template = params.template
         self.delay = params.delay
@@ -80,53 +81,53 @@ class DnsBruteThread(threading.Thread):
         need_retest = False
 
         while not self.done:
+            self.last_action = int(time.time())
             if self.delay:
                 time.sleep(self.delay)
             try:
                 if not need_retest:
-                    host = self.queue.get()
-                    if not len(host.strip()) or (self.ignore_words_re and self.ignore_words_re.findall(host)):
+                    check_host = self.queue.get()
+                    if not len(check_host.strip()) or (self.ignore_words_re and self.ignore_words_re.findall(check_host)):
                         continue
 
                     self.counter.up()
 
-                for domain in self.domains:
-                    self.check_name = self.template.replace(self.msymbol, host.decode('utf8', 'ignore')) + '.' + domain
-                    query = dns.message.make_query(self.check_name, self.zone)
+                self.check_name = self.template.replace(self.msymbol, check_host.decode('utf8', 'ignore')) + '.' + self.host
+                query = dns.message.make_query(self.check_name, self.zone)
 
-                    try:
-                        result = req_func(query, self.dns_srv, timeout=5)
-                    except EOFError:
+                try:
+                    result = req_func(query, self.dns_srv, timeout=5)
+                except EOFError:
+                    time.sleep(3)
+                    need_retest = True
+                    break
+                except BaseException as e:
+                    if str(e).count("Connection refused") or\
+                            str(e).count("Connection reset by peer") or\
+                            str(e).count("[Errno 104]"):
                         time.sleep(3)
                         need_retest = True
                         break
-                    except BaseException as e:
-                        if str(e).count("Connection refused") or\
-                                str(e).count("Connection reset by peer") or\
-                                str(e).count("[Errno 104]"):
-                            time.sleep(3)
-                            need_retest = True
-                            break
-                        else:
-                            raise e
+                    else:
+                        raise e
 
-                    response = self.re['ns_resp'].search(result.to_text())
-                    if response is not None:
-                        if self.zone == 'A':
-                            self.parse_zone_a(response)
-                        elif self.zone == 'CNAME':
-                            self.parse_zone_cname(result)
-                        else:
-                            raise WSException("Wrong dns zone '{0}'".format(self.zone))
-                    elif Registry().isset('tester'):
-                            Registry().get('tester').put(
-                                self.check_name,
-                                {
-                                    'ip': '',
-                                    'dns': self.dns_srv,
-                                    'positive': False
-                                }
-                            )
+                response = self.re['ns_resp'].search(result.to_text())
+                if response is not None:
+                    if self.zone == 'A':
+                        self.parse_zone_a(response)
+                    elif self.zone == 'CNAME':
+                        self.parse_zone_cname(result)
+                    else:
+                        raise WSException("Wrong dns zone '{0}'".format(self.zone))
+                elif Registry().isset('tester'):
+                        Registry().get('tester').put(
+                            self.check_name,
+                            {
+                                'ip': '',
+                                'dns': self.dns_srv,
+                                'positive': False
+                            }
+                        )
 
                 if len(self.result) >= int(Registry().get('config')['main']['positive_limit_stop']):
                     Registry().set('positive_limit_stop', True)

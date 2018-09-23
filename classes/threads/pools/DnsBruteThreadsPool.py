@@ -28,8 +28,7 @@ class DnsBruteThreadsPool(AbstractPool):
     def __init__(self, queue, counter, result, options, logger):
         AbstractPool.__init__(self, queue, counter, result, options, logger)
 
-        self.hosts = []
-        self.hosts.append(self.options['host'].value)
+        self.host = self.options['host'].value
 
         self.servers_roller = Roller()
         self.servers_roller.load_file(Registry().get('wr_path') + '/bases/dns-servers.txt')
@@ -39,8 +38,7 @@ class DnsBruteThreadsPool(AbstractPool):
 
     def born_thread(self):
         dns_server, protocol = self.get_next_server()
-        thrd = DnsBruteThread(
-            self.queue, self.hosts, protocol, dns_server, self.result, self.counter, self.threads_params)
+        thrd = DnsBruteThread(self.queue, protocol, dns_server, self.result, self.counter, self.threads_params)
         thrd.start()
         return thrd
 

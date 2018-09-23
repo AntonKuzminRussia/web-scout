@@ -22,6 +22,7 @@ class DnsBruteThreadParams:
     http_retest_phrase = None
     ignore_words_re = None
     zone = None
+    host = None
 
     def __init__(self, options):
         self.template = options['template'].value
@@ -33,3 +34,4 @@ class DnsBruteThreadParams:
         self.http_retest_phrase = options['http-retest-phrase'].value
         self.ignore_words_re = False if not len(options['ignore-words-re'].value) else re.compile(options['ignore-words-re'].value)
         self.zone = options['zone'].value.upper()
+        self.host = options['host'].value

@@ -102,10 +102,7 @@ class DnsBruteModules(WSModule):
                 pool.kill_all()
             time.sleep(1)
 
-        if self.options['host'].value == 'all':
-            self._output_zones(result)
-        else:
-            self._output(result)
+        self._output(result)
 
         self.done = True
 
@@ -129,55 +126,3 @@ class DnsBruteModules(WSModule):
             self.logger.log("\t" + host)
 
         self.logger.log("\nFound {0} hosts.".format(len(result)))
-
-    def _output_zones(self, result):
-        zones = {}
-        for host in result:
-            zone = ".".join(host['name'].split(".")[-2:])
-            if zone not in zones.keys():
-                zones[zone] = []
-            zones[zone].append(host)
-            zones[zone].sort()
-
-        self.logger.log("\nFound hosts (full):")
-        for zone in zones:
-            self.logger.log("\tZone {0}:".format(zone))
-
-            for host in zones[zone]:
-                self.logger.log("\t\t{0} {1} (DNS: {2})".format(host['name'], host['ip'], host['dns']))
-
-        self.logger.log("\nFound hosts names:")
-        for zone in zones:
-            self.logger.log("\tZone {0}:".format(zone))
-            for host in zones[zone]:
-                self.logger.log("\t\t{0}".format(host['name']))
-
-        self.logger.log("Found IPs by zones:")
-        for zone in zones:
-            self.logger.log("\tZone {0}:".format(zone))
-
-            uniq_hosts = []
-            for host in zones[zone]:
-                uniq_hosts.append(host['ip'])
-            uniq_hosts = list(set(uniq_hosts))
-
-            for host in uniq_hosts:
-                self.logger.log("\t\t" + host)
-
-        self.logger.log("Found IPs (all):")
-
-        uniq_hosts = []
-        for zone in zones:
-            for host in zones[zone]:
-                uniq_hosts.append(host['ip'])
-        uniq_hosts = list(set(uniq_hosts))
-
-        for host in uniq_hosts:
-            self.logger.log("\t" + host)
-
-        if Registry().get('positive_limit_stop'):
-            self.logger.log("\nMany positive detections. Please, look items logs")
-            self.logger.log("Last items:")
-            for i in range(1, 5):
-                print result[-i]
-            exit(1)
