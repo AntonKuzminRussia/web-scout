@@ -1,11 +1,16 @@
-import threading
+import copy
 
 from libs.common import is_binary_content_type
 from classes.Registry import Registry
+from classes.threads.AbstractThread import AbstractThread
 
 
-class HttpThread(threading.Thread):
-    daemon = True
+class HttpThread(AbstractThread):
+    http = None
+
+    def __init__(self):
+        AbstractThread.__init__(self)
+        self.http = copy.deepcopy(Registry().get('http'))
 
     def is_response_content_binary(self, resp):
         return resp is not None \

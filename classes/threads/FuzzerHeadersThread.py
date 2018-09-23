@@ -10,7 +10,6 @@ Thread class for FuzzerHeaders module
 """
 from __future__ import division
 
-import threading
 import Queue
 import time
 
@@ -18,36 +17,28 @@ from requests.exceptions import ConnectionError
 
 from classes.Registry import Registry
 from classes.threads.params.FuzzerThreadParams import FuzzerThreadParams
+from classes.threads.HttpThread import HttpThread
 
 
-class FuzzerHeadersThread(threading.Thread):
+class FuzzerHeadersThread(HttpThread):
     """ Thread class for FuzzerHeaders module """
-    daemon = True
-
-    done = False
-
-    queue = None
     method = None
     url = None
-    counter = None
-    last_action = 0
 
     def __init__(self, queue, counter, result, params):
         """
 
         :type params: FuzzerThreadParams
         """
-        threading.Thread.__init__(self)
+        HttpThread.__init__(self)
         self.queue = queue
         self.method = params.method.lower()
         self.domain = params.host
         self.result = result
         self.counter = counter
         self.protocol = params.protocol
-        self.done = False
         self.bad_words = params.bad_words
         self.headers = params.headers
-        self.http = Registry().get('http')
         self.delay = params.delay
 
     def run(self):
@@ -69,7 +60,6 @@ class FuzzerHeadersThread(threading.Thread):
                         resp = req_func(
                             url,
                             headers={header.lower(): Registry().get('fuzzer_evil_value')},
-                            #headers={header.lower(): Registry().get('config')['fuzzer']['headers_evil_value']},
                         )
                     except ConnectionError:
                         need_retest = True

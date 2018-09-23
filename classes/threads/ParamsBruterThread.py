@@ -11,8 +11,6 @@ Thread class for Dafs modules
 
 import Queue
 import time
-import copy
-import re
 
 from libs.common import get_response_size
 from requests.exceptions import ChunkedEncodingError, ConnectionError
@@ -23,13 +21,10 @@ from classes.Registry import Registry
 
 class ParamsBruterThread(HttpThread):
     """ Thread class for ParamsBrute modules """
-    queue = None
     method = None
     template = None
     mask_symbol = None
-    counter = None
     retested_words = None
-    last_action = 0
     ignore_words_re = None
     queue_is_empty = False
     last_word = ""
@@ -39,7 +34,7 @@ class ParamsBruterThread(HttpThread):
 
         :type params: ParamsBruterThreadParams
         """
-        super(ParamsBruterThread, self).__init__()
+        HttpThread.__init__(self)
         self.retested_words = {}
 
         self.queue = queue
@@ -50,7 +45,6 @@ class ParamsBruterThread(HttpThread):
         self.counter = counter
         self.result = result
         self.value = params.value
-        self.done = False
         self.max_params_length = params.max_params_length
         self.ignore_words_re = params.ignore_words_re
         self.not_found_re = params.not_found_re
@@ -59,9 +53,6 @@ class ParamsBruterThread(HttpThread):
         self.not_found_codes = params.not_found_codes
         self.retest_codes = params.retest_codes
         self.delay = params.delay
-
-        self.http = copy.deepcopy(Registry().get('http'))
-        self.logger = Registry().get('logger')
 
         self.retest_limit = int(Registry().get('config')['dafs']['retest_limit'])
         self.retest_delay = int(Registry().get('config')['params_bruter']['retest_delay'])

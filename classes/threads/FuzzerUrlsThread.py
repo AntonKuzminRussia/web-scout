@@ -17,35 +17,29 @@ import time
 from requests.exceptions import ConnectionError
 
 from classes.Registry import Registry
-from libs.common import file_to_list
 from classes.threads.params.FuzzerThreadParams import FuzzerThreadParams
+from classes.threads.HttpThread import HttpThread
 
 
-class FuzzerUrlsThread(threading.Thread):
+class FuzzerUrlsThread(HttpThread):
     """ Thread class for FuzzerUrls module """
-    daemon = True
-
-    queue = None
     method = None
     url = None
     counter = None
-    last_action = 0
 
     def __init__(self, queue, counter, result, params):
         """
 
         :type params: FuzzerThreadParams
         """
-        threading.Thread.__init__(self)
+        HttpThread.__init__(self)
         self.queue = queue
         self.method = params.method
         self.domain = params.host
         self.result = result
         self.counter = counter
         self.protocol = params.protocol
-        self.done = False
         self.bad_words = params.bad_words
-        self.http = Registry().get('http')
         self.delay = params.delay
 
     def run(self):

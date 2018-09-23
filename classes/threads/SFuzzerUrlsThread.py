@@ -17,33 +17,27 @@ from selenium.common.exceptions import TimeoutException
 
 from classes.Registry import Registry
 from classes.threads.SeleniumThread import SeleniumThread
-from libs.common import file_to_list
 from classes.threads.params.FuzzerThreadParams import FuzzerThreadParams
 
 
 class SFuzzerUrlsThread(SeleniumThread):
     """ Thread class for FuzzerUrls module (selenium) """
-    queue = None
     method = None
     url = None
-    counter = None
-    last_action = 0
 
     def __init__(self, queue, counter, result, params):
         """
 
         :type params: FuzzerThreadParams
         """
-        super(SFuzzerUrlsThread, self).__init__()
+        SeleniumThread.__init__(self)
         self.queue = queue
         self.method = params.method
         self.domain = params.host
         self.result = result
         self.counter = counter
         self.protocol = params.protocol
-        self.done = False
         self.bad_words = params.bad_words
-        self.http = Registry().get('http')
         self.delay = params.delay
         self.ddos_phrase = params.ddos_detect_phrase
         self.ddos_human = params.ddos_human_action

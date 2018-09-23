@@ -9,10 +9,8 @@ Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pr
 Thread class for FormBruter module
 """
 
-import threading
 import Queue
 import time
-import copy
 
 from requests.exceptions import ChunkedEncodingError, ConnectionError
 
@@ -24,22 +22,17 @@ from classes.threads.params.FormBruterThreadParams import FormBruterThreadParams
 
 class FormBruterThread(HttpThread):
     """ Thread class for FormBruter module """
-    queue = None
     method = None
     url = None
     mask_symbol = None
-    counter = None
-    last_action = 0
-    logger = None
     retested_words = None
-    last_action = 0
 
     def __init__(self, queue, pass_found, counter, result, params):
         """
 
         :type params: FormBruterThreadParams
         """
-        threading.Thread.__init__(self)
+        HttpThread.__init__(self)
         self.retested_words = {}
         self.queue = queue
         self.protocol = params.protocol
@@ -56,10 +49,7 @@ class FormBruterThread(HttpThread):
         self.result = result
         self.retest_codes = params.retest_codes
         self.pass_found = pass_found
-        self.done = False
 
-        self.logger = Registry().get('logger')
-        self.http = copy.deepcopy(Registry().get('http'))
         self.http.every_request_new_session = True
         self.pass_min_len = params.pass_min_len
         self.pass_max_len = params.pass_max_len

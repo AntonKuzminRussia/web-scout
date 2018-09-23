@@ -21,14 +21,10 @@ from classes.threads.params.FormBruterThreadParams import FormBruterThreadParams
 
 class SFormBruterThread(SeleniumThread):
     """ Thread class for FormBruter module (selenium) """
-    queue = None
     method = None
     url = None
     mask_symbol = None
-    counter = None
     retested_words = None
-    logger = None
-    last_action = 0
     first_page_load = False
 
     def __init__(self, queue, pass_found, counter, result, params):
@@ -36,7 +32,7 @@ class SFormBruterThread(SeleniumThread):
 
         :type params: FormBruterThreadParams
         """
-        super(SFormBruterThread, self).__init__()
+        SeleniumThread.__init__(self)
         self.retested_words = {}
 
         self.queue = queue
@@ -53,7 +49,6 @@ class SFormBruterThread(SeleniumThread):
         self.first_stop = params.first_stop
         self.login = params.login
         self.pass_found = pass_found
-        self.logger = Registry().get('logger')
         self.reload_form_page = params.reload_form_page
         self.pass_min_len = params.pass_min_len
         self.pass_max_len = params.pass_max_len
@@ -62,7 +57,6 @@ class SFormBruterThread(SeleniumThread):
 
         self.counter = counter
         self.result = result
-        self.done = False
 
         Registry().set('url_for_proxy_check', "{0}://{1}".format(params.protocol, params.host))
 

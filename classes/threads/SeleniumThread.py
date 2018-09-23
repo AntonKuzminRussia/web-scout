@@ -10,7 +10,6 @@ Common thread class for selenium threads
 """
 import os
 import random
-import threading
 import shutil
 import time
 
@@ -21,11 +20,11 @@ from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 
 from classes.Registry import Registry
 from classes.SeleniumBrowser import SeleniumBrowser
+from classes.threads.AbstractThread import AbstractThread
 
-class SeleniumThread(threading.Thread):
+
+class SeleniumThread(AbstractThread):
     """ Common thread class for selenium threads """
-    daemon = True
-
     requests_count = 0
     proxy_using = False
     browser = None

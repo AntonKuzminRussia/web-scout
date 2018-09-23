@@ -9,12 +9,10 @@ Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pr
 Thread class for HostsBrute modules
 """
 
-import threading
 import Queue
 import time
 import copy
 import pprint
-import re
 
 from requests.exceptions import ChunkedEncodingError, ConnectionError
 
@@ -26,13 +24,10 @@ from classes.threads.params.HostBruteThreadParams import HostBruteThreadParams
 
 class HostsBruteThread(HttpThread):
     """ Thread class for HostsBrute modules """
-    queue = None
     method = None
     url = None
     mask_symbol = None
-    counter = None
     retested_words = None
-    last_action = 0
 
     def __init__(self, queue, counter, result, params):
         """
@@ -40,6 +35,7 @@ class HostsBruteThread(HttpThread):
         :type params: HostBruteThreadParams
         """
         HttpThread.__init__(self)
+
         self.retested_words = {}
 
         self.queue = queue
@@ -49,15 +45,11 @@ class HostsBruteThread(HttpThread):
         self.mask_symbol = params.msymbol
         self.counter = counter
         self.result = result
-        self.done = False
         self.false_phrase = params.false_phrase
         self.retest_codes = params.retest_codes
         self.delay = params.delay
         self.method = 'get'
         self.ignore_words_re = params.ignore_words_re
-
-        self.http = copy.deepcopy(Registry().get('http'))
-        self.logger = Registry().get('logger')
 
         self.retest_limit = int(Registry().get('config')['hosts_brute']['retest_limit'])
         self.retest_delay = int(Registry().get('config')['hosts_brute']['retest_delay'])

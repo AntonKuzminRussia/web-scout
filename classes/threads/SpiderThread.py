@@ -13,27 +13,25 @@ import time
 
 from classes.Registry import Registry
 from classes.SpiderCommon import SpiderCommon
-from classes.kernel.WSThread import WSThread
 from classes.SpiderLinksParser import SpiderLinksParser
 from libs.common import file_put_contents, md5
 from classes.threads.params.SpiderThreadParams import SpiderThreadParams
+from classes.threads.HttpThread import HttpThread
 
-class SpiderThread(WSThread):
+
+class SpiderThread(HttpThread):
     """ Thread class for Spider module """
-    last_action = 0
-    done = False
 
     def __init__(self, job, src, counter, params):
         """
 
         :type params: SpiderThreadParams
         """
-        WSThread.__init__(self, None, None)
+        HttpThread.__init__(self)
         self.job = job
         self.host = params.host
         self.protocol = params.protocol
         self.links_parser = SpiderLinksParser()
-        self.http = Registry().get('http')
         self.src = src
         self.delay = params.delay
         self.counter = counter

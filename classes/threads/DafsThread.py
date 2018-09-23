@@ -9,11 +9,9 @@ Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pr
 Thread class for Dafs modules
 """
 
-import threading
 import Queue
 import time
 import copy
-import re
 import pprint
 
 from requests.exceptions import ChunkedEncodingError, ConnectionError
@@ -26,13 +24,10 @@ from classes.threads.params.DafsThreadParams import DafsThreadParams
 
 class DafsThread(HttpThread):
     """ Thread class for Dafs modules """
-    queue = None
     method = None
     template = None
     mask_symbol = None
-    counter = None
     retested_words = None
-    last_action = 0
     ignore_words_re = None
 
     def __init__(self, queue, counter, result, params):
@@ -40,7 +35,7 @@ class DafsThread(HttpThread):
 
         :type params: DafsThreadParams
         """
-        threading.Thread.__init__(self)
+        HttpThread.__init__(self)
         self.retested_words = {}
 
         self.queue = queue
@@ -50,7 +45,6 @@ class DafsThread(HttpThread):
         self.mask_symbol = params.msymbol
         self.counter = counter
         self.result = result
-        self.done = False
         self.ignore_words_re = params.ignore_words_re
         self.not_found_re = params.not_found_re
         self.not_found_ex = params.not_found_ex
@@ -62,9 +56,6 @@ class DafsThread(HttpThread):
 
         self.retest_delay = int(Registry().get('config')['dafs']['retest_delay'])
         self.retest_limit = int(Registry().get('config')['dafs']['retest_limit'])
-
-        self.http = copy.deepcopy(Registry().get('http'))
-        self.logger = Registry().get('logger')
 
     def run(self):
         """ Run thread """

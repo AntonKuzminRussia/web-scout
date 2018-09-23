@@ -22,14 +22,16 @@ from classes.Registry import Registry
 from libs.common import is_binary_content_type
 from classes.kernel.WSException import WSException
 from classes.threads.params.DnsBruteThreadParams import DnsBruteThreadParams
+from classes.threads.AbstractThread import AbstractThread
 
 
-class DnsBruteThread(threading.Thread):
+class DnsBruteThread(AbstractThread):
     """ Thread class for DnsBrute* modules """
-    daemon = True
-    last_action = None
-
-    done = False
+    re = {
+        'ip': re.compile(r"(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})"),
+        'ns_resp': re.compile(r";ANSWER\s(?P<data>(.|\s)*)\s;AUTHORITY", re.M),
+        'cname': re.compile("IN CNAME (.*?)\.$", re.MULTILINE)
+    }
 
     proxyErrors = [
         "Cannot connect to proxy.",
@@ -42,7 +44,7 @@ class DnsBruteThread(threading.Thread):
 
         :type params: DnsBruteThreadParams
         """
-        threading.Thread.__init__(self)
+        AbstractThread.__init__(self)
 
         self.queue = queue
         self.proto = proto
@@ -64,14 +66,8 @@ class DnsBruteThread(threading.Thread):
         self.retest_delay = int(Registry().get('config')['dns']['retest_delay'])
         self.retest_limit = int(Registry().get('config')['dns']['retest_limit'])
 
-        self.re = {
-            'ip': re.compile(r"(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})"),
-            'ns_resp': re.compile(r";ANSWER\s(?P<data>(.|\s)*)\s;AUTHORITY", re.M),
-            'cname': re.compile("IN CNAME (.*?)\.$", re.MULTILINE)
-        }
-        self.logger = Registry().get('logger')
         self.check_name = ""
-        self.http = copy.deepcopy(Registry().get('http'))
+
         self.http.every_request_new_session = True
 
     def run(self):
@@ -82,8 +78,10 @@ class DnsBruteThread(threading.Thread):
 
         while not self.done:
             self.last_action = int(time.time())
+
             if self.delay:
                 time.sleep(self.delay)
+
             try:
                 if not need_retest:
                     check_host = self.queue.get()

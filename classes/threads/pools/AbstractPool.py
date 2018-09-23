@@ -72,7 +72,7 @@ class AbstractPool(threading.Thread):
                 if not thrd.done and thrd.isAlive():
                     active = True
 
-                if int(time.time()) - thrd.last_action > self.kill_timeout:
+                if thrd.last_action > 0 and int(time.time()) - thrd.last_action > self.kill_timeout:
                     self.logger.log(
                         "Thread killed by time, resurected {0} times from {1}".format(
                             timeout_threads_count,

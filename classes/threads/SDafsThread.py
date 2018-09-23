@@ -22,12 +22,9 @@ from classes.threads.params.DafsThreadParams import DafsThreadParams
 
 class SDafsThread(SeleniumThread):
     """ Thread class for Dafs modules (selenium) """
-    queue = None
     method = None
     template = None
     mask_symbol = None
-    counter = None
-    last_action = 0
 
     def __init__(self, queue, counter, result, params):
         """
@@ -43,7 +40,6 @@ class SDafsThread(SeleniumThread):
         self.mask_symbol = params.msymbol
         self.counter = counter
         self.result = result
-        self.done = False
         self.not_found_re = params.not_found_re
         self.recreate_re = params.browser_recreate_re
         self.delay = params.delay
@@ -54,9 +50,6 @@ class SDafsThread(SeleniumThread):
         Registry().set('url_for_proxy_check', "{0}://{1}".format(self.protocol, self.host))
 
         self.browser_create()
-
-        self.logger = Registry().get('logger')
-        self.http = Registry().get('http')
 
     def run(self):
         """ Run thread """

@@ -10,7 +10,6 @@ Thread class for Spider module (selenium)
 """
 import time
 import Queue
-import re
 
 from libs.common import file_put_contents, md5
 from classes.Registry import Registry
@@ -19,9 +18,9 @@ from classes.SpiderLinksParser import SpiderLinksParser
 from classes.threads.SeleniumThread import SeleniumThread
 from classes.threads.params.SpiderThreadParams import SpiderThreadParams
 
+
 class SSpiderThread(SeleniumThread):
     """ Thread class for Spider module (selenium) """
-    last_action = 0
 
     def __init__(self, job, src, counter, params):
         """
@@ -35,7 +34,6 @@ class SSpiderThread(SeleniumThread):
         self.host = params.host
         self.links_parser = SpiderLinksParser()
         self.not_found_re = params.not_found_re
-        self.http = Registry().get('http')
         self.delay = params.delay
         self.counter = counter
         self.src = src

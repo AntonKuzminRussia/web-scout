@@ -20,12 +20,9 @@ from classes.threads.SeleniumThread import SeleniumThread
 
 class SParamsBruterThread(SeleniumThread):
     """ Thread class for Dafs modules (selenium) """
-    queue = None
     method = None
     template = None
     mask_symbol = None
-    counter = None
-    last_action = 0
     queue_is_empty = False
     last_word = ""
 
@@ -34,7 +31,7 @@ class SParamsBruterThread(SeleniumThread):
 
         :type params: ParamsBruterThreadParams
         """
-        super(SParamsBruterThread, self).__init__()
+        SeleniumThread.__init__(self)
         self.queue = queue
         self.protocol = params.protocol
         self.host = params.host
@@ -45,10 +42,8 @@ class SParamsBruterThread(SeleniumThread):
         self.counter = counter
         self.result = result
         self.value = params.value
-        self.done = False
         self.not_found_re = params.not_found_re
         self.recreate_re = params.browser_recreate_re
-        self.http = Registry().get('http')
         self.delay = params.delay
         self.ddos_phrase = params.ddos_detect_phrase
         self.ddos_human = params.ddos_human_action
@@ -57,8 +52,6 @@ class SParamsBruterThread(SeleniumThread):
         Registry().set('url_for_proxy_check', "{0}://{1}".format(self.protocol, self.host))
 
         self.browser_create()
-
-        self.logger = Registry().get('logger')
 
     def build_params_str(self):
         params_str = "" if not len(self.last_word) else "{0}={1}&".format(self.last_word, self.value)
