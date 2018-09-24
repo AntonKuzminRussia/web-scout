@@ -94,28 +94,16 @@ class Logger(object):
 
     def ex(self, _exception):
         """ Log func for exceptions """
-
-        # Very ugly hack, will be fixed
-        tmp_file_name = "/tmp/{0}{1}.txt".format("wsexc", random.randint(1, 9999))
-        fh = open(tmp_file_name, "w")
-        traceback.print_stack(file=fh)
-        fh.close()
-        trace_text = file_get_contents(tmp_file_name)
-        os.remove(tmp_file_name)
-
         exc_type, exc_obj, exc_tb = sys.exc_info()
-        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-
-        log_str = "Exception {1}:\n{2} ({3}): {4}\n{0}\n{5}{0}\n".format(
-            "{0:=^20}".format(""),
-            exc_type,
-            fname,
-            exc_tb.tb_lineno,
-            str(_exception),
-            trace_text,
-        )
+        tb_text = ""
+        tb_text += "{0:=^20}".format("")
+        for tb_line in traceback.extract_tb(exc_tb):
+            tb_file, tb_strnum, tb_where, tb_call = tb_line
+            log_str = "{0}:{1} in '{2}' => {3}\n".format(tb_file, tb_strnum, tb_where, tb_call)
+            tb_text += log_str
+        tb_text += "{0:=^20}".format("")
 
         self.log(log_str, _print=True)
 
         if Registry().isset('xml'):
-            Registry().get('xml').put_error(str(_exception), trace_text)
+            Registry().get('xml').put_error(str(_exception), tb_text)
