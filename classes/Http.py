@@ -51,6 +51,7 @@ class Http(object):
                 self.requests_counter >= self.new_session_per_requests:
             self.requests_counter = 0
             self.session = requests.Session()
+            self.change_proxy()
 
     def load_headers_from_file(self, _file):
         if not os.path.exists(_file):
@@ -100,6 +101,7 @@ class Http(object):
 
         if self.every_request_new_session:
             self.session = requests.Session()
+            self.change_proxy()
         verify = self.verify if verify is None else verify
         allow_redirects = self.allow_redirects if allow_redirects is None else allow_redirects
         headers = self.headers if headers is None else headers
