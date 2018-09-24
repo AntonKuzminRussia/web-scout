@@ -36,26 +36,12 @@ class FormBruterModuleParams:
             False,
             ['--threads']
         ),
-        "host": WSOption(
-            "host",
-            "Traget host for brute",
-            "",
-            True,
-            ['--host']
-        ),
         "url": WSOption(
             "url",
             "Traget url for brute",
             "",
             True,
             ['--url']
-        ),
-        "protocol": WSOption(
-            "protocol",
-            "Protocol http or https (default - http)",
-            "http",
-            False,
-            ['--protocol']
         ),
         "false-phrase": WSOption(
             "false-phrase",

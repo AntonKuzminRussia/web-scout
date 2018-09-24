@@ -75,7 +75,6 @@ class HostsBruteModules(WSModule):
         if Registry().get('proxy_many_died'):
             self.logger.log("Proxy many died, stop scan")
 
-
         if Registry().get('positive_limit_stop'):
             self.logger.log("\nMany positive detections. Please, look items logs")
             self.logger.log("Last items:")

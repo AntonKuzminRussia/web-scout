@@ -11,12 +11,7 @@ Common class for DnsBrute modules
 
 import os
 import time
-import socket
 
-import dns.query
-import dns.message
-
-from classes.Roller import Roller
 from classes.Registry import Registry
 from classes.kernel.WSCounter import WSCounter
 from classes.kernel.WSModule import WSModule

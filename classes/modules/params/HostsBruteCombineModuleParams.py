@@ -29,12 +29,12 @@ class HostsBruteCombineModuleParams:
             False,
             ['--threads']
         ),
-        "host": WSOption(
-            "host",
-            "Traget host name",
+        "ip": WSOption(
+            "ip",
+            "Traget IP",
             "",
             True,
-            ['--host']
+            ['--ip']
         ),
         "msymbol": WSOption(
             "msymbol",

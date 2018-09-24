@@ -35,8 +35,6 @@ class FormBruterThread(HttpThread):
         HttpThread.__init__(self)
         self.retested_words = {}
         self.queue = queue
-        self.protocol = params.protocol
-        self.host = params.host
         self.url = params.url
         self.false_phrase = params.false_phrase
         self.false_size = params.false_size
@@ -102,7 +100,7 @@ class FormBruterThread(HttpThread):
                 work_conf = self._fill_conf(dict(conf), self.login, word)
                 try:
                     resp = self.http.post(
-                        self.protocol + "://" + self.host + self.url, data=work_conf
+                        self.url, data=work_conf
                     )
                 except ConnectionError:
                     need_retest = True

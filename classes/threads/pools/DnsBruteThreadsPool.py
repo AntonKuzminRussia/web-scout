@@ -22,13 +22,10 @@ from classes.threads.pools.AbstractPool import AbstractPool
 
 
 class DnsBruteThreadsPool(AbstractPool):
-    hosts = []
     servers_roller = None
 
     def __init__(self, queue, counter, result, options, logger):
         AbstractPool.__init__(self, queue, counter, result, options, logger)
-
-        self.host = self.options['host'].value
 
         self.servers_roller = Roller()
         self.servers_roller.load_file(Registry().get('wr_path') + '/bases/dns-servers.txt')

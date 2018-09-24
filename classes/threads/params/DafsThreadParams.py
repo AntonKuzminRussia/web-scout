@@ -12,8 +12,6 @@ import re
 
 
 class DafsThreadParams:
-    protocol = None
-    host = None
     template = None
     method = None
     msymbol = None
@@ -29,8 +27,6 @@ class DafsThreadParams:
     ignore_words_re = None
 
     def __init__(self, options):
-        self.protocol = options['protocol'].value.lower()
-        self.host = options['host'].value
         self.template = options['template'].value
         self.msymbol = options['msymbol'].value
         self.delay = int(options['delay'].value)

@@ -28,13 +28,6 @@ class DafsModules(WSModule):
         """ Method for prepare check objects, here abstract """
         pass
 
-    def validate_main(self):
-        """ Check users params """
-        super(DafsModules, self).validate_main()
-
-        if self.options['template'].value[0] != '/':
-            raise WSException("Template must start from the root ('/') !")
-
     def do_work(self):
         """ Scan action of module """
         self.enable_logger()
@@ -46,7 +39,7 @@ class DafsModules(WSModule):
 
         if self.options['template'].value.find(self.options['msymbol'].value) == -1:
             raise WSException(
-                "Symbol of object position ({0}) not found in URL ({1}) ".
+                "Symbol of object position ({0}) not found in template ({1}) ".
                 format(self.options['msymbol'].value, self.options['template'].value)
             )
 

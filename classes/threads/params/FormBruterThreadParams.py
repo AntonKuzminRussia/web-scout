@@ -11,8 +11,6 @@ Common module class form Dafs* modules
 
 
 class FormBruterThreadParams:
-    protocol = None
-    host = None
     url = None
     false_phrase = None
     true_phrase = None
@@ -31,8 +29,6 @@ class FormBruterThreadParams:
     retest_codes = None
 
     def __init__(self, options):
-        self.protocol = options['protocol'].value
-        self.host = options['host'].value
         self.url = options['url'].value
         self.false_phrase = options['false-phrase'].value
         self.true_phrase = options['true-phrase'].value

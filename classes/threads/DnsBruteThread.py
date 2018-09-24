@@ -52,7 +52,6 @@ class DnsBruteThread(AbstractThread):
         self.counter = counter
         self.result = result
 
-        self.host = params.host
         self.msymbol = params.msymbol
         self.template = params.template
         self.delay = params.delay
@@ -68,6 +67,7 @@ class DnsBruteThread(AbstractThread):
 
         self.check_name = ""
 
+        self.http = copy.deepcopy(Registry().get('http'))
         self.http.every_request_new_session = True
 
     def run(self):
@@ -90,7 +90,7 @@ class DnsBruteThread(AbstractThread):
 
                     self.counter.up()
 
-                self.check_name = self.template.replace(self.msymbol, check_host.decode('utf8', 'ignore')) + '.' + self.host
+                self.check_name = self.template.replace(self.msymbol, check_host.decode('utf8', 'ignore'))
                 query = dns.message.make_query(self.check_name, self.zone)
 
                 try:

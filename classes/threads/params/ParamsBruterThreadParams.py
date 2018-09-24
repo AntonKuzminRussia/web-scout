@@ -12,8 +12,6 @@ import re
 
 
 class ParamsBruterThreadParams:
-    protocol = None
-    host = None
     url = None
     max_params_length = None
     value = None
@@ -30,8 +28,6 @@ class ParamsBruterThreadParams:
     retest_codes = None
 
     def __init__(self, options):
-        self.protocol = options['protocol'].value
-        self.host = options['host'].value
         self.url = options['url'].value
         self.max_params_length = int(options['max-params-length'].value)
         self.value = options['value'].value

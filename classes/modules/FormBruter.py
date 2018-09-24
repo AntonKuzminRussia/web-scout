@@ -37,9 +37,6 @@ class FormBruter(WSModule):
         """ Check users params """
         super(FormBruter, self).validate_main()
 
-        if self.options['url'].value[0] != '/':
-            raise WSException("URL must start from root (/)")
-
         if self.options['selenium'].value:
             if not len(self.options['conffile'].value.strip()):
                 raise WSException(

@@ -21,6 +21,14 @@ from classes.threads.HttpThread import HttpThread
 
 class SpiderThread(HttpThread):
     """ Thread class for Spider module """
+    url = None
+    job = None
+    links_parser = None
+    src = None
+    delay = None
+    counter = None
+    _db = None
+    running = None
 
     def __init__(self, job, src, counter, params):
         """
@@ -29,13 +37,13 @@ class SpiderThread(HttpThread):
         """
         HttpThread.__init__(self)
         self.job = job
-        self.host = params.host
-        self.protocol = params.protocol
+        self.url = params.url
         self.links_parser = SpiderLinksParser()
         self.src = src
         self.delay = params.delay
         self.counter = counter
         self._db = Registry().get('mongo')
+        self.running = True
 
     def run(self):
         """ Run thread """
@@ -62,7 +70,7 @@ class SpiderThread(HttpThread):
 
             self.counter.up()
 
-            url = SpiderCommon.gen_url(link, self.host, self.protocol)
+            url = SpiderCommon.gen_url(link)
 
             start_time = int(round(time.time() * 1000))
 
@@ -83,15 +91,15 @@ class SpiderThread(HttpThread):
                     content_type = 'unknown/unknown'
 
                 if 299 < response.status_code < 400:
-                    SpiderCommon.insert_links([response.headers['Location']], url, self.host)
+                    SpiderCommon.insert_links([response.headers['Location']], url, link['host'])
                 else:
                     new_links = self.links_parser.parse_links(content_type, str(response.content), link)
-                    SpiderCommon.insert_links(new_links, url, self.host)
+                    SpiderCommon.insert_links(new_links, url, link['host'])
 
                 file_put_contents(
                     "{0}{1}/{2}".format(
                         Registry().get('data_path'),
-                        self.host,
+                        link['host'],
                         md5(pre_url)
                     ),
                     str(response.content)

@@ -33,10 +33,8 @@ class FuzzerHeadersThread(HttpThread):
         HttpThread.__init__(self)
         self.queue = queue
         self.method = params.method.lower()
-        self.domain = params.host
         self.result = result
         self.counter = counter
-        self.protocol = params.protocol
         self.bad_words = params.bad_words
         self.headers = params.headers
         self.delay = params.delay

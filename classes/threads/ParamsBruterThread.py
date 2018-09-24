@@ -38,8 +38,6 @@ class ParamsBruterThread(HttpThread):
         self.retested_words = {}
 
         self.queue = queue
-        self.protocol = params.protocol
-        self.host = params.host
         self.url = params.url
         self.mask_symbol = params.msymbol
         self.counter = counter
@@ -81,10 +79,9 @@ class ParamsBruterThread(HttpThread):
         return params_str[:-(len(self.last_word) + 3)]
 
     def request_params(self, params):
-        full_url = self.protocol + "://" + self.host + self.url
-        return self.http.get(full_url + "?" + params) if \
+        return self.http.get(self.url + "?" + params) if \
             self.method == 'get' else \
-            self.http.post(full_url, data=params, headers={'Content-Type': 'application/x-www-form-urlencoded'})
+            self.http.post(self.url, data=params, headers={'Content-Type': 'application/x-www-form-urlencoded'})
 
     def run(self):
         """ Run thread """

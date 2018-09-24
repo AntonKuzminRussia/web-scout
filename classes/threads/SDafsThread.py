@@ -23,8 +23,8 @@ from classes.threads.params.DafsThreadParams import DafsThreadParams
 class SDafsThread(SeleniumThread):
     """ Thread class for Dafs modules (selenium) """
     method = None
-    template = None
     mask_symbol = None
+    url = None
 
     def __init__(self, queue, counter, result, params):
         """
@@ -33,10 +33,8 @@ class SDafsThread(SeleniumThread):
         """
         super(SDafsThread, self).__init__()
         self.queue = queue
-        self.protocol = params.protocol
-        self.host = params.host
+        self.url = params.url
         self.method = params.method
-        self.template = params.template
         self.mask_symbol = params.msymbol
         self.counter = counter
         self.result = result
@@ -69,7 +67,7 @@ class SDafsThread(SeleniumThread):
                     self.counter.up()
 
                 try:
-                    url = self.template.replace(self.mask_symbol, word)
+                    url = self.url.replace(self.mask_symbol, word)
                 except UnicodeDecodeError:
                     self.logger.log(
                         "URL build error (UnicodeDecodeError) with word '{0}', skip it".format(pprint.pformat(word)),
@@ -78,7 +76,7 @@ class SDafsThread(SeleniumThread):
                     continue
 
                 rtime = int(time.time())
-                self.browser.get(self.protocol + "://" + self.host + url)
+                self.browser.get(url)
 
                 if self.recreate_re and self.recreate_re.findall(self.browser.page_source):
                     need_retest = True

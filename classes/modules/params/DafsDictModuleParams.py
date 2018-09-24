@@ -36,16 +36,9 @@ class DafsDictModuleParams:
                 False,
                 ['--threads']
             ),
-            "host": WSOption(
-                "host",
-                "Traget host for scan",
-                "",
-                True,
-                ['--host']
-            ),
             "template": WSOption(
                 "template",
-                "Template for scan",
+                "Template of URLs for scan",
                 "",
                 True,
                 ['--template']
@@ -64,13 +57,6 @@ class DafsDictModuleParams:
                 "HEAD",
                 False,
                 ['--method']
-            ),
-            "protocol": WSOption(
-                "protocol",
-                "Protocol http or https (default - http)",
-                "http",
-                False,
-                ['--protocol']
             ),
             "dict": WSOption(
                 "dict",

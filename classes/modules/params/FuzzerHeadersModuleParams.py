@@ -22,26 +22,12 @@ class FuzzerHeadersModuleParams:
             False,
             ['--threads']
         ),
-        "host": WSOption(
-            "host",
-            "Traget host for scan",
-            "",
-            True,
-            ['--host']
-        ),
         "method": WSOption(
             "method",
             "Requests method (default - GET)",
             "GET",
             False,
             ['--method']
-        ),
-        "protocol": WSOption(
-            "protocol",
-            "Protocol http or https (default - http)",
-            "http",
-            False,
-            ['--protocol']
         ),
         "delay": WSOption(
             "delay",

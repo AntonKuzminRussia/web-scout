@@ -11,6 +11,7 @@ Class of Spider module
 import os
 import re
 import time
+from urlparse import urlparse
 
 from libs.common import parse_split_conf
 from classes.Registry import Registry
@@ -38,6 +39,9 @@ class Spider(WSModule):
     def validate_main(self):
         """ Check users params """
         super(Spider, self).validate_main()
+
+        if not len(self.options['urls-file'].value) and not len(self.options['url'].value):
+            raise WSException("You must specify 'url' or 'urls-file' param")
 
         if len(self.options['urls-file'].value) > 0 and not os.path.exists(self.options['urls-file'].value):
             raise WSException(
@@ -80,18 +84,23 @@ class Spider(WSModule):
         if self.options['proxies'].value:
             Registry().get('proxies').load(self.options['proxies'].value)
 
-        SpiderCommon.clear_old_data(self.options['host'].value)
-
         self.result = SpiderResult()
         self._options_to_registry()
 
-        start_urls_file = self.options['urls-file'].value
-        start_urls = map(str.strip, open(start_urls_file).readlines()) if len(start_urls_file) else ['/']
+        if len(self.options['urls-file'].value):
+            start_urls_file = self.options['urls-file'].value
+            start_urls = map(str.strip, open(start_urls_file).readlines())
+        else:
+            start_urls = [self.options['url'].value]
+
+        target_host = urlparse(start_urls[0]).netloc
+        SpiderCommon.clear_old_data(target_host)
+
         SpiderCommon.prepare_first_pages(start_urls)
 
-        if not os.path.exists(Registry().get('data_path') + self.options['host'].value):
-            os.mkdir(Registry().get('data_path') + self.options['host'].value)
-            os.chmod(Registry().get('data_path') + self.options['host'].value, 0o777)
+        if not os.path.exists(Registry().get('data_path') + target_host):
+            os.mkdir(Registry().get('data_path') + target_host)
+            os.chmod(Registry().get('data_path') + target_host, 0o777)
 
         queue = SpiderJob()
         src = SpiderRequestsCounter(int(Registry().get('config')['spider']['requests_limit']))

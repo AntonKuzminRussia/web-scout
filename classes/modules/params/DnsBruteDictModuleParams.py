@@ -36,13 +36,6 @@ class DnsBruteDictModuleParams:
                 False,
                 ['--threads']
             ),
-            "host": WSOption(
-                "host",
-                "Target hostname",
-                "",
-                True,
-                ['--host']
-            ),
             "template": WSOption(
                 "template",
                 "Template for brute",

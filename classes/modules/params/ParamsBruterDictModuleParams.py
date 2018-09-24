@@ -29,13 +29,6 @@ class ParamsBruterDictModuleParams:
             False,
             ['--threads']
         ),
-        "host": WSOption(
-            "host",
-            "Traget host for scan",
-            "",
-            True,
-            ['--host']
-        ),
         "url": WSOption(
             "url",
             "Url for scan",
@@ -71,13 +64,6 @@ class ParamsBruterDictModuleParams:
             "GET",
             False,
             ['--method']
-        ),
-        "protocol": WSOption(
-            "protocol",
-            "Protocol http or https (default - http)",
-            "http",
-            False,
-            ['--protocol']
         ),
         "dict": WSOption(
             "dict",

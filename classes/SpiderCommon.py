@@ -59,9 +59,9 @@ class SpiderCommon(object):
             Registry().get('mongo').spider_urls.update({'hash': link['hash']}, {'$set': link})
 
     @staticmethod
-    def gen_url(link, host, protocol):
+    def gen_url(link):
         """ Generate URL by host and dict of link data """
-        url = protocol + '://' + host + link['path']
+        url = link['protocol'] + '://' + link['host'] + link['path']
         if link['query']:
             url += '?' +  link['query']
         return url
@@ -75,6 +75,8 @@ class SpiderCommon(object):
                 continue
 
             link = urlparse(link)
+            scheme = link.scheme
+            netloc = link.netloc
 
             if not link.scheme and \
                 not link.netloc and \
@@ -102,8 +104,8 @@ class SpiderCommon(object):
                 del paths[-1]
                 separated_links.append(
                     ParseResult(
-                        scheme='',
-                        netloc='',
+                        scheme=scheme,
+                        netloc=netloc,
                         path="/".join(paths) + '/',
                         params='',
                         query='',
@@ -138,6 +140,7 @@ class SpiderCommon(object):
         if not len(links):
             return
 
+        parsed_referer = urlparse(referer)
         denied_schemas = SpiderCommon.denied_schemas
 
         for link in links:
@@ -148,6 +151,8 @@ class SpiderCommon(object):
                 'hash': SpiderCommon.get_url_hash(link.path, link.query),
                 'path': link.path.strip(),
                 'query': link.query.strip(),
+                'host': link.netloc if len(link.netloc) else parsed_referer.netloc,
+                'protocol': link.scheme if len(link.scheme) else parsed_referer.scheme,
                 'referer': referer,
                 'founder': 'spider',
                 'checked': 0 if SpiderCommon._link_allowed(link) else 1,
@@ -272,6 +277,8 @@ class SpiderCommon(object):
                 'hash': md5(str(url.path + url.query)),
                 'path': url.path,
                 'query': url.query,
+                'host': url.netloc,
+                'protocol': url.scheme,
                 'time': 0,
                 'code': 0,
                 'checked': 0,

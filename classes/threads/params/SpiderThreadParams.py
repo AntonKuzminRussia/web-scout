@@ -12,7 +12,7 @@ import re
 
 
 class SpiderThreadParams:
-    host = None
+    url = None
     protocol = None
     not_found_re = None
     delay = None
@@ -21,8 +21,7 @@ class SpiderThreadParams:
     browser_recreate_re = None
 
     def __init__(self, options):
-        self.host = options['host'].value
-        self.protocol = options['protocol'].value
+        self.url = options['url'].value
         self.not_found_re = False if not len(options['not-found-re'].value) else re.compile(options['not-found-re'].value)
         self.delay = int(options['delay'].value)
         self.ddos_human_action = options['ddos-human-action'].value

@@ -24,10 +24,10 @@ from classes.threads.params.DafsThreadParams import DafsThreadParams
 class DafsThread(HttpThread):
     """ Thread class for Dafs modules """
     method = None
-    template = None
     mask_symbol = None
     retested_words = None
     ignore_words_re = None
+    template = None
 
     def __init__(self, queue, counter, result, params):
         """
@@ -38,8 +38,6 @@ class DafsThread(HttpThread):
         self.retested_words = {}
 
         self.queue = queue
-        self.protocol = params.protocol
-        self.host = params.host
         self.template = params.template
         self.mask_symbol = params.msymbol
         self.counter = counter
@@ -87,7 +85,7 @@ class DafsThread(HttpThread):
 
                 positive_item = False
                 try:
-                    resp = req_func(self.protocol + "://" + self.host + url)
+                    resp = req_func(url)
                 except ConnectionError as ex:
                     if self.not_found_ex is not False and str(ex).count(self.not_found_ex):
                         positive_item = False

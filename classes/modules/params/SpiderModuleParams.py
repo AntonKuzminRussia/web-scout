@@ -36,12 +36,12 @@ class SpiderModuleParams:
             False,
             ['--only-one']
         ),
-        "host": WSOption(
-            "host",
-            "Traget host for scan",
+        "url": WSOption(
+            "url",
+            "URL for scan",
             "",
-            True,
-            ['--host']
+            False,
+            ['--url']
         ),
         "not-found-re": WSOption(
             "not-found-re",
@@ -99,16 +99,9 @@ class SpiderModuleParams:
             False,
             ['--headers-file']
         ),
-        "protocol": WSOption(
-            "protocol",
-            "Protocol http or https (default - http)",
-            "http",
-            False,
-            ['--protocol']
-        ),
         "urls-file": WSOption(
             "urls-file",
-            "File with list of URLs (if not, Spider started from /)",
+            "File with list of URLs (if not, Spider started from '--url' param)",
             "",
             False,
             ['--urls-file']

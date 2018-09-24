@@ -35,10 +35,8 @@ class FuzzerUrlsThread(HttpThread):
         HttpThread.__init__(self)
         self.queue = queue
         self.method = params.method
-        self.domain = params.host
         self.result = result
         self.counter = counter
-        self.protocol = params.protocol
         self.bad_words = params.bad_words
         self.delay = params.delay
 

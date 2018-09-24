@@ -13,7 +13,7 @@ import re
 
 class HostBruteThreadParams:
     protocol = None
-    host = None
+    ip = None
     template = None
     msymbol = None
     false_phrase = None
@@ -23,7 +23,7 @@ class HostBruteThreadParams:
 
     def __init__(self, options):
         self.protocol = options['protocol'].value
-        self.host = options['host'].value
+        self.ip = options['ip'].value
         self.template = options['template'].value
         self.msymbol = options['msymbol'].value
         self.false_phrase = options['false-phrase'].value

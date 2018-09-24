@@ -36,13 +36,6 @@ class DnsBruteCombineModuleParams:
             False,
             ['--threads']
         ),
-        "host": WSOption(
-            "host",
-            "Target hostname",
-            "",
-            True,
-            ['--host']
-        ),
         "protocol": WSOption(
             "protocol",
             "TCP or UDP connection to DNS server (default - auto)",

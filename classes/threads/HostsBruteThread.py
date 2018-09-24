@@ -40,7 +40,7 @@ class HostsBruteThread(HttpThread):
 
         self.queue = queue
         self.protocol = params.protocol
-        self.host = params.host
+        self.ip = params.ip
         self.template = params.template
         self.mask_symbol = params.msymbol
         self.counter = counter
@@ -84,7 +84,7 @@ class HostsBruteThread(HttpThread):
                     continue
 
                 try:
-                    resp = req_func(self.protocol + "://" + self.host, headers={'host': hostname})
+                    resp = req_func(self.protocol + "://" + self.ip, headers={'host': hostname})
                 except ConnectionError:
                     need_retest = True
                     self.http.change_proxy()

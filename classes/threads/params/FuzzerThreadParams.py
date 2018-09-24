@@ -13,8 +13,6 @@ from classes.Registry import Registry
 
 
 class FuzzerThreadParams:
-    host = None
-    protocol = None
     method = None
     delay = None
     ddos_detect_phrase = None
@@ -24,8 +22,6 @@ class FuzzerThreadParams:
     headers = None
 
     def __init__(self, options):
-        self.host = options['host'].value
-        self.protocol = options['protocol'].value.lower()
         self.method = options['method'].value.lower()
         self.delay = int(options['delay'].value)
         if 'ddos-human-action' in options:
