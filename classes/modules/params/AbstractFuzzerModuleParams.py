@@ -11,5 +11,6 @@ class AbstractFuzzerModuleParams(AbstractModuleParams):
                 'proxies',
                 "headers-file",
                 "urls-file",
+                'url'
             ]
         )

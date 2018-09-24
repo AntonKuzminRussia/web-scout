@@ -19,7 +19,6 @@ class FuzzerUrlsModuleParams(AbstractFuzzerModuleParams):
                 "ddos-detect-phrase",
                 "ddos-human-action",
                 "selenium",
-                "browser-recreate-re",
             ]
         )
         self.add_option("browser-recreate-re", "browser-recreate-phrase")

@@ -37,7 +37,10 @@ class FuzzerUrls(WSModule):
         """ Check users params """
         super(FuzzerUrls, self).validate_main()
 
-        if not os.path.exists(self.options['urls-file'].value):
+        if not len(self.options['urls-file'].value) and not len(self.options['url'].value):
+            raise WSException("You must specify 'url' or 'urls-file' param")
+
+        if len(self.options['urls-file'].value) and not os.path.exists(self.options['urls-file'].value):
             raise WSException(
                 "File with urls '{0}' not exists!".format(self.options['urls-file'].value)
             )
@@ -83,17 +86,24 @@ class FuzzerUrls(WSModule):
 
         result = []
 
-        fh_base = open(self.options['urls-file'].value, 'r')
         fh_work = open('/tmp/fuzzer-urls.txt', 'w')
-        while True:
-            line = fh_base.readline()
-            if len(line) == 0:
-                break
-            urls_to_work = self._generate_fuzz_urls(line.strip())
+        if len(self.options['urls-file'].value):
+            fh_base = open(self.options['urls-file'].value, 'r')
+
+            while True:
+                line = fh_base.readline()
+                if len(line) == 0:
+                    break
+                urls_to_work = self._generate_fuzz_urls(line.strip())
+                for url_to_work in urls_to_work:
+                    fh_work.write(url_to_work + "\n")
+
+            fh_base.close()
+        else:
+            urls_to_work = self._generate_fuzz_urls(self.options['url'].value)
             for url_to_work in urls_to_work:
                 fh_work.write(url_to_work + "\n")
         fh_work.close()
-        fh_base.close()
 
         queue = FuzzerUrlsJob()
 

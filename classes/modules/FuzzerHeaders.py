@@ -20,6 +20,7 @@ from classes.kernel.WSException import WSException
 from classes.threads.pools.FuzzerHeadersThreadPool import FuzzerHeadersThreadsPool
 from classes.modules.params.FuzzerHeadersModuleParams import FuzzerHeadersModuleParams
 from classes.FileGenerator import FileGenerator
+from libs.common import file_put_contents
 
 
 class FuzzerHeaders(WSModule):
@@ -36,7 +37,10 @@ class FuzzerHeaders(WSModule):
         """ Check users params """
         super(FuzzerHeaders, self).validate_main()
 
-        if not os.path.exists(self.options['urls-file'].value):
+        if not len(self.options['urls-file'].value) and not len(self.options['url'].value):
+            raise WSException("You must specify 'url' or 'urls-file' param")
+
+        if len(self.options['urls-file'].value) and not os.path.exists(self.options['urls-file'].value):
             raise WSException(
                 "File with urls '{0}' not exists!".format(self.options['urls-file'].value)
             )
@@ -52,14 +56,17 @@ class FuzzerHeaders(WSModule):
 
         result = []
 
-        to_scan = map(str.strip, open(self.options['urls-file'].value).readlines())
-
         queue = FuzzerHeadersJob()
-        generator = FileGenerator(self.options['urls-file'].value)
+        if len(self.options['urls-file'].value):
+            generator = FileGenerator(self.options['urls-file'].value)
+        else:
+            file_put_contents('/tmp/fuzzer-urls.txt', self.options['url'].value)
+            generator = FileGenerator('/tmp/fuzzer-urls.txt')
+
         queue.set_generator(generator)
         self.logger.log("Loaded {0} variants.".format(generator.lines_count))
 
-        counter = WSCounter(1, 60, len(to_scan))
+        counter = WSCounter(1, 60, generator.lines_count)
         pool = FuzzerHeadersThreadsPool(queue, counter, result, self.options, self.logger)
         pool.start()
 
