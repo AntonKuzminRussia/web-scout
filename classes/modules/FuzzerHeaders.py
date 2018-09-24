@@ -30,7 +30,7 @@ class FuzzerHeaders(WSModule):
     logger_enable = True
     logger_name = 'fuzzer-headers'
     logger_have_items = False
-    options = FuzzerHeadersModuleParams.options
+    options = FuzzerHeadersModuleParams().get_options()
 
     def validate_main(self):
         """ Check users params """

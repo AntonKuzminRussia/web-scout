@@ -9,58 +9,21 @@ Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pr
 Class of module for DAFS by Dict+Mask
 """
 
-from classes.kernel.WSOption import WSOption
+from classes.modules.params.AbstractModuleParams import AbstractModuleParams
 
 
-class PreModuleParams:
-    options = {
-        "host": WSOption(
-            "host",
-            "Traget host for scan",
-            "",
-            True,
-            ['--host']
-        ),
-        "dns": WSOption(
-            "dns",
-            "DNS server for domains search",
-            "8.8.8.8",
-            False,
-            ['--dns']
-        ),
-        "protocol": WSOption(
-            "protocol",
-            "Protocol http or https (default - http)",
-            "http",
-            False,
-            ['--protocol']
-        ),
-        "not-found-phrase": WSOption(
-            "not-found-phrase",
-            "Phrase for detect 'Not found' response (404)",
-            "",
-            False,
-            ['--not-found-phrase']
-        ),
-        "not-found-codes": WSOption(
-            "not-found-codes",
-            "Custom codes for detect 'Not found' response (404)",
-            "",
-            False,
-            ['--not-found-codes']
-        ),
-        "proxies": WSOption(
-            "proxies",
-            "File with list of proxies",
-            "",
-            False,
-            ['--proxies']
-        ),
-        "headers-file": WSOption(
-            "headers-file",
-            "File with list of HTTP headers",
-            "",
-            False,
-            ['--headers-file']
-        ),
-    }
+class PreModuleParams(AbstractModuleParams):
+    def __init__(self):
+        AbstractModuleParams.__init__(self)
+        self.add_options(
+            [
+                'host',
+                'url',
+                "not-found-codes",
+                'proxies',
+                "headers-file",
+                'dns',
+            ]
+        )
+        self.add_option('http-protocol', 'protocol')
+        self.add_option("not-found-re", "not-found-phrase")

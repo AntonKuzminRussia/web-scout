@@ -34,7 +34,7 @@ class Spider(WSModule):
     logger_enable = True
     logger_name = 'spider'
     logger_have_items = False
-    options = SpiderModuleParams.options
+    options = SpiderModuleParams().get_options()
 
     def validate_main(self):
         """ Check users params """
@@ -58,8 +58,8 @@ class Spider(WSModule):
         expr = expr.rstrip('|')
         Registry().set('allow_regexp', re.compile(expr, re.I))
 
-        if self.options['only_one'].value:
-            tmp = self.options['only_one'].value.split("||")
+        if self.options['only-one'].value:
+            tmp = self.options['only-one'].value.split("||")
             if len(tmp):
                 only_one = []
                 for regex in tmp:

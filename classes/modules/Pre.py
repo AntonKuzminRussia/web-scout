@@ -33,7 +33,7 @@ class Pre(WSModule):
     logger_enable = True
     logger_name = 'pre'
     logger_have_items = False
-    options = PreModuleParams.options
+    options = PreModuleParams().get_options()
 
     def validate_main(self):
         """ Check users params """

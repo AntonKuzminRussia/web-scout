@@ -20,7 +20,7 @@ class DafsMask(DafsModules):
     mode = 'mask'
     log_path = '/dev/null'
     time_count = True
-    options = DafsMaskModuleParams.options
+    options = DafsMaskModuleParams().get_options()
 
     def load_objects(self, queue):
         """ Prepare generator for work """

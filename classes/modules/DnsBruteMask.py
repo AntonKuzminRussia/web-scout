@@ -20,7 +20,7 @@ class DnsBruteMask(DnsBruteModules):
     mode = 'dict'
     log_path = '/dev/null'
     time_count = True
-    options = DnsBruteMaskModuleParams.options
+    options = DnsBruteMaskModuleParams().get_options()
 
     def load_objects(self, queue):
         """ Make generator with objects to check """

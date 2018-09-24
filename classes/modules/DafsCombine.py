@@ -19,7 +19,7 @@ class DafsCombine(DafsModules):
     mode = 'dict'
     log_path = '/dev/null'
     time_count = True
-    options = DafsCombineModuleParams.options
+    options = DafsCombineModuleParams().get_options()
 
     def load_objects(self, queue):
         """ Prepare generator for work """

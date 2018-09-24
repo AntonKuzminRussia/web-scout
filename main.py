@@ -37,7 +37,8 @@ logging.captureWarnings(True)
 
 try:
     module = base.load_module(module_name)
-except WSException:
+except WSException as e:
+    print(e)
     print " ERROR: Module '{0}' not exists!".format(module_name)
     exit(0)
 

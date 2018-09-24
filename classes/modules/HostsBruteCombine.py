@@ -20,7 +20,7 @@ class HostsBruteCombine(HostsBruteModules):
     mode = 'dict'
     log_path = '/dev/null'
     time_count = True
-    options = HostsBruteCombineModuleParams.options
+    options = HostsBruteCombineModuleParams().get_options()
 
     def load_objects(self, queue):
         """ Prepare generator for work """

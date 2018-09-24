@@ -20,7 +20,7 @@ class DnsBruteCombine(DnsBruteModules):
     mode = 'dict'
     log_path = '/dev/null'
     time_count = True
-    options = DnsBruteCombineModuleParams.options
+    options = DnsBruteCombineModuleParams().get_options()
 
     def load_objects(self, queue):
         """ Make generator with objects to check """

@@ -1,0 +1,26 @@
+from classes.modules.params.AbstractModuleParams import AbstractModuleParams
+
+
+class AbstractDafsModuleParams(AbstractModuleParams):
+    def __init__(self):
+        AbstractModuleParams.__init__(self)
+        self.add_options(
+            [
+                'msymbol',
+                'not-found-re',
+                'not-found-ex',
+                'not-found-size',
+                'not-found-codes',
+                'ignore-words-re',
+                'retest-codes',
+                'delay',
+                'selenium',
+                'ddos-detect-phrase',
+                'ddos-human-action',
+                'browser-recreate-re',
+                'proxies',
+                'headers-file',
+                'template',
+                'method',
+            ]
+        )

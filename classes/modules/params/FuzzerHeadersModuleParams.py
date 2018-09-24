@@ -9,52 +9,9 @@ Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pr
 Class of module for DAFS by Dict+Mask
 """
 
-from classes.kernel.WSOption import WSOption
-from classes.Registry import Registry
+from classes.modules.params.AbstractFuzzerModuleParams import AbstractFuzzerModuleParams
 
 
-class FuzzerHeadersModuleParams:
-    options = {
-        "threads": WSOption(
-            "threads",
-            "Threads count, default 10",
-            int(Registry().get('config')['main']['default_threads']),
-            False,
-            ['--threads']
-        ),
-        "method": WSOption(
-            "method",
-            "Requests method (default - GET)",
-            "GET",
-            False,
-            ['--method']
-        ),
-        "delay": WSOption(
-            "delay",
-            "Deley for every thread between requests (secs)",
-            "0",
-            False,
-            ['--delay']
-        ),
-        "proxies": WSOption(
-            "proxies",
-            "File with list of proxies",
-            "",
-            False,
-            ['--proxies']
-        ),
-        "headers-file": WSOption(
-            "headers-file",
-            "File with list of HTTP headers",
-            "",
-            False,
-            ['--headers-file']
-        ),
-        "urls-file": WSOption(
-            "urls-file",
-            "File with list of URLs",
-            "",
-            True,
-            ['--urls-file']
-        ),
-    }
+class FuzzerHeadersModuleParams(AbstractFuzzerModuleParams):
+    def __init__(self):
+        AbstractFuzzerModuleParams.__init__(self)

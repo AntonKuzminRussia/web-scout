@@ -21,7 +21,7 @@ class ParamsBruterCombine(ParamsBruterModules):
     mode = 'dict'
     log_path = '/dev/null'
     time_count = True
-    options = ParamsBruterCombineModuleParams.options
+    options = ParamsBruterCombineModuleParams().get_options()
 
     def load_objects(self, queue):
         """ Prepare generator for work """

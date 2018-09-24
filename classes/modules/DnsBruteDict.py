@@ -23,7 +23,7 @@ class DnsBruteDict(DnsBruteModules):
     mode = 'dict'
     log_path = '/dev/null'
     time_count = True
-    options = DnsBruteDictModuleParams.options
+    options = DnsBruteDictModuleParams().get_options()
 
     def load_objects(self, queue):
         """ Make generator with objects to check """

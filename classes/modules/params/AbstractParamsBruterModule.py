@@ -1,0 +1,28 @@
+from classes.modules.params.AbstractModuleParams import AbstractModuleParams
+
+
+class AbstractParamsBruterModule(AbstractModuleParams):
+    def __init__(self):
+        AbstractModuleParams.__init__(self)
+
+        self.add_options(
+            [
+                'url',
+                "max-params-length",
+                "value",
+                "msymbol",
+                "method",
+                "not-found-re",
+                "not-found-size",
+                "not-found-codes",
+                "ignore-words-re",
+                "retest-codes",
+                "delay",
+                "ddos-detect-phrase",
+                "ddos-human-action",
+                "selenium",
+                "browser-recreate-re",
+                "proxies",
+                "headers-file",
+            ]
+        )

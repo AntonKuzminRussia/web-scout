@@ -8,81 +8,18 @@ Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pr
 
 Class of module for DAFS by Dict+Mask
 """
-
-from classes.kernel.WSOption import WSOption
-from classes.Registry import Registry
+from classes.modules.params.AbstractFuzzerModuleParams import AbstractFuzzerModuleParams
 
 
-class FuzzerUrlsModuleParams:
-    options = {
-        "threads": WSOption(
-                "threads",
-                "Threads count, default 10",
-                int(Registry().get('config')['main']['default_threads']),
-                False,
-                ['--threads']
-            ),
-            "method": WSOption(
-                "method",
-                "Requests method (default - GET)",
-                "GET",
-                False,
-                ['--method']
-            ),
-            "delay": WSOption(
-                "delay",
-                "Deley for every thread between requests (secs)",
-                "0",
-                False,
-                ['--delay']
-            ),
-            "proxies": WSOption(
-                "proxies",
-                "File with list of proxies",
-                "",
-                False,
-                ['--proxies']
-            ),
-            "ddos-detect-phrase": WSOption(
+class FuzzerUrlsModuleParams(AbstractFuzzerModuleParams):
+    def __init__(self):
+        AbstractFuzzerModuleParams.__init__(self)
+        self.add_options(
+            [
                 "ddos-detect-phrase",
-                "Phrase for detect DDoS protection",
-                "",
-                False,
-                ['--ddos-detect-phrase']
-            ),
-            "ddos-human-action": WSOption(
                 "ddos-human-action",
-                "Phrase for detect human action need",
-                "",
-                False,
-                ['--ddos-human-action']
-            ),
-            "browser-recreate-phrase": WSOption(
-                "browser-recreate-phrase",
-                "Phrase for recreate browser with new proxy",
-                "",
-                False,
-                ['--browser-recreate-phrase']
-            ),
-            "selenium": WSOption(
                 "selenium",
-                "Use Selenium for scanning",
-                "",
-                False,
-                ['--selenium']
-            ),
-            "headers-file": WSOption(
-                "headers-file",
-                "File with list of HTTP headers",
-                "",
-                False,
-                ['--headers-file']
-            ),
-            "urls-file": WSOption(
-                "urls-file",
-                "File with list of URLs",
-                "",
-                True,
-                ['--urls-file']
-            ),
-    }
+                "browser-recreate-re",
+            ]
+        )
+        self.add_option("browser-recreate-re", "browser-recreate-phrase")

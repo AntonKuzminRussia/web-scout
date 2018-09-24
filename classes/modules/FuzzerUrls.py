@@ -31,7 +31,7 @@ class FuzzerUrls(WSModule):
     logger_have_items = False
     log_path = '/dev/null'
     time_count = True
-    options = FuzzerUrlsModuleParams.options
+    options = FuzzerUrlsModuleParams().get_options()
 
     def validate_main(self):
         """ Check users params """

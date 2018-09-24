@@ -20,7 +20,7 @@ class ParamsBruterDict(ParamsBruterModules):
     mode = 'dict'
     log_path = '/dev/null'
     time_count = True
-    options = ParamsBruterDictModuleParams.options
+    options = ParamsBruterDictModuleParams().get_options()
 
     def load_objects(self, queue):
         """ Prepare generator for work """
