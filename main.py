@@ -22,7 +22,7 @@ from libs.common import secs_to_text, main_help
 from classes.kernel.WSBase import WSBase
 from classes.Registry import Registry
 from classes.kernel.WSException import WSException
-from classes.Logger import Logger
+from classes.logger.Logger import Logger
 from classes.Tester import Tester
 from classes.XmlOutput import XmlOutput
 
