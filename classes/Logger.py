@@ -82,7 +82,6 @@ class Logger(object):
             coll.create_index([('hash', 1)], unique=True)
             coll.create_index([('module', 1), ('name', 1)])
 
-
     def log(self, _str, new_str=True, _print=True):
         """ Write string in log and print it if need """
         self.log_fh.write(
@@ -117,14 +116,14 @@ class Logger(object):
         """ Log func for exceptions """
         exc_type, exc_obj, exc_tb = sys.exc_info()
         tb_text = ""
-        tb_text += "{0:=^20}".format("")
+        tb_text += "{0:=^20}\n".format("")
         for tb_line in traceback.extract_tb(exc_tb):
             tb_file, tb_strnum, tb_where, tb_call = tb_line
             log_str = "{0}:{1} in '{2}' => {3}\n".format(tb_file, tb_strnum, tb_where, tb_call)
             tb_text += log_str
         tb_text += "{0:=^20}".format("")
 
-        self.log(log_str, _print=True)
+        self.log(tb_text, _print=True)
 
         if Registry().isset('xml'):
             Registry().get('xml').put_error(str(_exception), tb_text)
