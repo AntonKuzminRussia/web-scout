@@ -99,6 +99,13 @@ class DnsBruteModules(WSModule):
                 pool.kill_all()
             time.sleep(1)
 
+        if Registry().get('positive_limit_stop'):
+            self.logger.log("\nMany positive detections. Please, look items logs")
+            self.logger.log("Last items:")
+            for i in range(1, 5):
+                print result[-i]
+            exit(1)
+
         self._output(result)
 
         self.done = True
