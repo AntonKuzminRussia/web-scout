@@ -14,7 +14,7 @@ import re
 import pytest
 
 from Common import Common
-from classes.SpiderResult import SpiderResult
+from classes.spider.SpiderResult import SpiderResult
 from classes.Registry import Registry
 
 

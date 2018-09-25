@@ -19,9 +19,9 @@ sys.path.append(testpath + '/classes')
 
 from classes.threads.SpiderThread import SpiderThread
 from classes.jobs.SpiderJob import SpiderJob
-from classes.SpiderResult import SpiderResult
-from classes.SpiderCommon import SpiderCommon
-from classes.SpiderRequestsCounter import SpiderRequestsCounter
+from classes.spider.SpiderResult import SpiderResult
+from classes.spider.SpiderCommon import SpiderCommon
+from classes.spider.SpiderRequestsCounter import SpiderRequestsCounter
 from classes.generators.FileGenerator import FileGenerator
 from classes.Registry import Registry
 from classes.Http import Http

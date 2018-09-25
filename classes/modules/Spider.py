@@ -15,9 +15,9 @@ from urlparse import urlparse
 
 from libs.common import parse_split_conf
 from classes.Registry import Registry
-from classes.SpiderCommon import SpiderCommon
-from classes.SpiderResult import SpiderResult
-from classes.SpiderRequestsCounter import SpiderRequestsCounter
+from classes.spider.SpiderCommon import SpiderCommon
+from classes.spider.SpiderResult import SpiderResult
+from classes.spider.SpiderRequestsCounter import SpiderRequestsCounter
 from classes.kernel.WSModule import WSModule
 from classes.kernel.WSException import WSException
 from classes.kernel.WSCounter import WSCounter

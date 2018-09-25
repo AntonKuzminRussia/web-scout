@@ -22,7 +22,7 @@ import pytest
 
 from Common import Common
 from LoggerMock import LoggerMock
-from classes.SpiderCommon import SpiderCommon
+from classes.spider.SpiderCommon import SpiderCommon
 from classes.Registry import Registry
 from classes.models.UrlsModel import UrlsModel
 

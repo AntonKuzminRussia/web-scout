@@ -12,8 +12,8 @@ import Queue
 import time
 
 from classes.Registry import Registry
-from classes.SpiderCommon import SpiderCommon
-from classes.SpiderLinksParser import SpiderLinksParser
+from classes.spider.SpiderCommon import SpiderCommon
+from classes.spider.SpiderLinksParser import SpiderLinksParser
 from libs.common import file_put_contents, md5
 from classes.threads.params.SpiderThreadParams import SpiderThreadParams
 from classes.threads.HttpThread import HttpThread

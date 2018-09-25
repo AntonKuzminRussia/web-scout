@@ -13,8 +13,8 @@ import Queue
 
 from libs.common import file_put_contents, md5
 from classes.Registry import Registry
-from classes.SpiderCommon import SpiderCommon
-from classes.SpiderLinksParser import SpiderLinksParser
+from classes.spider.SpiderCommon import SpiderCommon
+from classes.spider.SpiderLinksParser import SpiderLinksParser
 from classes.threads.SeleniumThread import SeleniumThread
 from classes.threads.params.SpiderThreadParams import SpiderThreadParams
 

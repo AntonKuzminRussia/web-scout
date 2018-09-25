@@ -14,7 +14,7 @@ import re
 import pytest
 
 from Common import Common
-from classes.SpiderLinksParser import SpiderLinksParser
+from classes.spider.SpiderLinksParser import SpiderLinksParser
 from classes.Registry import Registry
 
 

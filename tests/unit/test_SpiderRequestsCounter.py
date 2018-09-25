@@ -10,7 +10,7 @@ Unit tests for SpiderRequestsCounter
 """
 
 from Common import Common
-from classes.SpiderRequestsCounter import SpiderRequestsCounter
+from classes.spider.SpiderRequestsCounter import SpiderRequestsCounter
 
 class Test_SpiderRequestsCounter(Common):
     """Unit tests for SpiderRequestsCounter"""
