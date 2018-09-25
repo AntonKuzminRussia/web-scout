@@ -91,7 +91,6 @@ class FormBruterThread(HttpThread):
 
                 if not need_retest:
                     word = self.queue.get()
-                    self.counter.up()
 
                 if (self.pass_min_len and len(word) < self.pass_min_len) or \
                         (self.pass_max_len and len(word) > self.pass_max_len):
@@ -145,6 +144,8 @@ class FormBruterThread(HttpThread):
                     break
 
                 need_retest = False
+
+                self.counter.up()
             except Queue.Empty:
                 self.done = True
                 break

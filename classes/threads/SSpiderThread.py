@@ -82,15 +82,6 @@ class SSpiderThread(SeleniumThread):
                 self.browser.get(url)
                 time.sleep(1)
 
-                    #content_type = response.headers['content-type'].split(";")[0] \
-                    #               if (response.headers['content-type'].find(";") != -1) \
-                    #               else response.headers['content-type']
-
-                    #if 299 < response.status_code < 400:
-                    #    SpiderCommon.insert_links([response.headers['Location']], url, self.host)
-                    #else:
-                        #new_links = self.links_parser.parse_links('text/html', str(self.browser.page_source), link)
-                        #SpiderCommon.insert_links(new_links, url, self.host)
                 source = str(self.browser.page_source.encode('utf8', errors='ignore'))
                 new_links = self.links_parser.parse_links('text/html', source, link)
                 SpiderCommon.insert_links(new_links, url, self.host)

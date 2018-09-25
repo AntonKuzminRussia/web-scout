@@ -70,8 +70,6 @@ class ParamsBruterThread(HttpThread):
             if not len(word.strip()) or (self.ignore_words_re and self.ignore_words_re.findall(word)):
                 continue
 
-            self.counter.up()
-
             params_str += "{0}={1}&".format(word, self.value)
 
             self.last_word = word
@@ -152,6 +150,7 @@ class ParamsBruterThread(HttpThread):
 
                 need_retest = False
 
+                self.counter.up()
             except Queue.Empty:
                 self.done = True
                 break
@@ -167,9 +166,6 @@ class ParamsBruterThread(HttpThread):
                     pass
                 except UnboundLocalError:
                     self.logger.ex(e)
-
-            finally:
-                pass
 
             if Registry().isset('tester') and Registry().get('tester').done():
                 self.done = True

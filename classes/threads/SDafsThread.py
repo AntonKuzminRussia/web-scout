@@ -64,7 +64,6 @@ class SDafsThread(SeleniumThread):
                     word = self.queue.get()
                     if not len(word.strip()) or (self.ignore_words_re and self.ignore_words_re.findall(word)):
                         continue
-                    self.counter.up()
 
                 try:
                     url = self.url.replace(self.mask_symbol, word)
@@ -109,6 +108,8 @@ class SDafsThread(SeleniumThread):
                     Registry().set('positive_limit_stop', True)
 
                 need_retest = False
+
+                self.counter.up()
             except Queue.Empty:
                 self.done = True
                 break

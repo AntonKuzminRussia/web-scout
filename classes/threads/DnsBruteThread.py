@@ -88,8 +88,6 @@ class DnsBruteThread(AbstractThread):
                     if not len(check_host.strip()) or (self.ignore_words_re and self.ignore_words_re.findall(check_host)):
                         continue
 
-                    self.counter.up()
-
                 self.check_name = self.template.replace(self.msymbol, check_host.decode('utf8', 'ignore'))
                 query = dns.message.make_query(self.check_name, self.zone)
 
@@ -131,6 +129,8 @@ class DnsBruteThread(AbstractThread):
                     Registry().set('positive_limit_stop', True)
 
                 need_retest = False
+
+                self.counter.up()
             except Queue.Empty:
                 self.done = True
                 break

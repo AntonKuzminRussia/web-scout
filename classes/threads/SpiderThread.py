@@ -68,8 +68,6 @@ class SpiderThread(HttpThread):
         for link in links:
             self.last_action = int(time.time())
 
-            self.counter.up()
-
             url = SpiderCommon.gen_url(link)
 
             start_time = int(round(time.time() * 1000))
@@ -99,6 +97,8 @@ class SpiderThread(HttpThread):
             link['size'] = len(response.content) if response is not None else 0
             link['code'] = response.status_code if response is not None else 0
             link['time'] = result_time if response is not None else 0
+
+            self.counter.up()
 
         SpiderCommon.links_checked(links)
 
