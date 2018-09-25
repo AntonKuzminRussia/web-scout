@@ -106,6 +106,8 @@ class Spider(WSModule):
         src = SpiderRequestsCounter(int(Registry().get('config')['spider']['requests_limit']))
         counter = WSCounter(5, 300, 0)
 
+        self.logger.set_scan_name(self.options['url'].value)
+
         pool = SpiderThreadsPool(queue, counter, src, self.options, self.logger)
         pool.start()
 

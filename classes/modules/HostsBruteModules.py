@@ -64,6 +64,8 @@ class HostsBruteModules(WSModule):
 
         counter = WSCounter(5, 300, loaded['all'] if not loaded['end'] else loaded['end']-loaded['start'])
 
+        self.logger.set_scan_name(self.options['template'].value + "|" + self.options['ip'].value)
+
         pool = HostsBruteThreadsPool(queue, counter, result, self.options, self.logger)
         pool.start()
 

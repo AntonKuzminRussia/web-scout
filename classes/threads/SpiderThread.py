@@ -74,8 +74,6 @@ class SpiderThread(HttpThread):
 
             start_time = int(round(time.time() * 1000))
 
-            pre_url = link['path'] + '?' + link['query'] if len(link['query']) else link['path']
-
             if self.delay:
                 time.sleep(self.delay)
 
@@ -96,14 +94,7 @@ class SpiderThread(HttpThread):
                     new_links = self.links_parser.parse_links(content_type, str(response.content), link)
                     SpiderCommon.insert_links(new_links, url, link['host'])
 
-                file_put_contents(
-                    "{0}{1}/{2}".format(
-                        Registry().get('data_path'),
-                        link['host'],
-                        md5(pre_url)
-                    ),
-                    str(response.content)
-                )
+                self.logger.item(url, response.content, self.is_response_content_binary(response), response.status_code is not 404)
 
             link['size'] = len(response.content) if response is not None else 0
             link['code'] = response.status_code if response is not None else 0

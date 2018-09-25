@@ -56,6 +56,8 @@ class ParamsBruterModules(WSModule):
 
         counter = WSCounter(50, 3000, loaded['all'] if not loaded['end'] else loaded['end']-loaded['start'])
 
+        self.logger.set_scan_name(self.options['url'].value)
+
         pool = ParamsBruterThreadsPool(queue, counter, result, self.options, self.logger)
         pool.start()
 

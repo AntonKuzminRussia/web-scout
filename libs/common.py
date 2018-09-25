@@ -93,11 +93,10 @@ def validate_uri_start(url):
     return bool(re.match(r'^(http:|https:|)//([\da-z\.-]+\.[a-z]{2,6})', url))
 
 
-def md5(string):
+def md5(s):
     """ String to MD5-hash """
     m = hashlib.md5()
-    #m.update(string.decode(encoding='UTF-8',errors='ignore').encode('UTF-8', errors='ignore'))
-    m.update(string.encode('UTF-8'))
+    m.update(s.decode(encoding='UTF-8',errors='ignore').encode('UTF-8', errors='ignore'))
     return m.hexdigest()
 
 

@@ -43,7 +43,7 @@ except WSException as e:
     exit(0)
 
 if module.logger_enable:
-    Registry().set('logger', Logger(module.logger_name, module.logger_have_items))
+    Registry().set('logger', Logger(module.logger_name))
 
 if module.time_count:
     print "Started module work at " + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
@@ -99,11 +99,15 @@ for k in Http.errors:
     for err_str in Http.errors[k]:
         print err_str
 
+if module.logger_enable:
+    Registry().get('logger').stop()
+
 if Registry().isset('display'):
     Registry().get('display').stop()
 
 if Registry().isset('tester'):
     Registry().get('tester').dump()
+
 elif module.time_count:
     print "\nEnded module work at " + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
     print "Common work time: {0}".format(secs_to_text(int(time.time()) - start_time))

@@ -103,6 +103,8 @@ class FormBruter(WSModule):
 
         counter = WSCounter(5, 300, loaded['all'] if not loaded['end'] else loaded['end']-loaded['start'])
 
+        self.logger.set_scan_name(self.options['url'].value)
+
         pass_found = False
 
         pool = FormBruterThreadsPool(queue, counter, result, pass_found, self.options, self.logger)
