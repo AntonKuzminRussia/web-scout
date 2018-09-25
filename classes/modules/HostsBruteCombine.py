@@ -10,7 +10,7 @@ Class of module for HostsBrute by Dict+Mask
 """
 
 from classes.modules.HostsBruteModules import HostsBruteModules
-from classes.CombineGenerator import CombineGenerator
+from classes.generators.CombineGenerator import CombineGenerator
 from classes.modules.params.HostsBruteCombineModuleParams import HostsBruteCombineModuleParams
 
 

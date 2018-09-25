@@ -11,7 +11,7 @@ Class of module for DAFS by Dict+Mask
 
 
 from classes.modules.ParamsBruterModules import ParamsBruterModules
-from classes.CombineGenerator import CombineGenerator
+from classes.generators.CombineGenerator import CombineGenerator
 from classes.modules.params.ParamsBruterCombineModuleParams import ParamsBruterCombineModuleParams
 
 

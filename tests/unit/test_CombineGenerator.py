@@ -21,7 +21,7 @@ sys.path.append(wrpath + '/classes/models')
 sys.path.append(wrpath + '/classes/kernel')
 sys.path.append(testpath + '/classes')
 
-from classes.CombineGenerator import CombineGenerator
+from classes.generators.CombineGenerator import CombineGenerator
 from libs.common import file_put_contents
 
 class Test_CombineGenerator(object):

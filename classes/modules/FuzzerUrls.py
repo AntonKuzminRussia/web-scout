@@ -18,7 +18,7 @@ from classes.Registry import Registry
 from classes.kernel.WSException import WSException
 from classes.kernel.WSCounter import WSCounter
 from classes.jobs.FuzzerUrlsJob import FuzzerUrlsJob
-from classes.FileGenerator import FileGenerator
+from classes.generators.FileGenerator import FileGenerator
 from classes.threads.pools.FuzzerUrlsThreadPool import FuzzerUrlsThreadsPool
 from classes.modules.params.FuzzerUrlsModuleParams import FuzzerUrlsModuleParams
 

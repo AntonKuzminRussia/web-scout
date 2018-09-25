@@ -22,7 +22,7 @@ from classes.jobs.SpiderJob import SpiderJob
 from classes.SpiderResult import SpiderResult
 from classes.SpiderCommon import SpiderCommon
 from classes.SpiderRequestsCounter import SpiderRequestsCounter
-from classes.FileGenerator import FileGenerator
+from classes.generators.FileGenerator import FileGenerator
 from classes.Registry import Registry
 from classes.Http import Http
 from LoggerMock import LoggerMock

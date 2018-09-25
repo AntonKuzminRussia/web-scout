@@ -9,7 +9,7 @@ Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pr
 Class of module for DAFS by mask
 """
 
-from classes.DictOfMask import DictOfMask
+from classes.generators.DictOfMask import DictOfMask
 from classes.modules.DafsModules import DafsModules
 from classes.modules.params.DafsMaskModuleParams import DafsMaskModuleParams
 

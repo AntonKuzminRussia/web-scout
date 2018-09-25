@@ -9,7 +9,7 @@ Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pr
 Class of WS Module for DNS Brute by mask
 """
 
-from classes.DictOfMask import DictOfMask
+from classes.generators.DictOfMask import DictOfMask
 from classes.modules.DnsBruteModules import DnsBruteModules
 from classes.modules.params.DnsBruteMaskModuleParams import DnsBruteMaskModuleParams
 

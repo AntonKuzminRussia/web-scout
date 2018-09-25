@@ -13,7 +13,7 @@ import os
 
 from classes.kernel.WSException import WSException
 from classes.modules.DnsBruteModules import DnsBruteModules
-from classes.FileGenerator import FileGenerator
+from classes.generators.FileGenerator import FileGenerator
 from classes.modules.params.DnsBruteDictModuleParams import DnsBruteDictModuleParams
 
 

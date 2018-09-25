@@ -9,7 +9,7 @@ Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pr
 Class of module for DAFS by Dict+Mask
 """
 from classes.modules.DafsModules import DafsModules
-from classes.CombineGenerator import CombineGenerator
+from classes.generators.CombineGenerator import CombineGenerator
 from classes.modules.params.DafsCombineModuleParams import DafsCombineModuleParams
 
 

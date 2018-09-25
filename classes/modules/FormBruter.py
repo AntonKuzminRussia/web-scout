@@ -13,7 +13,7 @@ import time
 import os
 
 from classes.Registry import Registry
-from classes.FileGenerator import FileGenerator
+from classes.generators.FileGenerator import FileGenerator
 from classes.jobs.FormBruterJob import FormBruterJob
 from classes.kernel.WSModule import WSModule
 from classes.kernel.WSException import WSException

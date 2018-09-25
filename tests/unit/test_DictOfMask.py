@@ -20,7 +20,7 @@ sys.path.append(wrpath + '/classes/models')
 sys.path.append(wrpath + '/classes/kernel')
 sys.path.append(testpath + '/classes')
 
-from classes.DictOfMask import DictOfMask
+from classes.generators.DictOfMask import DictOfMask
 
 
 class Test_DictOfMask(object):

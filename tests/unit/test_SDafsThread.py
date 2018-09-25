@@ -26,7 +26,7 @@ sys.path.append(testpath + '/classes')
 
 from classes.threads.SDafsThread import SDafsThread
 from classes.jobs.DafsJob import DafsJob
-from classes.FileGenerator import FileGenerator
+from classes.generators.FileGenerator import FileGenerator
 from classes.Registry import Registry
 from classes.Http import Http
 from LoggerMock import LoggerMock

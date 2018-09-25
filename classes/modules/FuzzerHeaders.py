@@ -19,7 +19,7 @@ from classes.kernel.WSModule import WSModule
 from classes.kernel.WSException import WSException
 from classes.threads.pools.FuzzerHeadersThreadPool import FuzzerHeadersThreadsPool
 from classes.modules.params.FuzzerHeadersModuleParams import FuzzerHeadersModuleParams
-from classes.FileGenerator import FileGenerator
+from classes.generators.FileGenerator import FileGenerator
 from libs.common import file_put_contents
 
 

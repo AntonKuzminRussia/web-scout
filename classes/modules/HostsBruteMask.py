@@ -10,7 +10,7 @@ Class of module for HostsBrute by Mask
 """
 
 from classes.modules.HostsBruteModules import HostsBruteModules
-from classes.DictOfMask import DictOfMask
+from classes.generators.DictOfMask import DictOfMask
 from classes.modules.params.HostsBruteMaskModuleParams import HostsBruteMaskModuleParams
 
 

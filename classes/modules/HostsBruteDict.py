@@ -10,7 +10,7 @@ Class of module for HostsBrute by Dict
 """
 
 from classes.modules.HostsBruteModules import HostsBruteModules
-from classes.FileGenerator import FileGenerator
+from classes.generators.FileGenerator import FileGenerator
 from classes.modules.params.HostsBruteDictModuleParams import HostsBruteDictModuleParams
 
 

@@ -27,7 +27,7 @@ sys.path.append(testpath + '/classes')
 
 from classes.threads.HostsBruteThread import HostsBruteThread
 from classes.jobs.HostsBruteJob import HostsBruteJob
-from classes.FileGenerator import FileGenerator
+from classes.generators.FileGenerator import FileGenerator
 from classes.Registry import Registry
 from classes.Http import Http
 from LoggerMock import LoggerMock

@@ -10,7 +10,7 @@ Class of WS Module for DNS Brute by dict+mask
 """
 
 from classes.modules.DnsBruteModules import DnsBruteModules
-from classes.CombineGenerator import CombineGenerator
+from classes.generators.CombineGenerator import CombineGenerator
 from classes.modules.params.DnsBruteCombineModuleParams import DnsBruteCombineModuleParams
 
 

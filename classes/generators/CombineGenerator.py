@@ -11,8 +11,8 @@ Class for generate and work with masks
 
 import os
 
-from classes.DictOfMask import DictOfMask
-from classes.FileGenerator import FileGenerator
+from classes.generators.DictOfMask import DictOfMask
+from classes.generators.FileGenerator import FileGenerator
 from classes.kernel.WSException import WSException
 
 

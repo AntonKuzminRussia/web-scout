@@ -10,7 +10,7 @@ Class of module for DAFS by Dict
 """
 
 from classes.modules.ParamsBruterModules import ParamsBruterModules
-from classes.FileGenerator import FileGenerator
+from classes.generators.FileGenerator import FileGenerator
 from classes.modules.params.ParamsBruterDictModuleParams import ParamsBruterDictModuleParams
 
 

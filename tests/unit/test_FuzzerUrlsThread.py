@@ -29,7 +29,7 @@ from classes.threads.FuzzerUrlsThread import FuzzerUrlsThread
 from classes.jobs.FuzzerUrlsJob import FuzzerUrlsJob
 from classes.Registry import Registry
 from classes.Http import Http
-from classes.FileGenerator import FileGenerator
+from classes.generators.FileGenerator import FileGenerator
 from LoggerMock import LoggerMock
 from CounterMock import CounterMock
 from Common import Common
