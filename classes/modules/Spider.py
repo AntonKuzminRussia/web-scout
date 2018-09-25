@@ -35,6 +35,8 @@ class Spider(WSModule):
     logger_name = 'spider'
     logger_have_items = False
     options = SpiderModuleParams().get_options()
+    src = None
+    logger_scan_name_option = 'url'
 
     def validate_main(self):
         """ Check users params """
@@ -48,7 +50,7 @@ class Spider(WSModule):
                 "File with urls '{0}' not exists!".format(self.options['urls-file'].value)
             )
 
-    def _options_to_registry(self):
+    def options_to_registry(self):
         if self.options['ignore'].value:
             Registry().set('ignore_regexp', re.compile(self.options['ignore'].value))
 
@@ -75,18 +77,20 @@ class Spider(WSModule):
             parse_split_conf(Registry().get('config')['spider']['noscan_content_types'])
         )
 
-    def do_work(self):
-        """ Scan action of module """
-        self.enable_logger()
-        self.validate_main()
-        self.pre_start_inf()
+    def start_pool(self):
+        pool = SpiderThreadsPool(self.queue, self.counter, self.src, self.options, self.logger)
+        pool.start()
 
-        if self.options['proxies'].value:
-            Registry().get('proxies').load(self.options['proxies'].value)
+        while pool.isAlive():
+            if Registry().get('positive_limit_stop'):
+                pool.kill_all()
+            time.sleep(1)
 
-        self.result = SpiderResult()
-        self._options_to_registry()
+    def make_queue(self):
+        self.queue = SpiderJob()
+        self.counter = WSCounter(5, 300, 0)
 
+    def build_queue_source_file(self):
         if len(self.options['urls-file'].value):
             start_urls_file = self.options['urls-file'].value
             start_urls = map(str.strip, open(start_urls_file).readlines())
@@ -102,19 +106,17 @@ class Spider(WSModule):
             os.mkdir(Registry().get('data_path') + target_host)
             os.chmod(Registry().get('data_path') + target_host, 0o777)
 
-        queue = SpiderJob()
-        src = SpiderRequestsCounter(int(Registry().get('config')['spider']['requests_limit']))
-        counter = WSCounter(5, 300, 0)
+    def do_work(self):
+        """ Scan action of module """
+        self.result = SpiderResult()
+        self.options_to_registry()
+        self.build_queue_source_file()
+        self.src = SpiderRequestsCounter(int(Registry().get('config')['spider']['requests_limit']))
 
-        self.logger.set_scan_name(self.options['url'].value)
+        WSModule.do_work(self)
 
-        pool = SpiderThreadsPool(queue, counter, src, self.options, self.logger)
-        pool.start()
-
-        while pool.isAlive():
-            if Registry().get('positive_limit_stop'):
-                pool.kill_all()
-            time.sleep(1)
+    def output(self):
+        WSModule.output(self)
 
         self.logger.log("\nTotal links count: " + str(Registry().get('mongo').spider_urls.count()))
         self.logger.log(str(self.result))

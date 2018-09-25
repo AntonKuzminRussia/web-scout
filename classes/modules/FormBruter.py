@@ -32,6 +32,8 @@ class FormBruter(WSModule):
     logger_have_items = True
     time_count = True
     options = FormBruterModuleParams().get_options()
+    pass_found = False
+    logger_scan_name_option = 'url'
 
     def validate_main(self):
         """ Check users params """
@@ -69,7 +71,6 @@ class FormBruter(WSModule):
                 "You must specify --false-phrase param or --true-phrase param or --false-size param!"
             )
 
-
     def load_objects(self, queue):
         """ Prepare work objects """
         generator = FileGenerator(
@@ -80,19 +81,9 @@ class FormBruter(WSModule):
         queue.set_generator(generator)
         return {'all': generator.lines_count, 'start': generator.first_border, 'end': generator.second_border}
 
-    def do_work(self):
-        """ Brute action of module """
-        self.enable_logger()
-        self.validate_main()
-        self.pre_start_inf()
-
-        if self.options['proxies'].value:
-            Registry().get('proxies').load(self.options['proxies'].value)
-
-        result = []
-
-        queue = FormBruterJob()
-        loaded = self.load_objects(queue)
+    def make_queue(self):
+        self.queue = FormBruterJob()
+        loaded = self.load_objects(self.queue)
 
         self.logger.log(
             "Loaded {0} words ({1}-{2}) from all {3}.".format(
@@ -101,13 +92,10 @@ class FormBruter(WSModule):
             "Loaded {0} words from source.".format(loaded['all'])
         )
 
-        counter = WSCounter(5, 300, loaded['all'] if not loaded['end'] else loaded['end']-loaded['start'])
+        self.counter = WSCounter(5, 300, loaded['all'] if not loaded['end'] else loaded['end'] - loaded['start'])
 
-        self.logger.set_scan_name(self.options['url'].value)
-
-        pass_found = False
-
-        pool = FormBruterThreadsPool(queue, counter, result, pass_found, self.options, self.logger)
+    def start_pool(self):
+        pool = FormBruterThreadsPool(self.queue, self.counter, self.result, self.pass_found, self.options, self.logger)
         pool.start()
 
         while pool.isAlive():
@@ -115,19 +103,10 @@ class FormBruter(WSModule):
                 pool.kill_all()
             time.sleep(1)
 
-        if Registry().get('proxy_many_died'):
-            self.logger.log("Proxy many died, stop scan")
-
-        if Registry().get('positive_limit_stop'):
-            self.logger.log("\nMany positive detections. Please, look items logs")
-            self.logger.log("Last items:")
-            for i in range(1, 5):
-                print result[-i]
-            exit(1)
+    def output(self):
+        WSModule.output(self)
 
         self.logger.log("")
         self.logger.log("Passwords found:")
-        for row in result:
+        for row in self.result:
             self.logger.log('\t' + row['word'])
-
-        self.done = True

@@ -23,37 +23,12 @@ class HostsBruteModules(WSModule):
     logger_enable = True
     logger_name = 'hosts'
     logger_have_items = True
+    logger_scan_name_option = 'template'
 
-    def load_objects(self, queue):
-        """ Method for prepare check objects, here abstract """
-        pass
+    def make_queue(self):
+        self.queue = HostsBruteJob()
 
-    def validate_main(self):
-        """ Check users params """
-        super(HostsBruteModules, self).validate_main()
-
-        if not self.options['template'].value.count(self.options['msymbol'].value):
-            raise WSException(
-                "Template '{0}' not contains msymbol ({1})".format(
-                    self.options['template'].value,
-                    self.options['msymbol'].value
-                )
-            )
-
-    def do_work(self):
-        """ Brute action of module """
-        self.enable_logger()
-        self.validate_main()
-        self.pre_start_inf()
-
-        if self.options['proxies'].value:
-            Registry().get('proxies').load(self.options['proxies'].value)
-
-        result = []
-
-        queue = HostsBruteJob()
-
-        loaded = self.load_objects(queue)
+        loaded = self.load_objects(self.queue)
 
         self.logger.log(
             "Loaded {0} words ({1}-{2}) from all {3}.".format(
@@ -62,11 +37,10 @@ class HostsBruteModules(WSModule):
             "Loaded {0} words from source.".format(loaded['all'])
         )
 
-        counter = WSCounter(5, 300, loaded['all'] if not loaded['end'] else loaded['end']-loaded['start'])
+        self.counter = WSCounter(5, 300, loaded['all'] if not loaded['end'] else loaded['end']-loaded['start'])
 
-        self.logger.set_scan_name(self.options['template'].value + "|" + self.options['ip'].value)
-
-        pool = HostsBruteThreadsPool(queue, counter, result, self.options, self.logger)
+    def start_pool(self):
+        pool = HostsBruteThreadsPool(self.queue, self.counter, self.result, self.options, self.logger)
         pool.start()
 
         while pool.isAlive():
@@ -74,18 +48,9 @@ class HostsBruteModules(WSModule):
                 pool.kill_all()
             time.sleep(1)
 
-        if Registry().get('proxy_many_died'):
-            self.logger.log("Proxy many died, stop scan")
+    def output(self):
+        WSModule.output(self)
 
-        if Registry().get('positive_limit_stop'):
-            self.logger.log("\nMany positive detections. Please, look items logs")
-            self.logger.log("Last items:")
-            for i in range(1, 5):
-                print result[-i]
-            exit(1)
-
-        self.logger.log("\nFound {0} hosts:".format(len(result)))
-        for host in result:
+        self.logger.log("\nFound {0} hosts:".format(len(self.result)))
+        for host in self.result:
             self.logger.log("\t" + host)
-
-        self.done = True

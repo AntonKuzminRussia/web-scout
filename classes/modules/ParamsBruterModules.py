@@ -23,29 +23,12 @@ class ParamsBruterModules(WSModule):
     logger_enable = True
     logger_name = 'params-bruter'
     logger_have_items = True
+    logger_scan_name_option = 'url'
 
-    def load_objects(self, queue):
-        """ Method for prepare check objects, here abstract """
-        pass
+    def make_queue(self):
+        self.queue = ParamsBruterJob()
 
-    def validate_main(self):
-        """ Check users params """
-        super(ParamsBruterModules, self).validate_main()
-
-    def do_work(self):
-        """ Scan action of module """
-        self.enable_logger()
-        self.validate_main()
-        self.pre_start_inf()
-
-        if self.options['proxies'].value:
-            Registry().get('proxies').load(self.options['proxies'].value)
-
-        result = []
-
-        queue = ParamsBruterJob()
-
-        loaded = self.load_objects(queue)
+        loaded = self.load_objects(self.queue)
 
         self.logger.log(
             "Loaded {0} words ({1}-{2}) from all {3}.".format(
@@ -54,11 +37,10 @@ class ParamsBruterModules(WSModule):
             "Loaded {0} words from source.".format(loaded['all'])
         )
 
-        counter = WSCounter(50, 3000, loaded['all'] if not loaded['end'] else loaded['end']-loaded['start'])
+        self.counter = WSCounter(50, 3000, loaded['all'] if not loaded['end'] else loaded['end']-loaded['start'])
 
-        self.logger.set_scan_name(self.options['url'].value)
-
-        pool = ParamsBruterThreadsPool(queue, counter, result, self.options, self.logger)
+    def start_pool(self):
+        pool = ParamsBruterThreadsPool(self.queue, self.counter, self.result, self.options, self.logger)
         pool.start()
 
         while pool.isAlive():
@@ -66,15 +48,9 @@ class ParamsBruterModules(WSModule):
                 pool.kill_all()
             time.sleep(1)
 
-        if Registry().get('positive_limit_stop'):
-            self.logger.log("\nMany positive detections. Please, look items logs")
-            self.logger.log("Last items:")
-            for i in range(1, 5):
-                print result[-i]
-            exit(1)
+    def output(self):
+        WSModule.output(self)
 
         self.logger.log("\n")
-        for result_row in result:
+        for result_row in self.result:
             self.logger.log(result_row)
-
-        self.done = True

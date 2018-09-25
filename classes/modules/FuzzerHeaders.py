@@ -45,29 +45,21 @@ class FuzzerHeaders(WSModule):
                 "File with urls '{0}' not exists!".format(self.options['urls-file'].value)
             )
 
-    def do_work(self):
-        """ Scan action of module """
-        self.enable_logger()
-        self.validate_main()
-        self.pre_start_inf()
-
-        if self.options['proxies'].value:
-            Registry().get('proxies').load(self.options['proxies'].value)
-
-        result = []
-
-        queue = FuzzerHeadersJob()
+    def make_queue(self):
+        self.queue = FuzzerHeadersJob()
         if len(self.options['urls-file'].value):
             generator = FileGenerator(self.options['urls-file'].value)
         else:
             file_put_contents('/tmp/fuzzer-urls.txt', self.options['url'].value)
             generator = FileGenerator('/tmp/fuzzer-urls.txt')
 
-        queue.set_generator(generator)
+        self.queue.set_generator(generator)
         self.logger.log("Loaded {0} variants.".format(generator.lines_count))
 
-        counter = WSCounter(1, 60, generator.lines_count)
-        pool = FuzzerHeadersThreadsPool(queue, counter, result, self.options, self.logger)
+        self.counter = WSCounter(1, 60, generator.lines_count)
+
+    def start_pool(self):
+        pool = FuzzerHeadersThreadsPool(self.queue, self.counter, self.result, self.options, self.logger)
         pool.start()
 
         while pool.isAlive():
@@ -75,22 +67,13 @@ class FuzzerHeaders(WSModule):
                 pool.kill_all()
             time.sleep(1)
 
-        if Registry().get('positive_limit_stop'):
-            self.logger.log("\nMany positive detections. Please, look items logs")
-            self.logger.log("Last items:")
-            for i in range(1, 5):
-                print result[-i]
-            exit(1)
-
-        if Registry().get('proxy_many_died'):
-            self.logger.log("Proxy many died, stop scan")
+    def output(self):
+        WSModule.output(self)
 
         self.logger.log("\n")
-        for fuzz in result:
+        for fuzz in self.result:
             self.logger.log("{0} (Word(s): {1}, Header: {2})".format(
                 fuzz['url'],
                 ", ".join(fuzz['words']),
                 fuzz['header']
             ))
-
-        self.done = True

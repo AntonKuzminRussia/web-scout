@@ -25,6 +25,7 @@ class DnsBruteModules(WSModule):
     logger_enable = True
     logger_name = 'dns'
     logger_have_items = True
+    logger_scan_name_option = 'template'
 
     ZONE_CNAME = 'CNAME'
     ZONE_A = 'A'
@@ -44,12 +45,6 @@ class DnsBruteModules(WSModule):
                 .format(self.options['http-protocol'].value)
             )
 
-        if not self.options['template'].value.count(self.options['msymbol'].value):
-            raise WSException(
-                "Brute template must contains msymbol ({0}), but it not ({1})"
-                .format(self.options['msymbol'].value, self.options['template'].value)
-            )
-
         if self.options['zone'].value.upper() not in self.POSSIBLE_ZONES:
             raise WSException(
                 "Wrong DNS zone - '{0}', allowed: {1}"
@@ -63,35 +58,8 @@ class DnsBruteModules(WSModule):
                 format(self.options['http-proxies'].value)
             )
 
-    def load_objects(self, queue):
-        """ Method for prepare test objects, here abstract """
-        pass
-
-    def do_work(self):
-        """ Action brute of module """
-        self.enable_logger()
-        self.validate_main()
-        self.pre_start_inf()
-
-        if self.options['http-proxies'].value:
-            Registry().get('proxies').load(self.options['http-proxies'].value)
-
-        queue = DnsBruteJob()
-
-        loaded = self.load_objects(queue)
-        self.logger.log(
-            "Loaded {0} words ({1}-{2}) from all {3}.".format(
-                (loaded['end'] - loaded['start']), loaded['start'], loaded['end'], loaded['all'])
-            if (int(self.options['parts'].value) and int(self.options['part'].value)) else
-            "Loaded {0} words from source.".format(loaded['all'])
-        )
-        counter = WSCounter(5, 300, loaded['all'] if not loaded['end'] else loaded['end']-loaded['start'])
-
-        self.logger.set_scan_name(self.options['template'].value)
-
-        result = []
-
-        pool = DnsBruteThreadsPool(queue, counter, result, self.options, self.logger)
+    def start_pool(self):
+        pool = DnsBruteThreadsPool(self.queue, self.counter, self.result, self.options, self.logger)
         pool.start()
 
         while pool.isAlive():
@@ -99,34 +67,37 @@ class DnsBruteModules(WSModule):
                 pool.kill_all()
             time.sleep(1)
 
-        if Registry().get('positive_limit_stop'):
-            self.logger.log("\nMany positive detections. Please, look items logs")
-            self.logger.log("Last items:")
-            for i in range(1, 5):
-                print result[-i]
-            exit(1)
+    def make_queue(self):
+        self.queue = DnsBruteJob()
 
-        self._output(result)
+        loaded = self.load_objects(self.queue)
+        self.logger.log(
+            "Loaded {0} words ({1}-{2}) from all {3}.".format(
+                (loaded['end'] - loaded['start']), loaded['start'], loaded['end'], loaded['all'])
+            if (int(self.options['parts'].value) and int(self.options['part'].value)) else
+            "Loaded {0} words from source.".format(loaded['all'])
+        )
+        self.counter = WSCounter(5, 300, loaded['all'] if not loaded['end'] else loaded['end'] - loaded['start'])
 
-        self.done = True
+    def output(self):
+        WSModule.output(self)
 
-    def _output(self, result):
         self.logger.log("\nFound hosts (full):")
-        for host in result:
+        for host in self.result:
             self.logger.log("\t{0} {1} (DNS: {2})".format(host['name'], host['ip'], host['dns']))
 
         self.logger.log("\nFound hosts names:")
-        for host in result:
+        for host in self.result:
             self.logger.log("\t{0}".format(host['name']))
 
         self.logger.log("Found IPs:")
 
         uniq_hosts = []
-        for host in result:
+        for host in self.result:
             uniq_hosts.append(host['ip'])
         uniq_hosts = list(set(uniq_hosts))
 
         for host in uniq_hosts:
             self.logger.log("\t" + host)
 
-        self.logger.log("\nFound {0} hosts.".format(len(result)))
+        self.logger.log("\nFound {0} hosts.".format(len(self.result)))

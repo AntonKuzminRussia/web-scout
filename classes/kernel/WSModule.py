@@ -21,23 +21,62 @@ class WSModule(object):
     log_path = None
     log_width = 60
     description = "module description"
-    result = None
     done = False
     options = []
     time_count = False
     logger = None
     logger_enable = False
     options_sets = {}
-    action = None
+
+    counter = None
+    queue = None
+    result = []
+
+    logger_scan_name_option = None
 
     def __init__(self, kernel):
         self.kernel = kernel
         if self.log_path is None:
             raise WSException('Module must have log path!')
 
+    def prepare(self):
+        self.enable_logger()
+        self.validate_main()
+        self.pre_start_inf()
+        self.load_proxies()
+
+    def output(self):
+        if Registry().get('proxy_many_died'):
+            self.logger.log("Proxy many died, stop scan")
+
+        if Registry().get('positive_limit_stop'):
+            self.logger.log("\nMany positive detections. Please, look items logs")
+            self.logger.log("Last items:")
+            for i in range(1, 5):
+                print self.result[-i]
+            exit(1)
+
+    def load_proxies(self):
+        for option_key in ['proxies', 'http-ptoxies']:
+            if option_key in self.options and self.options[option_key].value:
+                Registry().get('proxies').load(self.options[option_key].value)
+
+    def load_objects(self, queue):
+        """ Method for prepare test objects, here abstract """
+        raise WSException("This method must be described in child-class")
+
+    def make_queue(self):
+        raise WSException("This method must be described in child-class")
+
+    def start_pool(self):
+        raise WSException("This method must be decsribed in child-class")
+
     def enable_logger(self):
         """ Turn on logger """
         self.logger = Registry().get('logger')
+
+        if self.logger_scan_name_option is not None:
+            self.logger.set_scan_name(self.options[self.logger_scan_name_option].value)
 
     def pre_start_inf(self):
         """ Show options values before work start """
@@ -67,6 +106,18 @@ class WSModule(object):
     def finished(self):
         """ Is module finished? """
         return self.done
+
+    def do_work(self):
+        """ Scan action of module """
+        self.prepare()
+
+        self.make_queue()
+
+        self.start_pool()
+
+        self.output()
+
+        self.done = True
 
     def validate_main(self):
         """ Common user params validate functions """
@@ -173,4 +224,11 @@ class WSModule(object):
             if self.options['parts'].value == '0':
                 raise WSException(
                     "If you use '--part' param, you must specify '--parts'"
+                )
+
+        if 'template' in self.options.keys() and 'msymbol' in self.options.keys():
+            if self.options['template'].value.find(self.options['msymbol'].value) == -1:
+                raise WSException(
+                    "Symbol of object position ({0}) not found in template ({1}) ".
+                    format(self.options['msymbol'].value, self.options['template'].value)
                 )
