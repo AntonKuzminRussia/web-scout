@@ -19,9 +19,8 @@ import time
 from libs.common import t, md5
 from classes.Registry import Registry
 from classes.kernel.WSException import WSException
-from bson import Binary
 from classes.logger.MongoInserterThread import MongoLoggerThread
-
+from classes.kernel.WSMongo import WSMongo
 
 class Logger(object):
     """ Class for logging WS output """
@@ -96,18 +95,19 @@ class Logger(object):
         sys.stdout.flush()
 
     def item(self, name, content, binary=False, positive=False):
-        """ Write item and it content in txt-file """
+        """ Write item and it content in mongo """
         if self.scan_name is None:
             raise WSException("Scan name must be specified before logging")
+
+        content_hash = WSMongo.load_mongo_content_hash(content)
 
         item_data = {
             'name': name,
             'len': len(content),
             'binary': binary,
-            'content': Binary(content),
             'positive': positive,
             'scan_hash': self.scan_hash,
-            'hash': md5(content)
+            'hash': content_hash
         }
 
         self.mongo_inserter_queue.put(item_data)

@@ -18,13 +18,13 @@ from pymongo import MongoClient
 import pymongo.errors
 from pyvirtualdisplay import Display
 
-from libs.common import file_get_contents
+from libs.common import file_get_contents, md5
 from classes.Http import Http
-from classes.Database import Database
 from classes.Proxies import Proxies
 from classes.kernel.WSKernel import WSKernel
 from classes.kernel.WSException import WSException
 from classes.Registry import Registry
+
 
 class WSBase(object):
     """ Kernel base class. Prepare work, load config, connect db, etc """
@@ -34,7 +34,7 @@ class WSBase(object):
 
         try:
             mc = MongoClient(host=config['mongo']['host'], port=int(config['mongo']['port']))
-            mongo_collection = getattr(mc, config['mongo']['collection'])
+            mongo_collection = getattr(mc, config['mongo']['collection']) #TODO it`s not collection, it`s db
         except pymongo.errors.ConnectionFailure as e:
             print " ERROR: Can`t connect to MongoDB server! ({0})".format(str(e))
             exit(0)
@@ -58,6 +58,17 @@ class WSBase(object):
             display = Display(visible=0, size=(800, 600))
             display.start()
             R.set('display', display)
+
+        coll = Registry().get('mongo').responses_content
+        if coll.count() == 0:
+            data = {
+                'hash': md5(''),
+                'content': '',
+            }
+            coll.insert(data)
+
+            coll.create_index([('hash', 1)], unique=True)
+
 
     def random_ua(self):
         fh = open(Registry().get('wr_path') + "/bases/useragents.txt", 'r')

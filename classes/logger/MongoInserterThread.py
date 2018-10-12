@@ -17,7 +17,6 @@ class MongoLoggerThread(threading.Thread):
     queue = None
     pool = None
     pool_count_limit = None
-    pool_size_limit = None
     current_pool_size = 0
     working = True
 
@@ -28,7 +27,6 @@ class MongoLoggerThread(threading.Thread):
         self.mdb = Registry().get('mongo')
         self.queue = queue
         self.pool_count_limit = int(Registry().get('config')['main']['mongo_logger_items_pool_count_limit'])
-        self.pool_size_limit = int(Registry().get('config')['main']['mongo_logger_items_pool_size_limit'])
 
     def insert_pool(self):
         need_create_indexes = 'items' not in self.mdb.collection_names()
@@ -49,9 +47,8 @@ class MongoLoggerThread(threading.Thread):
                 item = self.queue.get(False)
 
                 self.pool.append(item)
-                self.current_pool_size += len(item['content'])
 
-                if len(self.pool) > self.pool_count_limit or self.current_pool_size > self.pool_size_limit:
+                if len(self.pool) > self.pool_count_limit:
                     self.insert_pool()
             except Queue.Empty:
                 time.sleep(1)

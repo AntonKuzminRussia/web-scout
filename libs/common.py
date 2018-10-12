@@ -168,8 +168,10 @@ def is_binary_content_type(content_type):
             return False
     return True
 
+
 def md5sum(path):
     return hashlib.md5(open(path, 'rb').read()).hexdigest()
+
 
 def get_response_size(resp):
     return len(resp.content)
