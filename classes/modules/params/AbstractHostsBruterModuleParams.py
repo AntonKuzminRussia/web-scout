@@ -12,6 +12,7 @@ class AbstractHostsBruterModuleParams(AbstractModuleParams):
                 'headers-file',
                 "ignore-words-re",
                 "retest-codes",
+                "retest-phrase"
                 'false-phrase',
                 'ip',
                 'msymbol',

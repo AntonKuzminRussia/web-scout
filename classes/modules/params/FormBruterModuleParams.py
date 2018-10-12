@@ -21,6 +21,7 @@ class FormBruterModuleParams(AbstractModuleParams):
                 'true-phrase',
                 'false-size',
                 "retest-codes",
+                "retest-phrase",
                 'delay',
                 'selenium',
                 "ddos-detect-phrase",

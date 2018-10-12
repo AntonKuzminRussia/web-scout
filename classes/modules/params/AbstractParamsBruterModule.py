@@ -17,6 +17,7 @@ class AbstractParamsBruterModule(AbstractModuleParams):
                 "not-found-codes",
                 "ignore-words-re",
                 "retest-codes",
+                "retest-phrase"
                 "delay",
                 "ddos-detect-phrase",
                 "ddos-human-action",

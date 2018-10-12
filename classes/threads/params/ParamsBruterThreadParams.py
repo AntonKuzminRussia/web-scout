@@ -26,6 +26,7 @@ class ParamsBruterThreadParams:
     browser_recreate_re = None
     ignore_words_re = None
     retest_codes = None
+    retest_phrase = None
 
     def __init__(self, options):
         self.url = options['url'].value
@@ -47,3 +48,4 @@ class ParamsBruterThreadParams:
         self.not_found_codes = list(set(not_found_codes))
 
         self.retest_codes = list(set(options['retest-codes'].value.split(','))) if len(options['retest-codes'].value) else []
+        self.retest_phrase = options['retest-phrase'].value if len(options['retest-phrase'].value) else None

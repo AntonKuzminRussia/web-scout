@@ -20,6 +20,7 @@ class HostBruteThreadParams:
     retest_codes = None
     delay = None
     ignore_words_re = None
+    retest_phrase = None
 
     def __init__(self, options):
         self.protocol = options['protocol'].value
@@ -30,3 +31,4 @@ class HostBruteThreadParams:
         self.retest_codes = list(set(options['retest-codes'].value.lower().split(','))) if len(options['retest-codes'].value.lower()) else []
         self.delay = int(options['delay'].value)
         self.ignore_words_re = False if not len(options['ignore-words-re'].value) else re.compile(options['ignore-words-re'].value)
+        self.retest_phrase = options['retest-phrase'].value if len(options['retest-phrase'].value) else None

@@ -13,6 +13,7 @@ class AbstractDafsModuleParams(AbstractModuleParams):
                 'not-found-codes',
                 'ignore-words-re',
                 'retest-codes',
+                'retest-phrase',
                 'delay',
                 'selenium',
                 'ddos-detect-phrase',

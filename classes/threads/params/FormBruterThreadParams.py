@@ -27,6 +27,7 @@ class FormBruterThreadParams:
     confstr = None
     false_size = None
     retest_codes = None
+    retest_phrase = None
 
     def __init__(self, options):
         self.url = options['url'].value
@@ -45,3 +46,4 @@ class FormBruterThreadParams:
         self.confstr = options['confstr'].value
         self.false_size = int(options['false-size'].value) if options['false-size'].value is not None else None
         self.retest_codes = list(set(options['retest-codes'].value.split(','))) if len(options['retest-codes'].value) else []
+        self.retest_phrase = options['retest-phrase'].value if len(options['retest-phrase'].value) else None
