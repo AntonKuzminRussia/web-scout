@@ -15,6 +15,7 @@ import pprint
 
 from requests.exceptions import ChunkedEncodingError, ConnectionError
 
+from libs.common import get_response_size
 from classes.threads.HttpThread import HttpThread
 from classes.threads.params.HostBruteThreadParams import HostBruteThreadParams
 
@@ -94,7 +95,7 @@ class HostsBruteThread(HttpThread):
                 search_scope += '\r\n\r\n' + resp.text
 
                 positive_item = False
-                if resp is not None and not search_scope.count(self.false_phrase):
+                if resp is not None and (not search_scope.count(self.false_phrase) or (self.false_size is not None and get_response_size(resp, self.url, "POST") != self.false_size)):
                     self.result.append(hostname)
                     self.xml_log({'hostname': hostname})
                     positive_item = True

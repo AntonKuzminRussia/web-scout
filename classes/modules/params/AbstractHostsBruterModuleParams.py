@@ -14,6 +14,7 @@ class AbstractHostsBruterModuleParams(AbstractModuleParams):
                 "retest-codes",
                 "retest-phrase"
                 'false-phrase',
+                'false-size',
                 'ip',
                 'msymbol',
             ]

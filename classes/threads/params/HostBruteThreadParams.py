@@ -21,6 +21,7 @@ class HostBruteThreadParams:
     delay = None
     ignore_words_re = None
     retest_phrase = None
+    false_size = None
 
     def __init__(self, options):
         self.protocol = options['protocol'].value
@@ -32,3 +33,4 @@ class HostBruteThreadParams:
         self.delay = int(options['delay'].value)
         self.ignore_words_re = False if not len(options['ignore-words-re'].value) else re.compile(options['ignore-words-re'].value)
         self.retest_phrase = options['retest-phrase'].value if len(options['retest-phrase'].value) else None
+        self.false_size = int(options['false-size'].value) if options['false-size'].value is not None else None
