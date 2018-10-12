@@ -12,6 +12,7 @@ Library with common used functions
 
 import os
 import re
+import sys
 import hashlib
 import locale
 import time
@@ -74,7 +75,7 @@ def main_help():
     config = configparser.ConfigParser()
     config.read(os.getcwd() + '/' + 'config.ini')
     print "Web-Scout " + config['main']['version']
-    print "Usage: ./main.py projectName moduleName actionName [-h|args]"
+    print "Usage: {0} moduleName [-h|args]".format(sys.argv[0])
     exit(0)
 
 
