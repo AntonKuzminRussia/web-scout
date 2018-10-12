@@ -11,7 +11,6 @@ Thread class for DnsBrute* modules
 import time
 import Queue
 import re
-import threading
 import copy
 
 import requests
@@ -61,9 +60,6 @@ class DnsBruteThread(AbstractThread):
         self.http_protocol = params.http_protocol
         self.http_retest_phrase = params.http_retest_phrase
         self.zone = params.zone
-
-        self.retest_delay = int(Registry().get('config')['dns']['retest_delay'])
-        self.retest_limit = int(Registry().get('config')['dns']['retest_limit'])
 
         self.check_name = ""
 
@@ -115,15 +111,7 @@ class DnsBruteThread(AbstractThread):
                         self.parse_zone_cname(result)
                     else:
                         raise WSException("Wrong dns zone '{0}'".format(self.zone))
-                elif Registry().isset('tester'):
-                        Registry().get('tester').put(
-                            self.check_name,
-                            {
-                                'ip': '',
-                                'dns': self.dns_srv,
-                                'positive': False
-                            }
-                        )
+                self.test_log('', False)
 
                 if len(self.result) >= int(Registry().get('config')['main']['positive_limit_stop']):
                     Registry().set('positive_limit_stop', True)
@@ -142,9 +130,16 @@ class DnsBruteThread(AbstractThread):
                 self.logger.log("Exception with {0}".format(self.dns_srv))
                 time.sleep(5)
 
-            if Registry().isset('tester') and Registry().get('tester').done():
-                self.done = True
-                break
+    def test_log(self, answer, positive_item):
+        if self.is_test():
+            self.test_put(
+                self.check_name,
+                {
+                    'ip': str(answer),
+                    'dns': self.dns_srv,
+                    'positive': positive_item
+                }
+            )
 
     def parse_zone_cname(self, dns_result):
         """ Parsing CNAME zone answer """
@@ -154,18 +149,9 @@ class DnsBruteThread(AbstractThread):
             positive_item = True
             item_data = {'name': self.check_name, 'ip': answer, 'dns': self.dns_srv}
             self.result.append(item_data)
-            if Registry().isset('xml'):
-                Registry().get('xml').put_result(item_data)
+            self.xml_log(item_data)
 
-        if Registry().isset('tester'):
-            Registry().get('tester').put(
-                self.check_name,
-                {
-                    'ip': str(answers),
-                    'dns': self.dns_srv,
-                    'positive': positive_item
-                }
-            )
+        self.test_log(answers, positive_item)
 
 
     def parse_zone_a(self, response):
@@ -179,19 +165,11 @@ class DnsBruteThread(AbstractThread):
                     positive_item = True
                     item_data = {'name': self.check_name, 'ip': ip, 'dns': self.dns_srv}
                     self.result.append(item_data)
-                    if Registry().isset('xml'):
-                        Registry().get('xml').put_result(item_data)
+                    self.xml_log(item_data)
             break
 
-        if self.http_nf_re is None and Registry().isset('tester'):
-            Registry().get('tester').put(
-                self.check_name,
-                {
-                    'ip': '',
-                    'dns': self.dns_srv,
-                    'positive': positive_item
-                }
-            )
+        if self.http_nf_re is None:
+            self.test_log('', positive_item)
 
     def http_test(self, ip):
         """ Make HTTP(S) test for found ip """
@@ -223,23 +201,14 @@ class DnsBruteThread(AbstractThread):
                     positive_item = True
                     item_data = {'name': self.check_name, 'ip': ip, 'dns': self.dns_srv}
                     self.result.append(item_data)
-                    if Registry().isset('xml'):
-                        Registry().get('xml').put_result(item_data)
+                    self.xml_log(item_data)
                     self.logger.item(
                         self.check_name,
                         text_for_search,
                         self.is_response_content_binary(resp),
                         positive=positive_item
                     )
-                if Registry().isset('tester'):
-                    Registry().get('tester').put(
-                        self.check_name,
-                        {
-                            'ip': ip,
-                            'dns': self.dns_srv,
-                            'positive': positive_item
-                        }
-                    )
+                self.test_log(ip, positive_item)
                 break
             except (requests.exceptions.ConnectionError,
                     requests.exceptions.ChunkedEncodingError) as e:
@@ -255,8 +224,7 @@ class DnsBruteThread(AbstractThread):
 
                 item_data = {'name': self.check_name, 'ip': ip, 'dns': self.dns_srv}
                 self.result.append(item_data)
-                if Registry().isset('xml'):
-                    Registry().get('xml').put_result(item_data)
+                self.xml_log(item_data)
                 self.logger.item(
                     self.check_name,
                     'ERROR: ' + str(e),

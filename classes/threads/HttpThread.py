@@ -3,10 +3,23 @@ import copy
 from libs.common import is_binary_content_type
 from classes.Registry import Registry
 from classes.threads.AbstractThread import AbstractThread
+from libs.common import get_response_size
 
 
 class HttpThread(AbstractThread):
     http = None
+
+    def test_log(self, url, resp, positive_item):
+        if self.is_test():
+            self.test_put(
+                url,
+                {
+                    'code': resp.status_code if resp is not None else 0,
+                    'positive': positive_item,
+                    'size': get_response_size(resp) if resp is not None else 0,
+                    'content': resp.content if resp is not None else '',
+                }
+            )
 
     def __init__(self):
         AbstractThread.__init__(self)

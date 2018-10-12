@@ -12,11 +12,9 @@ Thread class for Dafs modules
 import Queue
 import time
 
-from libs.common import get_response_size
 from requests.exceptions import ChunkedEncodingError, ConnectionError
 from classes.threads.HttpThread import HttpThread
 from classes.threads.params.ParamsBruterThreadParams import ParamsBruterThreadParams
-from classes.Registry import Registry
 
 
 class ParamsBruterThread(HttpThread):
@@ -51,9 +49,6 @@ class ParamsBruterThread(HttpThread):
         self.not_found_codes = params.not_found_codes
         self.retest_codes = params.retest_codes
         self.delay = params.delay
-
-        self.retest_limit = int(Registry().get('config')['dafs']['retest_limit'])
-        self.retest_delay = int(Registry().get('config')['params_bruter']['retest_delay'])
 
     def build_params_str(self):
         params_str = "" if not len(self.last_word) else "{0}={1}&".format(self.last_word, self.value)
@@ -120,14 +115,12 @@ class ParamsBruterThread(HttpThread):
 
                         if self.is_response_right(resp):
                             self.result.append(one_param)
-                            if Registry().isset('xml'):
-                                Registry().get('xml').put_result({'param': one_param})
+                            self.xml_log({'param': one_param})
                             param_found = True
                             found_item = one_param
 
                     if param_found is False:
-                        if Registry().isset('xml'):
-                            Registry().get('xml').put_result({'param': params_str})
+                        self.xml_log({'param': params_str})
                         self.result.append(params_str)
                         found_item = params_str
 
@@ -135,16 +128,7 @@ class ParamsBruterThread(HttpThread):
 
                     self.log_item(found_item, resp, positive_item)
 
-                if Registry().isset('tester'):
-                    Registry().get('tester').put(
-                        params_str,
-                        {
-                            'code': resp.status_code,
-                            'positive': positive_item,
-                            'size': get_response_size(resp, self.url, self.method),
-                            'content': resp.content,
-                        }
-                    )
+                self.test_log(params_str, resp, positive_item)
 
                 self.check_positive_limit_stop(self.result)
 
@@ -166,7 +150,3 @@ class ParamsBruterThread(HttpThread):
                     pass
                 except UnboundLocalError:
                     self.logger.ex(e)
-
-            if Registry().isset('tester') and Registry().get('tester').done():
-                self.done = True
-                break

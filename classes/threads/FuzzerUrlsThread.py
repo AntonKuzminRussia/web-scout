@@ -10,13 +10,11 @@ Thread class for FuzzerUrls module
 """
 from __future__ import division
 
-import threading
 import Queue
 import time
 
 from requests.exceptions import ConnectionError
 
-from classes.Registry import Registry
 from classes.threads.params.FuzzerThreadParams import FuzzerThreadParams
 from classes.threads.HttpThread import HttpThread
 
@@ -67,8 +65,7 @@ class FuzzerUrlsThread(HttpThread):
                 if 499 < resp.status_code < 600:
                     item_data = {"url": url, "words": ["{0} Status code".format(resp.status_code)]}
                     self.result.append(item_data)
-                    if Registry().isset('xml'):
-                        Registry().get('xml').put_result(item_data)
+                    self.xml_log(item_data)
                     continue
 
                 found_words = []
@@ -76,11 +73,12 @@ class FuzzerUrlsThread(HttpThread):
                     if resp.text.lower().count(bad_word):
                         found_words.append(bad_word)
 
+                self.test_log(url, resp, len(found_words) > 0)
+
                 if len(found_words):
                     item_data = {"url": url, "words": found_words}
                     self.result.append(item_data)
-                    if Registry().isset('xml'):
-                        Registry().get('xml').put_result(item_data)
+                    self.xml_log(item_data)
 
                 #self.log_item(str(found_words), resp, len(found_words) > 0)
 

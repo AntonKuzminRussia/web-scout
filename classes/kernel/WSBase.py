@@ -14,7 +14,6 @@ import os
 import random
 
 import configparser
-import mysql.connector
 from pymongo import MongoClient
 import pymongo.errors
 from pyvirtualdisplay import Display

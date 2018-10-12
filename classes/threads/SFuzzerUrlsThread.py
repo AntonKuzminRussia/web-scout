@@ -67,8 +67,7 @@ class SFuzzerUrlsThread(SeleniumThread):
 
                 if len(found_words):
                     item_data = {"url": url, "words": found_words}
-                    if Registry().isset('xml'):
-                        Registry().get('xml').put_result(item_data)
+                    self.xml_log(item_data)
                     self.result.append(item_data)
 
                 self.counter.up()

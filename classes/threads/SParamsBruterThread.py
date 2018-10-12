@@ -104,14 +104,12 @@ class SParamsBruterThread(SeleniumThread):
 
                         if not self.not_found_re.findall(self.browser.page_source):
                             self.result.append(one_param)
-                            if Registry().isset('xml'):
-                                Registry().get('xml').put_result({'param': one_param})
+                            self.xml_log({'param': one_param})
                             param_found = True
                             found_item = one_param
 
                     if param_found is False:
-                        if Registry().isset('xml'):
-                            Registry().get('xml').put_result({'param': params_str})
+                        self.xml_log({'param': params_str})
                         self.result.append(params_str)
                         found_item = params_str
 

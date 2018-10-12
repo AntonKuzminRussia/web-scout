@@ -15,8 +15,6 @@ import pprint
 
 from requests.exceptions import ChunkedEncodingError, ConnectionError
 
-from libs.common import get_response_size
-from classes.Registry import Registry
 from classes.threads.HttpThread import HttpThread
 from classes.threads.params.DafsThreadParams import DafsThreadParams
 
@@ -50,9 +48,6 @@ class DafsThread(HttpThread):
         self.not_found_codes = params.not_found_codes
         self.retest_codes = params.retest_codes
         self.delay = params.delay
-
-        self.retest_delay = int(Registry().get('config')['dafs']['retest_delay'])
-        self.retest_limit = int(Registry().get('config')['dafs']['retest_limit'])
 
     def run(self):
         """ Run thread """
@@ -89,25 +84,10 @@ class DafsThread(HttpThread):
                     if self.not_found_ex is not False and str(ex).count(self.not_found_ex):
                         positive_item = False
                         self.log_item(word, str(ex), positive_item)
-                    elif not Registry().isset('tester'):
+                    elif not self.is_test():
                         need_retest = True
                         self.http.change_proxy()
-
-                    if Registry().isset('tester'):
-                        Registry().get('tester').put(
-                            url,
-                            {
-                                'code': 0,
-                                'positive': positive_item,
-                                'size': 0,
-                                'content': '',
-                                'exception': str(ex),
-                            }
-                        )
-
-                        if Registry().isset('tester') and Registry().get('tester').done():
-                            self.done = True
-                            break
+                    self.test_log(url, None, False)
 
                     continue
 
@@ -123,20 +103,10 @@ class DafsThread(HttpThread):
                         'time': int(time.time()) - rtime
                     }
                     self.result.append(item_data)
-                    if Registry().isset('xml'):
-                        Registry().get('xml').put_result(item_data)
+                    self.xml_log(item_data)
                     positive_item = True
 
-                if Registry().isset('tester'):
-                    Registry().get('tester').put(
-                        url,
-                        {
-                            'code': resp.status_code,
-                            'positive': positive_item,
-                            'size': get_response_size(resp, url, self.method),
-                            'content': resp.content,
-                        }
-                    )
+                self.test_log(url, resp, positive_item)
 
                 self.log_item(word, resp, positive_item)
 
@@ -161,7 +131,3 @@ class DafsThread(HttpThread):
                     pass
                 except UnboundLocalError:
                     self.logger.ex(e)
-
-            if Registry().isset('tester') and Registry().get('tester').done():
-                self.done = True
-                break

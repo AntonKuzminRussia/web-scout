@@ -11,13 +11,10 @@ Thread class for HostsBrute modules
 
 import Queue
 import time
-import copy
 import pprint
 
 from requests.exceptions import ChunkedEncodingError, ConnectionError
 
-from libs.common import get_response_size
-from classes.Registry import Registry
 from classes.threads.HttpThread import HttpThread
 from classes.threads.params.HostBruteThreadParams import HostBruteThreadParams
 
@@ -50,9 +47,6 @@ class HostsBruteThread(HttpThread):
         self.delay = params.delay
         self.method = 'get'
         self.ignore_words_re = params.ignore_words_re
-
-        self.retest_limit = int(Registry().get('config')['hosts_brute']['retest_limit'])
-        self.retest_delay = int(Registry().get('config')['hosts_brute']['retest_delay'])
 
     def run(self):
         """ Run thread """
@@ -102,20 +96,10 @@ class HostsBruteThread(HttpThread):
                 positive_item = False
                 if resp is not None and not search_scope.count(self.false_phrase):
                     self.result.append(hostname)
-                    if Registry().isset('xml'):
-                        Registry().get('xml').put_result({'hostname': hostname})
+                    self.xml_log({'hostname': hostname})
                     positive_item = True
 
-                if Registry().isset('tester'):
-                    Registry().get('tester').put(
-                        hostname,
-                        {
-                            'code': resp.status_code,
-                            'positive': positive_item,
-                            'size': get_response_size(resp, "/", self.method),
-                            'content': resp.content,
-                        }
-                    )
+                self.test_log(hostname, resp, positive_item)
 
                 self.log_item(word, resp, positive_item)
 
@@ -140,7 +124,3 @@ class HostsBruteThread(HttpThread):
                     pass
                 except UnboundLocalError:
                     self.logger.ex(e)
-
-            if Registry().isset('tester') and Registry().get('tester').done():
-                self.done = True
-                break

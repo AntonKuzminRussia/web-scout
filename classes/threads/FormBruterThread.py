@@ -15,7 +15,6 @@ import time
 from requests.exceptions import ChunkedEncodingError, ConnectionError
 
 from libs.common import get_response_size
-from classes.Registry import Registry
 from classes.threads.HttpThread import HttpThread
 from classes.threads.params.FormBruterThreadParams import FormBruterThreadParams
 
@@ -51,9 +50,6 @@ class FormBruterThread(HttpThread):
         self.http.every_request_new_session = True
         self.pass_min_len = params.pass_min_len
         self.pass_max_len = params.pass_max_len
-
-        self.retest_delay = int(Registry().get('config')['form_bruter']['retest_delay'])
-        self.retest_limit = int(Registry().get('config')['form_bruter']['retest_limit'])
 
     def _make_conf_from_str(self, confstr):
         result = {}
@@ -119,24 +115,14 @@ class FormBruterThread(HttpThread):
                              (self.false_size is not None and get_response_size(resp, self.url, "POST") != self.false_size)):
                     item_data = {'word': word, 'content': resp.content, 'size': get_response_size(resp, self.url, "POST")}
                     self.result.append(item_data)
-                    if Registry().isset('xml'):
-                        Registry().get('xml').put_result(item_data)
+                    self.xml_log(item_data)
                     positive_item = True
 
                     self.check_positive_limit_stop(self.result)
 
                 self.log_item(word, resp, positive_item)
 
-                if Registry().isset('tester'):
-                    Registry().get('tester').put(
-                        word,
-                        {
-                            'code': resp.status_code,
-                            'positive': positive_item,
-                            'size': get_response_size(resp, self.url, "POST"),
-                            'content': resp.content,
-                        }
-                    )
+                self.test_log(word, resp, positive_item)
 
                 if positive_item and int(self.first_stop):
                     self.done = True
@@ -163,7 +149,3 @@ class FormBruterThread(HttpThread):
                     self.logger.ex(e)
             finally:
                 pass
-
-            if Registry().isset('tester') and Registry().get('tester').done():
-                self.done = True
-                break

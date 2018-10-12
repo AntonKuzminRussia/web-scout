@@ -94,6 +94,8 @@ class SpiderThread(HttpThread):
 
                 self.logger.item(url, response.content, self.is_response_content_binary(response), response.status_code is not 404)
 
+                self.test_log(url, response, True)
+
             link['size'] = len(response.content) if response is not None else 0
             link['code'] = response.status_code if response is not None else 0
             link['time'] = result_time if response is not None else 0
