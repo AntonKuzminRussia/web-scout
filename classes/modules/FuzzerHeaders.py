@@ -56,7 +56,7 @@ class FuzzerHeaders(WSModule):
         self.queue.set_generator(generator)
         self.logger.log("Loaded {0} variants.".format(generator.lines_count))
 
-        self.counter = WSCounter(1, 60, generator.lines_count)
+        self.counter = WSCounter.factory(generator.lines_count)
 
     def start_pool(self):
         pool = FuzzerHeadersThreadsPool(self.queue, self.counter, self.result, self.options, self.logger)

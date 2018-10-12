@@ -77,7 +77,7 @@ class DnsBruteModules(WSModule):
             if (int(self.options['parts'].value) and int(self.options['part'].value)) else
             "Loaded {0} words from source.".format(loaded['all'])
         )
-        self.counter = WSCounter(5, 300, loaded['all'] if not loaded['end'] else loaded['end'] - loaded['start'])
+        self.counter = WSCounter.factory(loaded['all'] if not loaded['end'] else loaded['end'] - loaded['start'])
 
     def output(self):
         WSModule.output(self)

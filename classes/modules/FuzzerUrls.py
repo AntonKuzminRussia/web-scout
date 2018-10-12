@@ -103,7 +103,7 @@ class FuzzerUrls(WSModule):
         self.queue.set_generator(generator)
         self.logger.log("Loaded {0} variants.".format(generator.lines_count))
 
-        self.counter = WSCounter(1, 60, generator.lines_count)
+        self.counter = WSCounter.factory(generator.lines_count)
 
     def do_work(self):
         self.build_queue_source_file()

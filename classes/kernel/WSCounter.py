@@ -22,6 +22,14 @@ class WSCounter(object):
     last_point_time = 0
     last_point_count = 0
 
+    @staticmethod
+    def factory(_all=0):
+        return WSCounter(
+            int(Registry().get('config')['main']['counter_step']),
+            int(Registry().get('config')['main']['counter_step']) * int(Registry().get('config')['main']['counter_steps_for_new_string']),
+            _all
+        )
+
     def __init__(self, point, new_str, _all=0):
         self.point = point
         self.new_str = new_str

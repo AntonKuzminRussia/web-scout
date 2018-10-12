@@ -88,7 +88,7 @@ class Spider(WSModule):
 
     def make_queue(self):
         self.queue = SpiderJob()
-        self.counter = WSCounter(5, 300, 0)
+        self.counter = WSCounter.factory()
 
     def build_queue_source_file(self):
         if len(self.options['urls-file'].value):
