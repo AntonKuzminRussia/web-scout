@@ -47,6 +47,7 @@ class DafsThread(HttpThread):
         self.method = params.method
         self.not_found_codes = params.not_found_codes
         self.retest_codes = params.retest_codes
+        self.retest_phrase = params.retest_phrase
         self.delay = params.delay
 
     def run(self):
