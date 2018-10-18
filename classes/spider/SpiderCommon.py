@@ -40,6 +40,17 @@ class SpiderCommon(object):
     ignore_regexp = None
     _external_hosts = []
     denied_schemas = None
+    allowed_regex = None
+
+    @staticmethod
+    def get_allowed_regex():
+        if SpiderCommon.allowed_regex is None:
+            expr = ''
+            for ext in Registry().get('config')['spider']['allow_exts'].split(','):
+                expr += r'\.' + ext.strip() + '$|'
+            expr = expr.rstrip('|')
+            SpiderCommon.allowed_regex = re.compile(expr, re.I)
+        return SpiderCommon.allowed_regex
 
     @staticmethod
     def _clear_link_obj(link):
@@ -75,19 +86,11 @@ class SpiderCommon(object):
                 continue
 
             link = urlparse(link)
-            scheme = link.scheme
-            netloc = link.netloc
 
-            if not link.scheme and \
-                not link.netloc and \
-                not link.path and \
-                not link.query:
+            if not link.scheme and not link.netloc and not link.path and link.query:
                 continue
 
-            if link.netloc \
-                and link.netloc != site \
-                and 'www.' + link.netloc != site \
-                and link.netloc != 'www.' + site:
+            if link.netloc and link.netloc != site and 'www.' + link.netloc != site and link.netloc != 'www.' + site:
                 SpiderCommon._external_hosts.append(link.netloc)
                 continue
 
@@ -98,21 +101,23 @@ class SpiderCommon(object):
             links_to_insert.append(link)
 
         separated_links = []
+
         for link in links_to_insert:
             paths = link.path.split("/")
             while len(paths) != 1:
                 del paths[-1]
                 separated_links.append(
                     ParseResult(
-                        scheme=scheme,
-                        netloc=netloc,
+                        scheme=link.scheme,
+                        netloc=link.netloc,
                         path="/".join(paths) + '/',
                         params='',
                         query='',
                         fragment=''
                     )
                 )
-        return links_to_insert + separated_links
+
+        return list(set(links_to_insert + separated_links))
 
     @staticmethod
     def get_denied_schemas():
@@ -130,8 +135,7 @@ class SpiderCommon(object):
         """ Build md5-hash for url """
         path = path.strip()
         query = query.strip()
-        url = str(path + query).decode('utf-8', errors='ignore')
-        return hashlib.md5(url.encode('utf-8')).hexdigest()
+        return md5(path + query)
 
     @staticmethod
     def insert_links(links, referer, site):
@@ -176,7 +180,7 @@ class SpiderCommon(object):
     @staticmethod
     def _link_allowed(link):
         """ Are link match to allow_regexp ? """
-        return Registry().get('allow_regexp').search(link.path) if link.path[len(link.path)-5:].count('.') else True
+        return SpiderCommon.get_allowed_regex().search(link.path) if link.path[len(link.path)-5:].count('.') else True
 
     @staticmethod
     def build_path(link, url_path):
@@ -185,7 +189,7 @@ class SpiderCommon(object):
             return link
 
         path = link.path
-        path = SpiderCommon.del_file_from_path(url_path) + "/" + path
+        path = (SpiderCommon.del_file_from_path(url_path) + "/" + path).replace("//", "/")
 
         return ParseResult(
             scheme=link.scheme,
@@ -199,18 +203,23 @@ class SpiderCommon(object):
     @staticmethod
     def del_file_from_path(path):
         """ Method delete file from path """
+        deleted = False
         if path.find("/") == -1:
             return ""
+
+        if path[-1] == "/":
+            return path
 
         path = path.split("/")
 
         if path[-1].find("."):
             del path[-1]
+            deleted = True
 
         if len(path) == 1 and not path[0]:
             return "/"
 
-        return "/".join(path)
+        return "/".join(path) + ("/" if deleted else "")
 
     @staticmethod
     def clear_link(link):

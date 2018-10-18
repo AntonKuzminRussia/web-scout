@@ -22,7 +22,6 @@ class FileGenerator(object):
         self._fh = open(_file)
 
         tmp_fh = open(_file)
-        tmp_data_last = ''
         tmp_data = ''
         while True:
             tmp_data_last = str(tmp_data)
@@ -42,7 +41,6 @@ class FileGenerator(object):
                 for _ in range(0, self.first_border-1):
                     self._fh.readline()
                     self.current_counter += 1
-
 
     def get(self):
         """ Return current file line """

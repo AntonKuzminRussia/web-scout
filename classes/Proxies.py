@@ -15,13 +15,15 @@ import requests
 from classes.Registry import Registry
 from libs.common import file_to_list
 
+
 class Proxies(object):
     """ Class for work with proxy """
-    _proxies = []
+    _proxies = None
     died_limit = 0
     died_count = 0
 
     def __init__(self):
+        self._proxies = []
         self.died_limit = int(Registry().get('config')['main']['proxies_died_limit'])
 
     def count(self):

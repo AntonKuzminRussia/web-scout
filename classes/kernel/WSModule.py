@@ -34,6 +34,10 @@ class WSModule(object):
 
     logger_scan_name_option = None
 
+    DNS_ZONE_CNAME = 'CNAME'
+    DNS_ZONE_A = 'A'
+    POSSIBLE_DNS_ZONES = [DNS_ZONE_A, DNS_ZONE_CNAME]
+
     def __init__(self, kernel):
         self.kernel = kernel
         if self.log_path is None:
@@ -45,6 +49,9 @@ class WSModule(object):
         self.pre_start_inf()
         self.load_proxies()
 
+    def work_end_error(self):
+        exit(1)
+
     def output(self):
         if Registry().get('proxy_many_died'):
             self.logger.log("Proxy many died, stop scan")
@@ -53,12 +60,12 @@ class WSModule(object):
             self.logger.log("\nMany positive detections. Please, look items logs")
             self.logger.log("Last items:")
             for i in range(1, 5):
-                print self.result[-i]
-            exit(1)
+                self.logger.log(self.result[-i])
+            self.work_end_error()
 
     def load_proxies(self):
-        for option_key in ['proxies', 'http-ptoxies']:
-            if option_key in self.options and self.options[option_key].value:
+        for option_key in ['proxies', 'http-proxies']:
+            if option_key in self.options.keys() and self.options[option_key].value:
                 Registry().get('proxies').load(self.options[option_key].value)
 
     def load_objects(self, queue):
@@ -85,23 +92,13 @@ class WSModule(object):
         for option in self.options:
             log_str += "Option '{0}': {1}\n".format(option, self.options[option].value)
         log_str += "---------------------------------"
-        print log_str
+        self.logger.log(log_str)
 
         if int(Registry().get('config')['main']['confirm']):
             tmp = raw_input("Do you have continue? [Y/n]")
             if len(tmp.strip()) and tmp.lower() != 'y':
-                print "Aborted..."
-                exit(0)
-
-        self.logger.log(log_str + '\n', new_str=False, _print=False)
-
-    def do_work(self):
-        """ Run module """
-        raise Exception("This method must be declared in child classes")
-
-    def help(self):
-        """ Display module help """
-        pass
+                self.logger.log("Aborted...")
+                self.work_end_error()
 
     def finished(self):
         """ Is module finished? """
@@ -121,10 +118,8 @@ class WSModule(object):
 
     def validate_main(self):
         """ Common user params validate functions """
-        options = self.options_sets.keys()
-
         if 'selenium' in self.options.keys() and self.options['selenium'].value:
-            if 'not-found-re' in options and not self.options['not-found-re'].value:
+            if 'not-found-re' in self.options.keys() and not self.options['not-found-re'].value:
                 raise WSException("Selenium enabled, module need a not found phrase (--not-found-re) for work!")
 
             if int(self.options['threads'].value) > int(Registry().get('config')['selenium']['max_threads']):
@@ -160,12 +155,13 @@ class WSModule(object):
                         format(code.strip())
                     )
 
-        if 'proxies' in self.options.keys() and len(self.options['proxies'].value) and \
-                not os.path.exists(self.options['proxies'].value):
-            raise WSException(
-                "Proxy list not found: '{0}'".
-                format(self.options['proxies'].value)
-            )
+        for proxies_params in ['proxies', 'http-proxies']:
+            if proxies_params in self.options.keys() and len(self.options[proxies_params].value) and \
+                    not os.path.exists(self.options[proxies_params].value):
+                raise WSException(
+                    "Proxy list not found: '{0}'".
+                    format(self.options[proxies_params].value)
+                )
 
         if 'not-found-re' in self.options.keys() and len(self.options['not-found-re'].value):
             try:
@@ -210,7 +206,7 @@ class WSModule(object):
                 )
 
         if 'parts' in self.options.keys() and self.options['parts'].value != '0':
-            if self.options['part'].value == '0':
+            if 'part' not in self.options.keys() or self.options['part'].value == '0':
                 raise WSException(
                     "If you use '--parts' param, you must specify '--part'"
                 )
@@ -221,7 +217,7 @@ class WSModule(object):
                 )
 
         if 'part' in self.options.keys() and self.options['part'].value != '0':
-            if self.options['parts'].value == '0':
+            if 'parts' not in self.options.keys() or self.options['parts'].value == '0':
                 raise WSException(
                     "If you use '--part' param, you must specify '--parts'"
                 )
@@ -232,3 +228,15 @@ class WSModule(object):
                     "Symbol of object position ({0}) not found in template ({1}) ".
                     format(self.options['msymbol'].value, self.options['template'].value)
                 )
+
+        if 'zone' in self.options.keys() and self.options['zone'].value.upper() not in self.POSSIBLE_DNS_ZONES:
+            raise WSException(
+                "Wrong DNS zone - '{0}', allowed: {1}"
+                .format(self.options['zone'].value, ", ".join(self.POSSIBLE_DNS_ZONES))
+            )
+
+        if 'dns-protocol' in self.options.keys() and self.options['dns-protocol'].value not in ['tcp', 'udp', 'auto']:
+            raise WSException(
+                "DNS Protocol mast be 'tcp', 'udp' or 'auto', but it is '{0}'"
+                .format(self.options['dns-protocol'].value)
+            )

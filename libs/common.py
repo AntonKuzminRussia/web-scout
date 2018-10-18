@@ -16,6 +16,7 @@ import sys
 import hashlib
 import locale
 import time
+import random
 
 import requests
 import configparser
@@ -65,7 +66,9 @@ def secs_to_text(secs):
         str_time.append("{0}h".format(hours))
     if mins:
         str_time.append("{0}m".format(mins))
-    str_time.append("{0}s".format(secs))
+
+    if not len(str_time) or secs > 0:
+        str_time.append("{0}s".format(secs))
 
     return " ".join(str_time)
 
@@ -97,7 +100,7 @@ def validate_uri_start(url):
 def md5(s):
     """ String to MD5-hash """
     m = hashlib.md5()
-    m.update(s.decode(encoding='UTF-8',errors='ignore').encode('UTF-8', errors='ignore'))
+    m.update(s.decode(encoding='UTF-8', errors='ignore').encode('UTF-8', errors='ignore'))
     return m.hexdigest()
 
 
@@ -176,3 +179,11 @@ def md5sum(path):
 
 def get_response_size(resp):
     return len(resp.content)
+
+
+def random_ua():
+    fh = open(Registry().get('wr_path') + "/bases/useragents.txt", 'r')
+    uas = fh.readlines()
+    fh.close()
+
+    return uas[random.randint(0, len(uas) - 1)].strip()

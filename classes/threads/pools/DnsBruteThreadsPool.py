@@ -46,7 +46,7 @@ class DnsBruteThreadsPool(AbstractPool):
 
             try:
                 dns_server = self.servers_roller.get()
-                if self.options['protocol'].value == 'auto':
+                if self.options['dns-protocol'].value == 'auto':
                     try:
                         dns.query.tcp(dns.message.make_query('test.com', 'A'), dns_server, timeout=5)
                         protocol = 'tcp'
@@ -57,7 +57,7 @@ class DnsBruteThreadsPool(AbstractPool):
                         except socket.error:
                             we_need_server = True
                 else:
-                    protocol = self.options['protocol'].value
+                    protocol = self.options['dns-protocol'].value
             except dns.exception.Timeout:
                 self.logger.log("Check server {0}. Don`t work.".format(dns_server))
                 we_need_server = True

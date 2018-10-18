@@ -34,11 +34,3 @@ class DnsBruteDict(DnsBruteModules):
         )
         queue.set_generator(generator)
         return {'all': generator.lines_count, 'start': generator.first_border, 'end': generator.second_border}
-
-    def validate_main(self):
-        """ Method for validate user params """
-        super(DnsBruteDict, self).validate_main()
-
-        if not os.path.exists(self.options['dict'].value):
-            raise WSException("Dictionary '{0}' not exists or not readable".format(self.options['dict'].value))
-

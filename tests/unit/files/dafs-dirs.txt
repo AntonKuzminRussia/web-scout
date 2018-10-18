@@ -1,6 +1,0 @@
-aaa
-dir1
-bbb
-ccc
-dir2
-ddd

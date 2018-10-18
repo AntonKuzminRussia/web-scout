@@ -35,10 +35,6 @@ class Pre(WSModule):
     logger_have_items = False
     options = PreModuleParams().get_options()
 
-    def validate_main(self):
-        """ Check users params """
-        super(Pre, self).validate_main()
-
     def _get_default_dns_proto(self):
         """ Check default dns protocol """
         if self.dns_proto is None:

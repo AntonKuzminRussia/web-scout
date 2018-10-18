@@ -27,8 +27,3 @@ class HostsBruteMask(HostsBruteModules):
         dom = DictOfMask(self.options['mask'].value, int(self.options['parts'].value), int(self.options['part'].value))
         queue.set_generator(dom)
         return {'all': dom.all_objects_count, 'start': dom.first_border, 'end': dom.second_border}
-
-    def validate_main(self):
-        """ Check users params """
-        super(HostsBruteMask, self).validate_main()
-

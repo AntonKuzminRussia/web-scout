@@ -17,8 +17,8 @@ class MongoLoggerThread(threading.Thread):
     queue = None
     pool = None
     pool_count_limit = None
-    current_pool_size = 0
     working = True
+    sleep_time_per_step = 1
 
     def __init__(self, queue):
         threading.Thread.__init__(self)
@@ -39,7 +39,6 @@ class MongoLoggerThread(threading.Thread):
             coll.create_index([('hash', 1)])
 
         self.pool = []
-        self.current_pool_size = 0
 
     def run(self):
         while self.working or self.queue.qsize():
@@ -51,7 +50,7 @@ class MongoLoggerThread(threading.Thread):
                 if len(self.pool) > self.pool_count_limit:
                     self.insert_pool()
             except Queue.Empty:
-                time.sleep(1)
+                time.sleep(self.sleep_time_per_step)
 
         if len(self.pool):
             self.insert_pool()

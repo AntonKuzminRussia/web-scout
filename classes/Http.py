@@ -26,16 +26,15 @@ class Http(object):
     allow_redirects = False
     headers = None
     config = None
-    sess = None
     noscan_content_types = []
     scan_content_types = []
     # Common for all class copies dict with errors
     errors = {'maxsize': [], 'noscan_content_types': [], 'scan_content_types': []}
     current_proxy = None
-    current_proxy_count = 0
+    current_proxy_counter = None
     every_request_new_session = False
-    new_session_per_requests = 50
-    requests_counter = 0
+    requests_per_session = None
+    requests_counter = None
 
     def __init__(self, verify=False, allow_redirects=False, headers=None):
         self.verify = verify
@@ -43,12 +42,18 @@ class Http(object):
         self.headers = {} if headers is None else headers
         self.session = requests.Session()
 
+        self.requests_counter = 0
+        self.requests_per_session = 50
+        self.current_proxy_counter = 0
+
     def up_requests_counter(self):
         self.requests_counter += 1
 
+        # every_request_new_session checks in get()/post()/head(), here we don`t need it,
+        # only actions relates with counter
         if not self.every_request_new_session and \
-                self.new_session_per_requests and \
-                self.requests_counter >= self.new_session_per_requests:
+                self.requests_per_session and \
+                self.requests_counter >= self.requests_per_session:
             self.requests_counter = 0
             self.session = requests.Session()
             self.change_proxy()
@@ -81,19 +86,33 @@ class Http(object):
 
     def get_current_proxy(self):
         """ Check current proxy, get next if need (max requests per proxy made) """
-        if self.current_proxy_count >= int(Registry().get('config')['main']['requests_per_proxy']):
+        if self.current_proxy_counter >= int(Registry().get('config')['main']['requests_per_proxy']):
             self.current_proxy = None
-            self.current_proxy_count = 0
+            self.current_proxy_counter = 0
 
         if not self.current_proxy:
             self.change_proxy()
 
-        self.current_proxy_count += 1
+        self.current_proxy_counter += 1
 
         return {
             "http": "http://" + self.current_proxy,
             "https": "http://" + self.current_proxy,
         } if self.current_proxy else None
+
+    def is_response_length_less_than_limit(self, url, resp):
+        if 'content-length' in resp.headers and \
+                        int(resp.headers['content-length']) > int(Registry().get('config')['main']['max_size']):
+            self.errors['maxsize'].append(
+                "URL {0} has size {1} bytes, but limit in config - {2} bytes".
+                format(
+                    url,
+                    resp.headers['content-length'],
+                    Registry().get('config')['main']['max_size']
+                )
+            )
+            return False
+        return True
 
     def get(self, url, verify=None, allow_redirects=None, headers=None):
         """ HTTP GET request """
@@ -119,16 +138,7 @@ class Http(object):
             timeout=int(Registry().get('config')['main']['http_timeout'])
         )
 
-        if 'content-length' in resp.headers and \
-                        int(resp.headers['content-length']) > int(Registry().get('config')['main']['max_size']):
-            self.errors['maxsize'].append(
-                "URL {0} has size {1} bytes, but limit in config - {2} bytes".
-                format(
-                    url,
-                    resp.headers['content-length'],
-                    Registry().get('config')['main']['max_size']
-                )
-            )
+        if not self.is_response_length_less_than_limit(url, resp):
             resp = None
 
         if resp and 'content-type' in resp.headers and (len(self.scan_content_types) or len(self.noscan_content_types)):
@@ -177,16 +187,7 @@ class Http(object):
             proxies=self.get_current_proxy(),
             timeout=int(Registry().get('config')['main']['http_timeout'])
         )
-        if 'content-length' in resp.headers and \
-                        int(resp.headers['content-length']) > int(Registry().get('config')['main']['max_size']):
-            self.errors['maxsize'].append(
-                "URL {0} has size {1} bytes, but limit in config - {2} bytes".
-                format(
-                    url,
-                    resp.headers['content-length'],
-                    Registry().get('config')['main']['max_size']
-                )
-            )
+        if not self.is_response_length_less_than_limit(url, resp):
             resp = None
 
         return resp

@@ -10,10 +10,15 @@ Class of roller list (get last element - next first element)
 """
 from libs.common import file_to_list
 
+
 class Roller(object):
     """ Class of roller list (get last element - next first element) """
-    data = []
-    current_index = 0
+    data = None
+    current_index = None
+
+    def __init__(self):
+        self.data = []
+        self.current_index = 0
 
     def load_file(self, file_name):
         """ Method load file in inner list """

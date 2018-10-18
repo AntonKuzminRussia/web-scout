@@ -27,37 +27,6 @@ class DnsBruteModules(WSModule):
     logger_have_items = True
     logger_scan_name_option = 'template'
 
-    ZONE_CNAME = 'CNAME'
-    ZONE_A = 'A'
-    POSSIBLE_ZONES = [ZONE_A, ZONE_CNAME]
-
-    def validate_main(self):
-        """ Check users params """
-        if self.options['protocol'].value not in ['tcp', 'udp', 'auto']:
-            raise WSException(
-                "Protocol mast be 'tcp', 'udp' or 'auto', but it is '{0}'"
-                .format(self.options['protocol'].value)
-            )
-
-        if self.options['http-protocol'].value not in ['http', 'https']:
-            raise WSException(
-                "HTTP Protocol mast be 'http' or 'https', but it is '{0}'"
-                .format(self.options['http-protocol'].value)
-            )
-
-        if self.options['zone'].value.upper() not in self.POSSIBLE_ZONES:
-            raise WSException(
-                "Wrong DNS zone - '{0}', allowed: {1}"
-                .format(self.options['zone'].value, ", ".join(self.POSSIBLE_ZONES))
-            )
-
-        if 'http-proxies' in self.options.keys() and len(self.options['http-proxies'].value) and \
-                not os.path.exists(self.options['http-proxies'].value):
-            raise WSException(
-                "Proxy list not found: '{0}'".
-                format(self.options['http-proxies'].value)
-            )
-
     def start_pool(self):
         pool = DnsBruteThreadsPool(self.queue, self.counter, self.result, self.options, self.logger)
         pool.start()

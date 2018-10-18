@@ -11,14 +11,13 @@ Kernel base class. Prepare work, load config, connect db, etc
 
 import sys
 import os
-import random
 
 import configparser
 from pymongo import MongoClient
 import pymongo.errors
 from pyvirtualdisplay import Display
 
-from libs.common import file_get_contents, md5
+from libs.common import file_get_contents, md5, random_ua
 from classes.Http import Http
 from classes.Proxies import Proxies
 from classes.kernel.WSKernel import WSKernel
@@ -45,7 +44,7 @@ class WSBase(object):
         R.set('wr_path', os.getcwd())
         R.set('data_path', os.getcwd() + '/data/')
         R.set('http', Http())
-        R.set('ua', self.random_ua())
+        R.set('ua', random_ua())
         R.set('proxies', Proxies())
         R.set(
             'fuzzer_evil_value',
@@ -68,14 +67,6 @@ class WSBase(object):
             coll.insert(data)
 
             coll.create_index([('hash', 1)], unique=True)
-
-
-    def random_ua(self):
-        fh = open(Registry().get('wr_path') + "/bases/useragents.txt", 'r')
-        uas = fh.readlines()
-        fh.close()
-
-        return uas[random.randint(0, len(uas) - 1)].strip()
 
     def __my_import(self, name):
         """ Load need WS module """

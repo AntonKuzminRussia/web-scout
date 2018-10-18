@@ -17,7 +17,7 @@ import argparse
 import time
 import logging
 
-from libs.common import secs_to_text, main_help
+from libs.common import secs_to_text, main_help, t
 
 from classes.kernel.WSBase import WSBase
 from classes.Registry import Registry
@@ -40,19 +40,19 @@ try:
 except WSException as e:
     print(e)
     print " ERROR: Module '{0}' not exists!".format(module_name)
-    exit(0)
+    exit(1)
 
 if module.logger_enable:
     Registry().set('logger', Logger(module.logger_name))
 
 if module.time_count:
-    print "Started module work at " + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+    print "Started module work at " + t("%Y-%m-%d %H:%M:%S")
     start_time = int(time.time())
 
 Registry().set('module', module)
 
 parser = argparse.ArgumentParser(
-    description=module.help(),
+    description="",
     prog="{0} {1}".format(sys.argv[0], sys.argv[1])
 )
 for option in module.options:
@@ -109,5 +109,5 @@ if Registry().isset('tester'):
     Registry().get('tester').dump()
 
 elif module.time_count:
-    print "\nEnded module work at " + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+    print "\nEnded module work at " + t("%Y-%m-%d %H:%M:%S")
     print "Common work time: {0}".format(secs_to_text(int(time.time()) - start_time))

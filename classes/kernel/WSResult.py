@@ -6,14 +6,18 @@ Docs RU: http://hack4sec.pro/wiki/index.php/WebScout
 License: MIT
 Copyright (c) Alexey Meshcheryakov <tank1st99@gmail.com>
 
-Kernel class for module results
+Kernel class for modules results
 """
 
+
 class WSResult(object):
-    results = []
+    results = None
+
+    def __init__(self):
+        self.results = []
 
     def put(self, item):
-        """ Pu item to results """
+        """ Put item to results """
         self.results.append(item)
         return self
 

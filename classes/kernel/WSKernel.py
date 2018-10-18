@@ -21,8 +21,8 @@ class WSKernel(object):
 
     def finished(self):
         """ Is all threads are finished? """
-        for pool in self.pool:
-            if pool.running:
+        for thread in self.pool:
+            if thread.running:
                 return False
         return True
 

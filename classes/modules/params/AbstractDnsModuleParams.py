@@ -16,7 +16,7 @@ class AbstractDnsModuleParams(AbstractModuleParams):
                 'zone',
             ]
         )
-        self.add_option("dns-protocol", 'protocol')
+        self.add_option("dns-protocol")
         self.add_option('not-found-re', 'http-not-found-re')
         self.add_option('retest-phrase', 'http-retest-phrase')
         self.add_option('proxies', 'http-proxies')

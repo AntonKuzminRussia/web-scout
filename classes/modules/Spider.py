@@ -54,12 +54,6 @@ class Spider(WSModule):
         if self.options['ignore'].value:
             Registry().set('ignore_regexp', re.compile(self.options['ignore'].value))
 
-        expr = ''
-        for ext in Registry().get('config')['spider']['allow_exts'].split(','):
-            expr += r'\.' + ext.strip() + '$|'
-        expr = expr.rstrip('|')
-        Registry().set('allow_regexp', re.compile(expr, re.I))
-
         if self.options['only-one'].value:
             tmp = self.options['only-one'].value.split("||")
             if len(tmp):
@@ -120,10 +114,6 @@ class Spider(WSModule):
 
         self.logger.log("\nTotal links count: " + str(Registry().get('mongo').spider_urls.count()))
         self.logger.log(str(self.result))
-
-    def help(self):
-        """ Help func """
-        return "Module Spider ver 1.0"
 
     def finished(self):
         """ Is module finished? """
