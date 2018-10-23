@@ -12,6 +12,7 @@ Class of xml ouput functional
 import xml.etree.cElementTree as eTree
 import time
 
+
 class XmlOutput:
     report_name = None
 
@@ -21,19 +22,27 @@ class XmlOutput:
     results_root = None
     results_doc = None
 
+    def flush_result(self):
+        eTree.ElementTree(self.results_root).write(self.report_name + "-result.xml")
+
+    def flush_errors(self):
+        eTree.ElementTree(self.errors_root).write(self.report_name + "-errors.xml")
+
     def __init__(self, report_name):
         self.report_name = report_name
 
         self.errors_root = eTree.Element("root")
         self.errors_doc = eTree.SubElement(self.errors_root, "errors")
+        self.flush_errors()
 
         self.results_root = eTree.Element("root")
         self.results_doc = eTree.SubElement(self.results_root, "results")
+        self.flush_result()
 
     def put_progress(self, count_now, full_count, percent_done, time_now, time_left, speed):
         progress_root = eTree.Element("root")
         progress_doc = eTree.SubElement(progress_root, "progress")
-        
+
         eTree.SubElement(progress_doc, "count_now").text = str(count_now)
         eTree.SubElement(progress_doc, "full_count").text = str(full_count)
         eTree.SubElement(progress_doc, "percent_done").text = str(percent_done)
@@ -49,7 +58,7 @@ class XmlOutput:
         item = eTree.SubElement(self.results_doc, "item")
         for field in data.keys():
             eTree.SubElement(item, field).text = data[field]
-        eTree.ElementTree(self.results_root).write(self.report_name + "-result.xml")
+        self.flush_result()
 
     def put_error(self, error_text, trace_str):
         item = eTree.SubElement(self.errors_doc, "error")
@@ -57,4 +66,4 @@ class XmlOutput:
         eTree.SubElement(item, "trace").text = trace_str
         eTree.SubElement(item, "timestamp").text = str(int(time.time()))
 
-        eTree.ElementTree(self.errors_root).write(self.report_name + "-errors.xml")
+        self.flush_errors()
