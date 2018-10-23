@@ -1,4 +1,3 @@
-.
 0001.html
 000.css
 000.htm
@@ -12353,7 +12352,7 @@ discuss.php
 discuz_version.php
 disdls.php
 diseno-web.html
-diseñoweb.swf
+diseï¿½oweb.swf
 dishtml.asp
 disk_add.asp
 disk.php
@@ -16791,7 +16790,7 @@ gotoframe.php
 goto.htm
 goto.html
 gotoitem.php
-gotoitem.php£¿
+gotoitem.phpï¿½ï¿½
 gotojob.html
 goto.jsp
 gotolink.asp
@@ -16803,7 +16802,7 @@ goto.php3
 goto-poker-room.php
 gotoprofile.htm
 gotoshop.php
-gotoshop.php£¿
+gotoshop.phpï¿½ï¿½
 gotostore.php
 goto_top.asp
 goto_top.php
