@@ -56,6 +56,7 @@ class WSModule(object):
     def output(self):
         if Registry().get('proxy_many_died'):
             self.logger.log("Proxy many died, stop scan")
+            self.work_end_error()
 
         if Registry().get('positive_limit_stop'):
             self.logger.log("\nMany positive detections. Please, look items logs")
@@ -66,6 +67,7 @@ class WSModule(object):
 
         if ErrorsCounter.is_limit():
             self.logger.log("\nToo many errors")
+            self.work_end_error()
 
     def load_proxies(self):
         for option_key in ['proxies', 'http-proxies']:
