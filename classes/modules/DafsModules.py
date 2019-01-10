@@ -12,7 +12,7 @@ import time
 
 from classes.Registry import Registry
 from classes.kernel.WSModule import WSModule
-from classes.kernel.WSException import WSException
+from classes.ErrorsCounter import ErrorsCounter
 from classes.kernel.WSCounter import WSCounter
 from classes.jobs.DafsJob import DafsJob
 from classes.threads.pools.DafsThreadsPool import DafsThreadsPool
@@ -45,7 +45,7 @@ class DafsModules(WSModule):
         pool.start()
 
         while pool.isAlive():
-            if Registry().get('positive_limit_stop'):
+            if Registry().get('positive_limit_stop') or ErrorsCounter.is_limit():
                 pool.kill_all()
             time.sleep(1)
 

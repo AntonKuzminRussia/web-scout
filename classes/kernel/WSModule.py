@@ -14,6 +14,7 @@ import os
 
 from classes.kernel.WSException import WSException
 from classes.Registry import Registry
+from classes.ErrorsCounter import ErrorsCounter
 
 
 class WSModule(object):
@@ -62,6 +63,9 @@ class WSModule(object):
             for i in range(1, 5):
                 self.logger.log(self.result[-i])
             self.work_end_error()
+
+        if ErrorsCounter.is_limit():
+            self.logger.log("\nToo many errors")
 
     def load_proxies(self):
         for option_key in ['proxies', 'http-proxies']:

@@ -17,6 +17,7 @@ from requests.exceptions import ChunkedEncodingError, ConnectionError
 
 from classes.threads.HttpThread import HttpThread
 from classes.threads.params.DafsThreadParams import DafsThreadParams
+from classes.ErrorsCounter import ErrorsCounter
 
 
 class DafsThread(HttpThread):
@@ -81,7 +82,11 @@ class DafsThread(HttpThread):
                 positive_item = False
                 try:
                     resp = req_func(url)
+
+                    ErrorsCounter.flush()
                 except ConnectionError as ex:
+                    ErrorsCounter.up()
+
                     if self.not_found_ex is not False and str(ex).count(self.not_found_ex):
                         positive_item = False
                         self.log_item(word, str(ex), positive_item)
