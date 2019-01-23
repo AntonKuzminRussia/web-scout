@@ -160,11 +160,15 @@ class DnsBruteThread(AbstractThread):
         myResolver.nameservers = [dns_server]
 
         result = False
-        try:
-            myResolver.query(name, 'A')
-            result = True
-        except dns.resolver.NXDOMAIN:
-            pass
+        for i in range(0, 3):
+            time.sleep(3)
+
+            try:
+                myResolver.query(name, 'A')
+                result = True
+            except dns.resolver.NXDOMAIN:
+                result = False
+                break
 
         return result
 
