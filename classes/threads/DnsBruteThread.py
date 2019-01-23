@@ -16,6 +16,7 @@ import copy
 import requests
 import dns.query
 import dns.message
+import dns.resolver
 
 from classes.Registry import Registry
 from libs.common import is_binary_content_type
@@ -153,11 +154,32 @@ class DnsBruteThread(AbstractThread):
 
         self.test_log(answers, positive_item)
 
+    def additional_hostname_validation(self, name):
+        dns_server = Registry().get('config')['dns']['additional_domains_check_dns']
+        myResolver = dns.resolver.Resolver()
+        myResolver.nameservers = [dns_server]
+
+        result = False
+        try:
+            myResolver.query(name, 'A')
+            result = True
+        except dns.resolver.NXDOMAIN:
+            pass
+
+        return result
 
     def parse_zone_a(self, response):
         """ Parsing A zone answer """
         positive_item = False
+        additional_validation_passed = False
         for ip in self.re['ip'].findall(response.group('data')):
+            if Registry().get('config')['dns']['additional_domains_check'] == '1' and not additional_validation_passed:
+                if self.additional_hostname_validation(self.check_name):
+                    additional_validation_passed = True
+                else:
+                    self.logger.log("Domain {0} with ip {1} not pass additional validation, skip it".format(self.check_name, ip))
+                    return
+
             if not len(self.ignore_ip) or ip != self.ignore_ip:
                 if self.http_nf_re is not None:
                     self.http_test(ip)
