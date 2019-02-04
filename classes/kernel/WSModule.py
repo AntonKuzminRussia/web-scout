@@ -139,7 +139,7 @@ class WSModule(object):
                 format(self.options['protocol'].value)
             )
 
-        if 'method' in self.options.keys() and self.options['method'].value.lower() not in ['head', 'get', 'post']:
+        if 'method' in self.options.keys() and self.options['method'].value.lower() not in ['head', 'get', 'post', 'cookies', 'files']:
             raise WSException(
                 "Method param must be only 'head', 'get' or 'post', but have value '{0}' !".
                 format(self.options['method'].value)

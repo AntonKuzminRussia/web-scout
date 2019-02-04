@@ -11,10 +11,13 @@ Thread class for Dafs modules
 
 import Queue
 import time
+import os
 
 from requests.exceptions import ChunkedEncodingError, ConnectionError
 from classes.threads.HttpThread import HttpThread
 from classes.threads.params.ParamsBruterThreadParams import ParamsBruterThreadParams
+
+from libs.common import file_put_contents
 
 
 class ParamsBruterThread(HttpThread):
@@ -26,6 +29,8 @@ class ParamsBruterThread(HttpThread):
     ignore_words_re = None
     queue_is_empty = False
     last_word = ""
+    tmp_filepath = "/tmp/tmpfileforparamswork.txt"
+    files_params_fh = None
 
     def __init__(self, queue, counter, result, params):
         """
@@ -51,31 +56,109 @@ class ParamsBruterThread(HttpThread):
         self.retest_phrase = params.retest_phrase
         self.delay = params.delay
 
+        if not os.path.exists(self.tmp_filepath):
+            file_put_contents(self.tmp_filepath, "test")
+
+        self.files_params_fh = open(self.tmp_filepath, "rb")
+
     def build_params_str(self):
-        params_str = "" if not len(self.last_word) else "{0}={1}&".format(self.last_word, self.value)
-        self.last_word = ""
-        while len(params_str) < self.max_params_length:
-            try:
-                word = self.queue.get()
-            except Queue.Empty:
-                self.queue_is_empty = True
-                if params_str == "":
-                    raise Queue.Empty
-                break
+        if self.method in ['get', 'post']:
+            params_str = "" if not len(self.last_word) else "{0}={1}&".format(self.last_word, self.value)
+            self.last_word = ""
+            while len(params_str) < self.max_params_length:
+                try:
+                    word = self.queue.get()
+                except Queue.Empty:
+                    self.queue_is_empty = True
+                    if params_str == "":
+                        raise Queue.Empty
+                    break
 
-            if not len(word.strip()) or (self.ignore_words_re and self.ignore_words_re.findall(word)):
-                continue
+                if not len(word.strip()) or (self.ignore_words_re and self.ignore_words_re.findall(word)):
+                    continue
 
-            params_str += "{0}={1}&".format(word, self.value)
+                params_str += "{0}={1}&".format(word, self.value)
 
-            self.last_word = word
+                self.last_word = word
 
-        return params_str[:-(len(self.last_word) + 3)]
+            return params_str[:-(len(self.last_word) + 3)]
+        elif self.method == 'cookies':
+            cookies = {self.last_word: self.value} if len(self.last_word) else {}
+
+            self.last_word = ""
+            while len(cookies) < self.max_params_length:
+                try:
+                    word = self.queue.get()
+                except Queue.Empty:
+                    self.queue_is_empty = True
+                    if len(cookies) == 0:
+                        raise Queue.Empty
+                    break
+
+                if not len(word.strip()) or (self.ignore_words_re and self.ignore_words_re.findall(word)):
+                    continue
+
+                cookies[word] = self.value
+
+                self.last_word = word
+
+            return cookies
+        elif self.method == 'files':
+            files = {self.last_word: self.files_params_fh} if len(self.last_word) else {}
+
+            self.last_word = ""
+            while len(files) < self.max_params_length:
+                try:
+                    word = self.queue.get()
+                except Queue.Empty:
+                    self.queue_is_empty = True
+                    if len(files) == 0:
+                        raise Queue.Empty
+                    break
+
+                if not len(word.strip()) or (self.ignore_words_re and self.ignore_words_re.findall(word)):
+                    continue
+
+                files[word] = self.files_params_fh
+
+                self.last_word = word
+            return files
+        else:
+            raise BaseException("Unknown work type - {0}".format(self.method))
 
     def request_params(self, params):
-        return self.http.get(self.url + "?" + params) if \
-            self.method == 'get' else \
-            self.http.post(self.url, data=params, headers={'Content-Type': 'application/x-www-form-urlencoded'})
+        if self.method == 'get':
+            return self.http.get(self.url + "?" + params)
+        elif self.method == 'post':
+            return self.http.post(self.url, data=params, headers={'Content-Type': 'application/x-www-form-urlencoded'})
+        elif self.method == 'cookies':
+            return self.http.get(self.url, cookies=params)
+        elif self.method == 'files':
+            return self.http.post(self.url, files=params, data={'a': 'b'})
+        else:
+            raise BaseException("Unknown work type - {0}".format(self.method))
+
+    def split_params(self, params):
+        if self.method in ['get', 'post']:
+            return params.split("&")
+        elif self.method in ['cookies', 'files']:
+            to_return = []
+            for k in params:
+                to_return.append({k: params[k]})
+            return to_return
+        else:
+            raise BaseException("Unknown work type - {0}".format(self.method))
+
+    def param_str_repr(self, param):
+        if self.method in ['get', 'post']:
+            return param
+        elif self.method in ['cookies', 'files']:
+            to_return = ""
+            for k in param:
+                to_return += "{0}".format(k)
+            return to_return
+        else:
+            raise BaseException("Unknown work type - {0}".format(self.method))
 
     def run(self):
         """ Run thread """
@@ -106,7 +189,7 @@ class ParamsBruterThread(HttpThread):
                 positive_item = False
                 if self.is_response_right(resp):
                     param_found = False
-                    for one_param in params_str.split("&"):
+                    for one_param in self.split_params(params_str):
                         try:
                             resp = self.request_params(one_param)
                         except ConnectionError:
@@ -115,15 +198,15 @@ class ParamsBruterThread(HttpThread):
                             continue
 
                         if self.is_response_right(resp):
-                            self.result.append(one_param)
-                            self.xml_log({'param': one_param})
+                            self.result.append(self.param_str_repr(one_param))
+                            self.xml_log({'param': self.param_str_repr(one_param)})
                             param_found = True
-                            found_item = one_param
+                            found_item = self.param_str_repr(one_param)
 
                     if param_found is False:
-                        self.xml_log({'param': params_str})
-                        self.result.append(params_str)
-                        found_item = params_str
+                        self.xml_log({'param': self.param_str_repr(params_str)})
+                        self.result.append(self.param_str_repr(params_str))
+                        found_item = self.param_str_repr(params_str)
 
                     positive_item = True
 

@@ -114,7 +114,7 @@ class Http(object):
             return False
         return True
 
-    def get(self, url, verify=None, allow_redirects=None, headers=None):
+    def get(self, url, verify=None, allow_redirects=None, headers=None, cookies=None):
         """ HTTP GET request """
         self.up_requests_counter()
 
@@ -135,7 +135,8 @@ class Http(object):
             headers=headers,
             stream=True,
             proxies=self.get_current_proxy(),
-            timeout=int(Registry().get('config')['main']['http_timeout'])
+            timeout=int(Registry().get('config')['main']['http_timeout']),
+            cookies=cookies
         )
 
         if not self.is_response_length_less_than_limit(url, resp):
@@ -164,7 +165,7 @@ class Http(object):
 
         return resp
 
-    def post(self, url, data=None, verify=None, allow_redirects=None, headers=None):
+    def post(self, url, data=None, verify=None, allow_redirects=None, headers=None, cookies=None, files=None):
         """ HTTP POST request """
         self.up_requests_counter()
 
@@ -185,7 +186,9 @@ class Http(object):
             headers=headers,
             stream=True,
             proxies=self.get_current_proxy(),
-            timeout=int(Registry().get('config')['main']['http_timeout'])
+            timeout=int(Registry().get('config')['main']['http_timeout']),
+            cookies=cookies,
+            files=files
         )
         if not self.is_response_length_less_than_limit(url, resp):
             resp = None
