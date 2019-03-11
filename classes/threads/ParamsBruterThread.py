@@ -130,7 +130,7 @@ class ParamsBruterThread(HttpThread):
         if self.method == 'get':
             return self.http.get(self.url + "?" + params)
         elif self.method == 'post':
-            return self.http.post(self.url, data=params, headers={'Content-Type': 'application/x-www-form-urlencoded'})
+            return self.http.post(self.url, data=params)
         elif self.method == 'cookies':
             return self.http.get(self.url, cookies=params)
         elif self.method == 'files':
