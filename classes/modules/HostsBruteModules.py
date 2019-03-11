@@ -25,6 +25,15 @@ class HostsBruteModules(WSModule):
     logger_have_items = True
     logger_scan_name_option = 'template'
 
+    def validate_main(self):
+        """ Check users params """
+        super(HostsBruteModules, self).validate_main()
+
+        if (not self.options['false-phrase'].value or not len(self.options['false-phrase'].value)) and (not self.options['false-size'].value or not len(self.options['false-size'].value)):
+            raise WSException(
+                "You must specify --false-phrase param or --false-size param!"
+            )
+
     def make_queue(self):
         self.queue = HostsBruteJob()
 
@@ -54,3 +63,4 @@ class HostsBruteModules(WSModule):
         self.logger.log("\nFound {0} hosts:".format(len(self.result)))
         for host in self.result:
             self.logger.log("\t" + host)
+

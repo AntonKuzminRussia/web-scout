@@ -24,7 +24,7 @@ class HostBruteThreadParams:
     false_size = None
 
     def __init__(self, options):
-        self.protocol = options['protocol'].value
+        self.protocol = options['http-protocol'].value
         self.ip = options['ip'].value
         self.template = options['template'].value
         self.msymbol = options['msymbol'].value

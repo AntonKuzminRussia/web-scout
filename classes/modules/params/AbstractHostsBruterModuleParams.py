@@ -12,11 +12,11 @@ class AbstractHostsBruterModuleParams(AbstractModuleParams):
                 'headers-file',
                 "ignore-words-re",
                 "retest-codes",
-                "retest-phrase"
+                "retest-phrase",
                 'false-phrase',
                 'false-size',
                 'ip',
                 'msymbol',
+                'http-protocol',
             ]
         )
-        self.add_option('http-protocol', 'protocol')

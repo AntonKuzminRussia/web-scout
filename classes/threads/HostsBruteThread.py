@@ -44,6 +44,7 @@ class HostsBruteThread(HttpThread):
         self.counter = counter
         self.result = result
         self.false_phrase = params.false_phrase
+        self.false_size = params.false_size
         self.retest_codes = params.retest_codes
         self.retest_phrase = params.retest_phrase
         self.delay = params.delay
@@ -117,6 +118,9 @@ class HostsBruteThread(HttpThread):
             except ChunkedEncodingError as e:
                 self.logger.ex(e)
             except BaseException as e:
+                import traceback
+                traceback.format_exc()
+                print(e)
                 try:
                     if str(e).count('Cannot connect to proxy'):
                         need_retest = True
