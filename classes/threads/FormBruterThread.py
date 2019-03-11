@@ -56,7 +56,7 @@ class FormBruterThread(HttpThread):
         result = {}
         tmp = confstr.split("&")
         for tmp_row in tmp:
-            field, value = tmp_row.split("=")
+            field, value = tmp_row.split("=", 1)
             result[field] = value
         return result
 
