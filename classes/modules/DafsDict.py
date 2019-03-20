@@ -20,7 +20,11 @@ class DafsDict(DafsModules):
     mode = 'dict'
     log_path = '/dev/null'
     time_count = True
-    options = DafsDictModuleParams().get_options()
+    options = None
+
+    def __init__(self, kernel):
+        DafsModules.__init__(self, kernel)
+        self.options = DafsDictModuleParams().get_options()
 
     def load_objects(self, queue):
         """ Prepare generator for work """

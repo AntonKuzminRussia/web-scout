@@ -51,6 +51,7 @@ class WSBase(object):
         R.set('http', Http())
         R.set('ua', random_ua())
         R.set('proxies', Proxies())
+        R.set('tmp_files', [])
         R.set(
             'fuzzer_evil_value',
             file_get_contents(Registry().get('wr_path') + "/bases/fuzzer-evil-value.txt").strip()

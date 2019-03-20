@@ -16,6 +16,7 @@ import sys
 import argparse
 import time
 import logging
+import os
 
 from libs.common import secs_to_text, main_help, t
 
@@ -107,6 +108,10 @@ if Registry().isset('display'):
 
 if Registry().isset('tester'):
     Registry().get('tester').dump()
+
+if len(Registry().get('tmp_files')):
+    for tmp_file in Registry().get('tmp_files'):
+        os.remove(tmp_file)
 
 elif module.time_count:
     print "\nEnded module work at " + t("%Y-%m-%d %H:%M:%S")

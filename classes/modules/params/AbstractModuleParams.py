@@ -344,6 +344,13 @@ class AbstractModuleParams:
             False,
             ['--value']
         ),
+        "discovery-exts": WSOption(
+            "discovery-exts",
+            "Exts, comma separated, for generate discovery filenames",
+            "php,html,js,log,txt",
+            False,
+            ['--discovery-exts']
+        ),
     }
 
     def __init__(self):
