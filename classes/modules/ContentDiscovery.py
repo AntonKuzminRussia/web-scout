@@ -8,7 +8,10 @@ Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pr
 
 Threads pool class for Dafs* modules
 """
+import re
 import random
+import subprocess
+import datetime
 from urlparse import urlparse
 
 from classes.modules.DafsDict import DafsDict
@@ -47,6 +50,31 @@ class ContentDiscovery(DafsDict):
         for basename in basenames:
             for schema in schemas:
                 results.append(schema.replace("|name|", basename))
+        return results
+
+    def gen_numbers_variants(self, basename, may_be_file):
+        results = []
+        basenames = [basename]
+
+        ext = ""
+        if may_be_file and basename.count("."):
+            ext = basename[basename.rfind("."):]
+            basenames.append(basename[:basename.rfind(".")])
+
+        for basename in basenames:
+            if re.match("\d", basename[-1]):
+                for i in range(0, 10):
+                    results.append(basename[:-1] + str(i) + ext)
+            if re.match("\d", basename[0]):
+                for i in range(0, 10):
+                    results.append(str(i) + basename[1:] + ext)
+            if re.match("\d", basename[-1]) and re.match("\d", basename[0]):
+                for i in range(0, 10):
+                    results.append(str(i) + basename[1:-1] + str(i) + ext)
+            if not re.match("\d", basename[-1]) and not re.match("\d", basename[0]):
+                for i in range(0, 10):
+                    results.append(basename + str(i) + ext)
+                    results.append(str(i) + basename + ext)
         return results
 
     def write_bases_variants(self, base_fh):
@@ -98,6 +126,9 @@ class ContentDiscovery(DafsDict):
                 c += 1
 
                 gens.extend(self.gen_backups_variants(part, c == len(parts)))
+                if c == len(parts):
+                    gens.extend(self.gen_numbers_variants(part, True))
+                gens.extend(self.gen_numbers_variants(part, False))
 
                 if c == len(parts):  # It`s may be file
                     baseword = part[:part.rfind(".")] if part.count(".") else part
@@ -122,9 +153,15 @@ class ContentDiscovery(DafsDict):
                 base_fh.write(gen + "\n")
         del dom
 
+    def write_years(self, base_fh):
+        now = datetime.datetime.now()
+        for year in range(2010, now.year+1):
+            base_fh.write(str(year) + "\n")
+
     def build_attack_list(self, dict_path):
         base_fh = open(dict_path, 'w')
 
+        self.write_years(base_fh)
         self.write_bases_variants(base_fh)
         self.write_tools_variants(base_fh)
         self.write_mask_variants('?l?d,1,2', base_fh)
@@ -137,11 +174,15 @@ class ContentDiscovery(DafsDict):
     def do_work(self):
         dict_path = "/tmp/web-scout-content-discovery-%d.txt" % random.randint(1000000, 9000000)
 
+        self.build_attack_list(dict_path)
+
+        dict_path_uniq = dict_path + "-uniq"
+        subprocess.check_output("sort -u {0} > {1}".format(dict_path, dict_path_uniq), shell=True)
+
         tmp_files = Registry().get('tmp_files')
         tmp_files.append(dict_path)
+        tmp_files.append(dict_path_uniq)
         Registry().set('tmp_files', tmp_files)
-
-        self.build_attack_list(dict_path)
 
         self.options['dict'] = WSOption(
             "dict",
@@ -150,6 +191,6 @@ class ContentDiscovery(DafsDict):
             True,
             ['--dict']
         )
-        self.options['dict'].value = dict_path
+        self.options['dict'].value = dict_path_uniq
 
         WSModule.do_work(self)

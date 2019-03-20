@@ -12,3 +12,5 @@
 !pre
 !spider
 !hosts
+!content_discovery
+!params-bruter
