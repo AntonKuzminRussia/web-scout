@@ -81,6 +81,9 @@ class ParamsBruterThread(HttpThread):
 
                 self.last_word = word
 
+                if self.is_test():
+                    break
+
             return params_str[:-(len(self.last_word) + 3)]
         elif self.method == 'cookies':
             cookies = {self.last_word: self.value} if len(self.last_word) else {}
