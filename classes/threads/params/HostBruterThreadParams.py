@@ -11,7 +11,7 @@ Common module class form Dafs* modules
 import re
 
 
-class HostBruteThreadParams:
+class HostBruterThreadParams:
     protocol = None
     ip = None
     template = None

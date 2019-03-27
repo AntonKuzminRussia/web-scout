@@ -11,7 +11,7 @@ Common module class form Dafs* modules
 import re
 
 
-class DnsBruteThreadParams:
+class DnsBruterThreadParams:
     template = None
     protocol = None
     msymbol = None

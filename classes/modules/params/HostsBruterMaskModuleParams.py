@@ -9,16 +9,10 @@ Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pr
 Class of module for DAFS by Dict+Mask
 """
 
-from classes.modules.params.AbstractDnsModuleParams import AbstractDnsModuleParams
+from classes.modules.params.AbstractHostsBruterModuleParams import AbstractHostsBruterModuleParams
 
 
-class DnsBruteCombineModuleParams(AbstractDnsModuleParams):
+class HostsBruterMaskModuleParams(AbstractHostsBruterModuleParams):
     def __init__(self):
-        AbstractDnsModuleParams.__init__(self)
-        self.add_options(
-            [
-                'mask',
-                'dict',
-                'combine-template'
-            ]
-        )
+        AbstractHostsBruterModuleParams.__init__(self)
+        self.add_option('mask')

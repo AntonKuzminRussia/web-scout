@@ -17,10 +17,10 @@ from requests.exceptions import ChunkedEncodingError, ConnectionError
 
 from libs.common import get_response_size
 from classes.threads.HttpThread import HttpThread
-from classes.threads.params.HostBruteThreadParams import HostBruteThreadParams
+from classes.threads.params.HostBruterThreadParams import HostBruterThreadParams
 
 
-class HostsBruteThread(HttpThread):
+class HostsBruterThread(HttpThread):
     """ Thread class for HostsBrute modules """
     method = None
     url = None
@@ -30,7 +30,7 @@ class HostsBruteThread(HttpThread):
     def __init__(self, queue, counter, result, params):
         """
 
-        :type params: HostBruteThreadParams
+        :type params: HostBruterThreadParams
         """
         HttpThread.__init__(self)
 

@@ -11,7 +11,7 @@ Class of module for HostsBrute by Mask
 
 from classes.modules.HostsBruteModules import HostsBruteModules
 from classes.generators.DictOfMask import DictOfMask
-from classes.modules.params.HostsBruteMaskModuleParams import HostsBruteMaskModuleParams
+from classes.modules.params.HostsBruterMaskModuleParams import HostsBruterMaskModuleParams
 
 
 class HostsBruteMask(HostsBruteModules):
@@ -20,7 +20,7 @@ class HostsBruteMask(HostsBruteModules):
     mode = 'dict'
     log_path = '/dev/null'
     time_count = True
-    options = HostsBruteMaskModuleParams().get_options()
+    options = HostsBruterMaskModuleParams().get_options()
 
     def load_objects(self, queue):
         """ Prepare generator for work """

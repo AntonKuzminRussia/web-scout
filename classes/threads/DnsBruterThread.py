@@ -21,11 +21,11 @@ import dns.resolver
 from classes.Registry import Registry
 from libs.common import is_binary_content_type
 from classes.kernel.WSException import WSException
-from classes.threads.params.DnsBruteThreadParams import DnsBruteThreadParams
+from classes.threads.params.DnsBruterThreadParams import DnsBruterThreadParams
 from classes.threads.AbstractThread import AbstractThread
 
 
-class DnsBruteThread(AbstractThread):
+class DnsBruterThread(AbstractThread):
     """ Thread class for DnsBrute* modules """
     re = {
         'ip': re.compile(r"(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})"),
@@ -42,7 +42,7 @@ class DnsBruteThread(AbstractThread):
     def __init__(self, queue, proto, dns_srv, result, counter, params):
         """
 
-        :type params: DnsBruteThreadParams
+        :type params: DnsBruterThreadParams
         """
         AbstractThread.__init__(self)
 

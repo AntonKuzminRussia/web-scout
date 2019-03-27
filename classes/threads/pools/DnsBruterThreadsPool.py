@@ -14,14 +14,14 @@ import socket
 import dns.query
 import dns.message
 
-from classes.threads.DnsBruteThread import DnsBruteThread
-from classes.threads.params.DnsBruteThreadParams import DnsBruteThreadParams
+from classes.threads.DnsBruterThread import DnsBruterThread
+from classes.threads.params.DnsBruterThreadParams import DnsBruterThreadParams
 from classes.Roller import Roller
 from classes.Registry import Registry
 from classes.threads.pools.AbstractPool import AbstractPool
 
 
-class DnsBruteThreadsPool(AbstractPool):
+class DnsBruterThreadsPool(AbstractPool):
     servers_roller = None
 
     def __init__(self, queue, counter, result, options, logger):
@@ -31,11 +31,11 @@ class DnsBruteThreadsPool(AbstractPool):
         self.servers_roller.load_file(Registry().get('wr_path') + '/bases/dns-servers.txt')
 
     def build_threads_params(self):
-        return DnsBruteThreadParams(self.options)
+        return DnsBruterThreadParams(self.options)
 
     def born_thread(self):
         dns_server, protocol = self.get_next_server()
-        thrd = DnsBruteThread(self.queue, protocol, dns_server, self.result, self.counter, self.threads_params)
+        thrd = DnsBruterThread(self.queue, protocol, dns_server, self.result, self.counter, self.threads_params)
         thrd.start()
         return thrd
 

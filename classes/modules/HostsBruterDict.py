@@ -6,30 +6,28 @@ Docs RU: http://hack4sec.pro/wiki/index.php/WebScout
 License: MIT
 Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pro> (en)
 
-Class of WS Module for DNS Brute by dict+mask
+Class of module for HostsBrute by Dict
 """
 
-from classes.modules.DnsBruteModules import DnsBruteModules
-from classes.generators.CombineGenerator import CombineGenerator
-from classes.modules.params.DnsBruteCombineModuleParams import DnsBruteCombineModuleParams
+from classes.modules.HostsBruteModules import HostsBruteModules
+from classes.generators.FileGenerator import FileGenerator
+from classes.modules.params.HostsBruterDictModuleParams import HostsBruterDictModuleParams
 
 
-class DnsBruteCombine(DnsBruteModules):
-    """ Class of WS Module for DNS Brute by dict+mask """
+class HostsBruteDict(HostsBruteModules):
+    """ Class of module for HostsBrute by Dict """
     model = None
     mode = 'dict'
     log_path = '/dev/null'
     time_count = True
-    options = DnsBruteCombineModuleParams().get_options()
+    options = HostsBruterDictModuleParams().get_options()
 
     def load_objects(self, queue):
-        """ Make generator with objects to check """
-        generator = CombineGenerator(
-            self.options['mask'].value,
+        """ Prepare generator for work """
+        generator = FileGenerator(
             self.options['dict'].value,
             int(self.options['parts'].value),
-            int(self.options['part'].value),
-            self.options['combine-template'].value
+            int(self.options['part'].value)
         )
         queue.set_generator(generator)
         return {'all': generator.lines_count, 'start': generator.first_border, 'end': generator.second_border}

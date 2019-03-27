@@ -10,17 +10,17 @@ Class of WS Module for DNS Brute by mask
 """
 
 from classes.generators.DictOfMask import DictOfMask
-from classes.modules.DnsBruteModules import DnsBruteModules
-from classes.modules.params.DnsBruteMaskModuleParams import DnsBruteMaskModuleParams
+from classes.modules.DnsBruterModules import DnsBruterModules
+from classes.modules.params.DnsBruterMaskModuleParams import DnsBruterMaskModuleParams
 
 
-class DnsBruteMask(DnsBruteModules):
+class DnsBruterMask(DnsBruterModules):
     """ Class of WS Module for DNS Brute by mask """
     model = None
     mode = 'dict'
     log_path = '/dev/null'
     time_count = True
-    options = DnsBruteMaskModuleParams().get_options()
+    options = DnsBruterMaskModuleParams().get_options()
 
     def load_objects(self, queue):
         """ Make generator with objects to check """

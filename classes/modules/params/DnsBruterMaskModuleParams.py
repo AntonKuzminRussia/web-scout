@@ -12,7 +12,7 @@ Class of module for DAFS by Dict+Mask
 from classes.modules.params.AbstractDnsModuleParams import AbstractDnsModuleParams
 
 
-class DnsBruteMaskModuleParams(AbstractDnsModuleParams):
+class DnsBruterMaskModuleParams(AbstractDnsModuleParams):
     def __init__(self):
         AbstractDnsModuleParams.__init__(self)
         self.add_option('mask')

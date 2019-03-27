@@ -1,7 +1,7 @@
 from classes.modules.params.AbstractHostsBruterModuleParams import AbstractHostsBruterModuleParams
 
 
-class HostsBruteCombineModuleParams(AbstractHostsBruterModuleParams):
+class HostsBruterCombineModuleParams(AbstractHostsBruterModuleParams):
     def __init__(self):
         AbstractHostsBruterModuleParams.__init__(self)
         self.add_options(

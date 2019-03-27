@@ -17,10 +17,10 @@ from classes.kernel.WSCounter import WSCounter
 from classes.kernel.WSModule import WSModule
 from classes.kernel.WSException import WSException
 from classes.jobs.DnsBruteJob import DnsBruteJob
-from classes.threads.pools.DnsBruteThreadsPool import DnsBruteThreadsPool
+from classes.threads.pools.DnsBruterThreadsPool import DnsBruterThreadsPool
 
 
-class DnsBruteModules(WSModule):
+class DnsBruterModules(WSModule):
     """ Common class for DnsBrute modules """
     logger_enable = True
     logger_name = 'dns'
@@ -28,7 +28,7 @@ class DnsBruteModules(WSModule):
     logger_scan_name_option = 'template'
 
     def start_pool(self):
-        pool = DnsBruteThreadsPool(self.queue, self.counter, self.result, self.options, self.logger)
+        pool = DnsBruterThreadsPool(self.queue, self.counter, self.result, self.options, self.logger)
         pool.start()
 
         while pool.isAlive():

@@ -15,7 +15,7 @@ from classes.kernel.WSModule import WSModule
 from classes.kernel.WSException import WSException
 from classes.kernel.WSCounter import WSCounter
 from classes.jobs.HostsBruteJob import HostsBruteJob
-from classes.threads.pools.HostsBruteThreadsPool import HostsBruteThreadsPool
+from classes.threads.pools.HostsBruterThreadsPool import HostsBruterThreadsPool
 
 
 class HostsBruteModules(WSModule):
@@ -49,7 +49,7 @@ class HostsBruteModules(WSModule):
         self.counter = WSCounter.factory(loaded['all'] if not loaded['end'] else loaded['end']-loaded['start'])
 
     def start_pool(self):
-        pool = HostsBruteThreadsPool(self.queue, self.counter, self.result, self.options, self.logger)
+        pool = HostsBruterThreadsPool(self.queue, self.counter, self.result, self.options, self.logger)
         pool.start()
 
         while pool.isAlive():
