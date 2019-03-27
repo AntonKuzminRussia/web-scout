@@ -184,6 +184,9 @@ class ParamsBruterThread(HttpThread):
                     self.http.change_proxy()
                     continue
 
+                if resp.status_code == 414:
+                    self.logger.log("414 response code, very long url, it mean value of --max-param-length too high")
+
                 if self.is_retest_need(params_str, resp):
                     time.sleep(self.retest_delay)
                     need_retest = True
