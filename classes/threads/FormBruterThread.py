@@ -117,6 +117,7 @@ class FormBruterThread(HttpThread):
                     self.result.append(item_data)
                     self.xml_log(item_data)
                     positive_item = True
+                    self.logger.log("F", False)
 
                     self.check_positive_limit_stop(self.result)
 
