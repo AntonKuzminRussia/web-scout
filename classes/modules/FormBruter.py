@@ -32,7 +32,6 @@ class FormBruter(WSModule):
     logger_have_items = True
     time_count = True
     options = FormBruterModuleParams().get_options()
-    pass_found = False
     logger_scan_name_option = 'url'
 
     def validate_main(self):
@@ -95,7 +94,8 @@ class FormBruter(WSModule):
         self.counter = WSCounter.factory(loaded['all'] if not loaded['end'] else loaded['end'] - loaded['start'])
 
     def start_pool(self):
-        pool = FormBruterThreadsPool(self.queue, self.counter, self.result, self.pass_found, self.options, self.logger)
+        Registry().set('pass_found', False)
+        pool = FormBruterThreadsPool(self.queue, self.counter, self.result, self.options, self.logger)
         pool.start()
 
         while pool.isAlive():

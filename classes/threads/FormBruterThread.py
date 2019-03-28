@@ -17,6 +17,7 @@ from requests.exceptions import ChunkedEncodingError, ConnectionError
 from libs.common import get_response_size
 from classes.threads.HttpThread import HttpThread
 from classes.threads.params.FormBruterThreadParams import FormBruterThreadParams
+from classes.Registry import Registry
 
 
 class FormBruterThread(HttpThread):
@@ -26,7 +27,7 @@ class FormBruterThread(HttpThread):
     mask_symbol = None
     retested_words = None
 
-    def __init__(self, queue, pass_found, counter, result, params):
+    def __init__(self, queue, counter, result, params):
         """
 
         :type params: FormBruterThreadParams
@@ -46,7 +47,6 @@ class FormBruterThread(HttpThread):
         self.result = result
         self.retest_codes = params.retest_codes
         self.retest_phrase = params.retest_phrase
-        self.pass_found = pass_found
 
         self.http.every_request_new_session = True
         self.pass_min_len = params.pass_min_len
@@ -65,6 +65,12 @@ class FormBruterThread(HttpThread):
             conf[field] = conf[field].replace("^USER^", login).replace("^PASS^", password)
         return conf
 
+    def pass_found(self):
+        return Registry().get('pass_found')
+
+    def set_pass_found(self, value):
+        return Registry().set('pass_found', value)
+
     def run(self):
         """ Run thread """
         need_retest = False
@@ -72,16 +78,9 @@ class FormBruterThread(HttpThread):
 
         conf = self._make_conf_from_str(self.confstr)
 
-        while not self.done:
-            if self.pass_found:
-                break
-
+        while not self.done and not self.pass_found():
             try:
                 self.last_action = int(time.time())
-
-                if self.pass_found:
-                    self.done = True
-                    break
 
                 if self.delay:
                     time.sleep(self.delay)
@@ -127,7 +126,7 @@ class FormBruterThread(HttpThread):
 
                 if positive_item and int(self.first_stop):
                     self.done = True
-                    self.pass_found = True
+                    self.set_pass_found(True)
                     break
 
                 need_retest = False

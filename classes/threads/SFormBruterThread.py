@@ -27,7 +27,7 @@ class SFormBruterThread(SeleniumThread):
     retested_words = None
     first_page_load = False
 
-    def __init__(self, queue, pass_found, counter, result, params):
+    def __init__(self, queue, counter, result, params):
         """
 
         :type params: FormBruterThreadParams
@@ -48,7 +48,6 @@ class SFormBruterThread(SeleniumThread):
         self.true_phrase = params.true_phrase
         self.first_stop = params.first_stop
         self.login = params.login
-        self.pass_found = pass_found
         self.reload_form_page = params.reload_form_page
         self.pass_min_len = params.pass_min_len
         self.pass_max_len = params.pass_max_len
@@ -59,6 +58,12 @@ class SFormBruterThread(SeleniumThread):
         self.result = result
 
         Registry().set('url_for_proxy_check', "{0}://{1}".format(params.protocol, params.host))
+
+    def pass_found(self):
+        return Registry().get('pass_found')
+
+    def set_pass_found(self, value):
+        return Registry().set('pass_found', value)
 
     def parse_brute_config(self, path):
         """ Parse conf file to dict """
@@ -83,10 +88,6 @@ class SFormBruterThread(SeleniumThread):
         while not self.pass_found and not self.done:
             try:
                 self.last_action = int(time.time())
-
-                if self.pass_found:
-                    self.done = True
-                    break
 
                 if self.delay:
                     time.sleep(self.delay)
@@ -156,7 +157,7 @@ class SFormBruterThread(SeleniumThread):
                 if positive_item:
                     if int(self.first_stop):
                         self.done = True
-                        self.pass_found = True
+                        self.set_pass_found(True)
                         break
                     else:
                         # Иначе старая сессия останется и будет куча false-positive

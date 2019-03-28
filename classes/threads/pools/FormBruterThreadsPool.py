@@ -16,15 +16,14 @@ from classes.threads.params.FormBruterThreadParams import FormBruterThreadParams
 
 
 class FormBruterThreadsPool(AbstractPool):
-    def __init__(self, queue, counter, result, pass_found, options, logger):
+    def __init__(self, queue, counter, result, options, logger):
         AbstractPool.__init__(self, queue, counter, result, options, logger)
-        self.pass_found = pass_found
 
     def born_thread(self):
         if self.options['selenium'].value:
-            thrd = SFormBruterThread(self.queue, self.pass_found, self.counter, self.result, self.threads_params)
+            thrd = SFormBruterThread(self.queue, self.counter, self.result, self.threads_params)
         else:
-            thrd = FormBruterThread(self.queue, self.pass_found, self.counter, self.result, self.threads_params)
+            thrd = FormBruterThread(self.queue, self.counter, self.result, self.threads_params)
         thrd.start()
         return thrd
 
