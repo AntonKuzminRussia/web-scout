@@ -59,6 +59,11 @@ class FuzzerUrlsThread(HttpThread):
                     self.http.change_proxy()
                     continue
 
+                if self.is_retest_need(url, resp):
+                    time.sleep(self.retest_delay)
+                    need_retest = True
+                    continue
+
                 if resp is None:
                     continue
 
