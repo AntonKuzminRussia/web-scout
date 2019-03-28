@@ -85,7 +85,7 @@ class FuzzerUrlsThread(HttpThread):
                     self.result.append(item_data)
                     self.xml_log(item_data)
 
-                #self.log_item(str(found_words), resp, len(found_words) > 0)
+                self.log_item(str(found_words), resp, len(found_words) > 0)
 
                 self.counter.up()
 
