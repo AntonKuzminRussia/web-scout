@@ -52,6 +52,8 @@ class FormBruterThread(HttpThread):
         self.pass_min_len = params.pass_min_len
         self.pass_max_len = params.pass_max_len
 
+        self.http.allow_redirects = params.follow_redirects
+
     def _make_conf_from_str(self, confstr):
         result = {}
         tmp = confstr.split("&")

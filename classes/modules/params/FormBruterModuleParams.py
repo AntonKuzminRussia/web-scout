@@ -36,6 +36,7 @@ class FormBruterModuleParams(AbstractModuleParams):
                 "pass-min-len",
                 "pass-max-len",
                 'first-stop',
+                'follow-redirects',
             ]
         )
         self.add_option("browser-recreate-re", "browser-recreate-phrase")

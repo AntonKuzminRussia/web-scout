@@ -14,6 +14,13 @@ class AbstractModuleParams:
             False,
             ['--test']
         ),
+        "follow-redirects": WSOption(
+            "follow-redirects",
+            "Follow redirects from server response",
+            "0",
+            False,
+            ['--follow-redirects']
+        ),
         "xml-report": WSOption(
             "xml-report",
             "XML report file",
