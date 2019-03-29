@@ -229,7 +229,7 @@ class AbstractModuleParams:
             "url",
             "URL for work",
             "",
-            False,
+            True,
             ['--url']
         ),
         "urls-file": WSOption(
