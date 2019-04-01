@@ -44,7 +44,7 @@ class DafsThreadParams:
             self.method = 'get'
 
         not_found_codes = options['not-found-codes'].value.split(',')
-        not_found_codes.append('404')
+        #not_found_codes.append('404')
         self.not_found_codes = list(set(not_found_codes))
 
         self.retest_codes = list(set(options['retest-codes'].value.split(','))) if len(options['retest-codes'].value) else []
