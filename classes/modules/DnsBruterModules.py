@@ -9,13 +9,13 @@ Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pr
 Common class for DnsBrute modules
 """
 
-import os
 import time
+import re
 
 from classes.Registry import Registry
 from classes.kernel.WSCounter import WSCounter
-from classes.kernel.WSModule import WSModule
 from classes.kernel.WSException import WSException
+from classes.kernel.WSModule import WSModule
 from classes.jobs.DnsBruteJob import DnsBruteJob
 from classes.threads.pools.DnsBruterThreadsPool import DnsBruterThreadsPool
 
@@ -26,6 +26,15 @@ class DnsBruterModules(WSModule):
     logger_name = 'dns'
     logger_have_items = True
     logger_scan_name_option = 'template'
+
+    def validate_main(self):
+        """ Check users params """
+        super(DnsBruterModules, self).validate_main()
+
+        if re.search('[^a-zA-Z0-9@\-\.]', self.options['template'].value):
+            raise WSException(
+                "Template contains bad symbols, check it. Allowed only a-zA-Z0-9, -, @, ."
+            )
 
     def start_pool(self):
         pool = DnsBruterThreadsPool(self.queue, self.counter, self.result, self.options, self.logger)
