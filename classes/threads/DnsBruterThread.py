@@ -27,6 +27,8 @@ from classes.threads.AbstractThread import AbstractThread
 
 class DnsBruterThread(AbstractThread):
     """ Thread class for DnsBrute* modules """
+    current_response_text = None
+
     re = {
         'ip': re.compile(r"(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})"),
         'ns_resp': re.compile(r";ANSWER\s(?P<data>(.|\s)*)\s;AUTHORITY", re.M),
@@ -104,6 +106,7 @@ class DnsBruterThread(AbstractThread):
                     else:
                         raise e
 
+                self.current_response_text = str(result.to_text())
                 response = self.re['ns_resp'].search(result.to_text())
                 if response is not None:
                     if self.zone == 'A':
@@ -150,6 +153,12 @@ class DnsBruterThread(AbstractThread):
             positive_item = True
             item_data = {'name': self.check_name, 'ip': answer, 'dns': self.dns_srv}
             self.result.append(item_data)
+            self.logger.item(
+                self.check_name,
+                self.current_response_text,
+                False,
+                positive=True
+            )
             self.xml_log(item_data)
 
         self.test_log(answers, positive_item)
@@ -191,6 +200,12 @@ class DnsBruterThread(AbstractThread):
                     positive_item = True
                     item_data = {'name': self.check_name, 'ip': ip, 'dns': self.dns_srv}
                     self.result.append(item_data)
+                    self.logger.item(
+                        self.check_name,
+                        self.current_response_text,
+                        False,
+                        positive=True
+                    )
                     self.xml_log(item_data)
             break
 
