@@ -53,6 +53,34 @@ class Pre(WSModule):
             self.logger.log('DNS protolol detected automaticaly: ' + self.dns_proto)
         return self.dns_proto
 
+    def get_ns_zone_txt_response(self, domain, zone):
+        req_func = getattr(dns.query, self._get_default_dns_proto())
+        query = dns.message.make_query(domain, zone)
+        result = req_func(query, self.options['dns'].value, timeout=2)
+        return result.to_text()
+
+    def get_interest_ns(self):
+        result = {}
+        domain = self.options['host'].value
+        zones = ['MX', 'SPF', 'NS', 'PTR', 'SOA']
+
+        for zone in zones:
+            result[domain + " " + zone] = self.get_ns_zone_txt_response(domain, zone)
+            if zone == 'PTR':
+                ip = socket.gethostbyname(domain)
+                result[ip + " " + zone] = self.get_ns_zone_txt_response(ip, zone)
+
+        to_return = ""
+        for zone_row in result.keys():
+            to_return += "\t" + zone_row + ":\n"
+            lines = result[zone_row].split("\n")
+            for line in lines:
+                line = line.strip()
+                if not len(line) or re.search('^opcode|^flags |^id |^rcode |^;| IN [A-Z]+$', line):
+                    continue
+                to_return += "\t\t" + line + "\n"
+        return to_return
+
     def check_ns_always_true(self):
         """ Check always good answer by dns zone """
         domain = self.options['host'].value
@@ -159,6 +187,7 @@ class Pre(WSModule):
 
         result['backups'] = self.check_backups()
         result['ns'] = self.check_ns()
+        result['interest_ns'] = self.get_interest_ns()
         result['ns_always_true'] = str(int(self.check_ns_always_true()))
         result['powered_by'] = self.check_powered_by()
         result['robots_txt'] = self.check_robots_txt()
@@ -173,6 +202,10 @@ class Pre(WSModule):
             self.logger.log("Found {0} hosts: ".format(len(result['ns'])))
             for ns_name in result['ns']:
                 self.logger.log("\t{0} ({1})".format(ns_name['name'], ns_name['ip']))
+
+        if len(result['interest_ns']):
+            self.logger.log("Interest DNS records: ")
+            self.logger.log(result['interest_ns'])
 
         self.logger.log("Encodings:")
         self.logger.log("\tHTTP: " + result['encodings']['http'])
