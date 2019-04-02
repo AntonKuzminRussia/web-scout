@@ -31,9 +31,15 @@ class DnsBruterModules(WSModule):
         """ Check users params """
         super(DnsBruterModules, self).validate_main()
 
-        if re.search('[^a-zA-Z0-9@\-\.]', self.options['template'].value):
+        if not self.options['template'].value.count("."):
             raise WSException(
-                "Template contains bad symbols, check it. Allowed only a-zA-Z0-9, -, @, ."
+                "Bad template structure, dot not found"
+            )
+
+        if re.search('[^a-zA-Z0-9\-\.]', self.options['template'].value.replace(self.options['msymbol'].value, '')):
+            raise WSException(
+                "Template contains bad symbols, check it. Allowed only a-zA-Z0-9, -, ., " +
+                self.options['msymbol'].value
             )
 
     def start_pool(self):
