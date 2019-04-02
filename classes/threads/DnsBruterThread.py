@@ -193,24 +193,22 @@ class DnsBruterThread(AbstractThread):
                     self.logger.log("Domain {0} with ip {1} not pass additional validation, skip it".format(self.check_name, ip))
                     return
 
-            if not len(self.ignore_ip) or ip != self.ignore_ip:
-                if self.http_nf_re is not None:
-                    self.http_test(ip)
-                else:
-                    positive_item = True
-                    item_data = {'name': self.check_name, 'ip': ip, 'dns': self.dns_srv}
-                    self.result.append(item_data)
-                    self.logger.item(
-                        self.check_name,
-                        self.current_response_text,
-                        False,
-                        positive=True
-                    )
-                    self.xml_log(item_data)
-            break
+            if len(self.ignore_ip) and ip != self.ignore_ip:
+                positive_item = True
+                item_data = {'name': self.check_name, 'ip': ip, 'dns': self.dns_srv}
+                self.result.append(item_data)
+                self.logger.item(
+                    self.check_name,
+                    self.current_response_text,
+                    False,
+                    positive=True
+                )
+                self.xml_log(item_data)
+                self.test_log('', positive_item)
+                continue
 
-        if self.http_nf_re is None:
-            self.test_log('', positive_item)
+            if self.http_nf_re is not None:
+                self.http_test(ip)
 
     def http_test(self, ip):
         """ Make HTTP(S) test for found ip """
