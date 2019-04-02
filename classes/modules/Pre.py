@@ -25,6 +25,7 @@ from classes.modules.params.PreModuleParams import PreModuleParams
 class Pre(WSModule):
     """ Class of Pre module """
     model = None
+    nf_codes = [404]
     log_path = '/dev/null'
     options = {}
     time_count = True
@@ -137,14 +138,9 @@ class Pre(WSModule):
 
     def _response_404(self, resp):
         """ Check answers on 404 request """
-        nf_codes = [404]
-        if len(self.options['not-found-codes'].value):
-            for code in self.options['not-found-codes'].value.split(","):
-                nf_codes.append(int(code.strip()))
-
         nf_phrase = self.options['not-found-phrase'].value if len(self.options['not-found-phrase'].value) else False
 
-        return resp.status_code in nf_codes or (nf_phrase and resp.content.lower().count(nf_phrase.lower()))
+        return resp.status_code in self.nf_codes or (nf_phrase and resp.content.lower().count(nf_phrase.lower()))
 
     def check_backups(self):
         """ Simple check backups """
@@ -183,16 +179,19 @@ class Pre(WSModule):
 
         self.root_url = "{0}://{1}/".format(self.options['protocol'].value, self.options['host'].value)
 
-        result = {}
+        if len(self.options['not-found-codes'].value):
+            for code in self.options['not-found-codes'].value.split(","):
+                self.nf_codes.append(int(code.strip()))
 
-        result['backups'] = self.check_backups()
-        result['ns'] = self.check_ns()
-        result['interest_ns'] = self.get_interest_ns()
+        result = {}
         result['ns_always_true'] = str(int(self.check_ns_always_true()))
+        result['nf'] = self.check_404()
+        result['backups'] = self.check_backups()
+        result['ns'] = self.check_ns() if not result['ns_always_true'] else []
+        result['interest_ns'] = self.get_interest_ns()
         result['powered_by'] = self.check_powered_by()
         result['robots_txt'] = self.check_robots_txt()
         result['sitemap'] = self.check_sitemap(result['robots_txt'])
-        result['nf'] = self.check_404()
         result['dafs_dirs'] = self.check_dafs('dirs') if result['nf']['dirs'] else []
         result['dafs_files'] = self.check_dafs('files') if result['nf']['files'] else []
         result['encodings'] = self._get_encodings()
@@ -348,7 +347,7 @@ class Pre(WSModule):
 
     def check_404(self):
         """ Check 404 answer for files and dirs """
-        return {
+        result = {
             'files': requests.get(
                 self.root_url + "ergergergergegerger.php", allow_redirects=False, verify=False
             ).status_code,
@@ -356,6 +355,10 @@ class Pre(WSModule):
                 self.root_url + "ergergergergeg/", allow_redirects=False, verify=False
             ).status_code
         }
+        self.nf_codes.append(result['files'])
+        self.nf_codes.append(result['dirs'])
+        self.nf_codes = list(set(self.nf_codes))
+        return result
 
     def check_headers(self):
         """ Parse headers from answer """
