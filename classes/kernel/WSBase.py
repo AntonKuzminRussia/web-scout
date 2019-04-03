@@ -13,8 +13,6 @@ import sys
 import os
 
 import configparser
-from pymongo import MongoClient
-import pymongo.errors
 from pyvirtualdisplay import Display
 
 from libs.common import file_get_contents, md5, random_ua
@@ -31,21 +29,8 @@ class WSBase(object):
         config = configparser.ConfigParser()
         config.read(os.getcwd() + '/' + 'config.ini')
 
-        try:
-            mongo_host = config['mongo']['host'] if 'WEBSCOUT_MONGO_HOST' not in os.environ else os.environ['WEBSCOUT_MONGO_HOST']
-            mongo_port = config['mongo']['port'] if 'WEBSCOUT_MONGO_PORT' not in os.environ else os.environ['WEBSCOUT_MONGO_PORT']
-
-            mc = MongoClient(host=mongo_host, port=int(mongo_port))
-            mongo_collection = getattr(mc, config['mongo']['collection']) #TODO it`s not collection, it`s db
-
-            print("MongoDB: {0}:{1}".format(mongo_host, mongo_port))
-        except pymongo.errors.ConnectionFailure as e:
-            print " ERROR: Can`t connect to MongoDB server! ({0})".format(str(e))
-            exit(0)
-
         R = Registry()
         R.set('config', config)
-        R.set('mongo', mongo_collection)
         R.set('wr_path', os.getcwd())
         R.set('data_path', os.getcwd() + '/data/')
         R.set('http', Http())
@@ -63,16 +48,6 @@ class WSBase(object):
             display = Display(visible=0, size=(800, 600))
             display.start()
             R.set('display', display)
-
-        coll = Registry().get('mongo').responses_content
-        if coll.count() == 0:
-            data = {
-                'hash': md5(''),
-                'content': '',
-            }
-            coll.insert(data)
-
-            coll.create_index([('hash', 1)], unique=True)
 
     def __my_import(self, name):
         """ Load need WS module """
