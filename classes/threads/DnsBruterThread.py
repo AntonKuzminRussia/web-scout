@@ -193,7 +193,7 @@ class DnsBruterThread(AbstractThread):
                     self.logger.log("Domain {0} with ip {1} not pass additional validation, skip it".format(self.check_name, ip))
                     return
 
-            if len(self.ignore_ip) and ip != self.ignore_ip:
+            if not len(self.ignore_ip) or ip != self.ignore_ip:
                 positive_item = True
                 item_data = {'name': self.check_name, 'ip': ip, 'dns': self.dns_srv}
                 self.result.append(item_data)
