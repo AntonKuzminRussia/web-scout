@@ -22,6 +22,9 @@ class XmlOutput:
     results_root = None
     results_doc = None
 
+    errors_counter = 0
+    errors_limit = 100
+
     def flush_result(self):
         eTree.ElementTree(self.results_root).write(self.report_name + "-result.xml")
 
@@ -61,9 +64,18 @@ class XmlOutput:
         self.flush_result()
 
     def put_error(self, error_text, trace_str):
+        # This decision using because counting&loggins errors
+        # e1  - 1, e2 - 2, e3 - 3
+        # has realization (same errors has text with small differences)  and
+        # concurrency trouble with big errors count
+        if self.errors_counter > self.errors_limit:
+            return
+
         item = eTree.SubElement(self.errors_doc, "error")
         eTree.SubElement(item, "text").text = error_text
         eTree.SubElement(item, "trace").text = trace_str
         eTree.SubElement(item, "timestamp").text = str(int(time.time()))
 
         self.flush_errors()
+
+        self.errors_counter += 1
