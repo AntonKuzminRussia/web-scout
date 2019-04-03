@@ -42,8 +42,19 @@ logging.captureWarnings(True)
 try:
     module = base.load_module(module_name)
 except WSException as e:
-    print(e)
-    print " ERROR: Module '{0}' not exists!".format(module_name)
+    if len(str(e)):
+        print(e)
+    else:
+        print "ERROR: Module '{0}' not exists!".format(module_name)
+        print "Possible modules:"
+        modules_list = []
+        for tmp in os.listdir(Registry().get('wr_path') + "/classes/modules/"):
+            if tmp.count("Modules") or tmp.count(".pyc") or tmp.count("__init__") or tmp == "params":
+                continue
+            modules_list.append(tmp.replace(".py", ""))
+        modules_list.sort()
+        for module_name in modules_list:
+            print "\t" + module_name
     exit(1)
 
 if module.logger_enable:

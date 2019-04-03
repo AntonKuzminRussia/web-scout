@@ -19,4 +19,4 @@ class WSException(Exception):
 
     def __str__(self):
         """ How show as str? """
-        return "ERROR: " + self.error_message
+        return "ERROR: " + self.error_message if len(self.error_message) else ""
