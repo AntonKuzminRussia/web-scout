@@ -97,6 +97,7 @@ class WSModule(object):
         log_str += "---------------------------------\n"
         for option in self.options:
             log_str += "Option '{0}': {1}\n".format(option, self.options[option].value)
+        log_str += "Logs dir: {0}\n".format(self.logger.logs_dir)
         log_str += "---------------------------------"
         self.logger.log(log_str)
 
