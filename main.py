@@ -17,6 +17,7 @@ import argparse
 import time
 import logging
 import os
+import urllib3
 
 from libs.common import secs_to_text, main_help, t
 
@@ -26,6 +27,8 @@ from classes.kernel.WSException import WSException
 from classes.logger.Logger import Logger
 from classes.Tester import Tester
 from classes.XmlOutput import XmlOutput
+
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 if len(sys.argv) < 2:
     main_help()
