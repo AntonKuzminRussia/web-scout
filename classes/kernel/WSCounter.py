@@ -61,13 +61,14 @@ class WSCounter(object):
                     time_left_str = secs_to_text(time_left)
                     speed = round((self.counter - self.last_point_count) / (int(time.time()) - self.last_point_time), 2)
 
-                    print "({0}/{1}/{2}%) | {3} | {4} | {5} o/s".format(
+                    print "({6}) ({0}/{1}/{2}%) | {3} | {4} | {5} o/s".format(
                         counter_str,
                         all_str,
                         percent,
                         time_now_str,
                         time_left_str,
-                        speed
+                        speed,
+                        time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
                     )
 
                     if Registry().isset('xml'):
