@@ -44,7 +44,7 @@ except WSException as e:
     exit(1)
 
 if module.logger_enable:
-    Registry().set('logger', Logger(module.logger_name))
+    Registry().set('logger', Logger(module.logger_name, module.logger_have_items))
 
 if module.time_count:
     print "Started module work at " + t("%Y-%m-%d %H:%M:%S")

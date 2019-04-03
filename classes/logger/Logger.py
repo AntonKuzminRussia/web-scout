@@ -15,12 +15,15 @@ import os
 import traceback
 import random
 import time
+import re
+import codecs
 
 from libs.common import t, md5
 from classes.Registry import Registry
 from classes.kernel.WSException import WSException
 from classes.logger.MongoInserterThread import MongoLoggerThread
 from classes.kernel.WSMongo import WSMongo
+
 
 class Logger(object):
     """ Class for logging WS output """
@@ -34,7 +37,7 @@ class Logger(object):
     mongo_inserter = None
     mongo_inserter_queue = None
 
-    def __init__(self, module_name):
+    def __init__(self, module_name, have_items):
         self.mdb = Registry().get('mongo')
 
         self.mongo_inserter_queue = Queue.Queue()
@@ -54,6 +57,10 @@ class Logger(object):
 
         if not os.path.exists("{0}/{1}/{2}".format(logs_dir, curdate, curtime)):
             os.mkdir("{0}/{1}/{2}".format(logs_dir, curdate, curtime))
+
+        if have_items:
+            self.items_dir = "{0}/{1}/{2}/items".format(logs_dir, curdate, curtime)
+            os.mkdir(self.items_dir)
 
         self.logs_dir = "{0}/{1}/{2}".format(logs_dir, curdate, curtime)
 
@@ -95,23 +102,50 @@ class Logger(object):
         sys.stdout.flush()
 
     def item(self, name, content, binary=False, positive=False):
-        """ Write item and it content in mongo """
+        """ Write item and it content in file and mongo """
         if self.scan_name is None:
             raise WSException("Scan name must be specified before logging")
 
-        if int(Registry().get('config')['main']['log_modules_items']) or positive:
-            content_hash = WSMongo.load_mongo_content_hash(content)
+        if not positive or not len(name):
+            return
 
-            item_data = {
-                'name': name,
-                'len': len(content),
-                'binary': binary,
-                'positive': positive,
-                'scan_hash': self.scan_hash,
-                'hash': content_hash
-            }
+        name = name[1:] if name[0] == '/' else name
+        name = name.replace(" ", "_")
+        name = re.sub(r"[^a-zA-Z0-9_\-\.\|]", "_", name)
 
-            self.mongo_inserter_queue.put(item_data)
+        ext = "bin" if binary else "txt"
+
+        fh = codecs.open("{0}/{1}.{2}".format(self.items_dir, name, ext), 'wb', 'utf-8')
+
+        if binary:
+            try:
+                fh.write(content)
+            except UnicodeDecodeError:
+                fh.write("BINARY ENCODING ERROR")
+        else:
+            decoded_content = ""
+            for symbol in content:
+                try:
+                    symbol = codecs.encode(symbol, 'utf8', 'ignore')
+                except UnicodeDecodeError:
+                    symbol = '?'
+                decoded_content += symbol.decode('utf8', 'ignore')
+            fh.write(decoded_content)
+            # codecs.encode(content, 'utf8', 'ignore') - not work!
+        fh.close()
+
+        content_hash = WSMongo.load_mongo_content_hash(content)
+
+        item_data = {
+            'name': name,
+            'len': len(content),
+            'binary': binary,
+            'positive': positive,
+            'scan_hash': self.scan_hash,
+            'hash': content_hash
+        }
+
+        self.mongo_inserter_queue.put(item_data)
 
     def ex(self, _exception):
         """ Log func for exceptions """
