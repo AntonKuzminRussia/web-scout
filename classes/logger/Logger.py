@@ -17,6 +17,7 @@ import random
 import time
 import re
 import codecs
+import random
 
 from libs.common import t, md5
 from classes.Registry import Registry
@@ -52,14 +53,20 @@ class Logger(object):
         if not os.path.exists(logs_dir):
             raise WSException("LOGGER ERROR: Path {0} for module {1} not exists!".format(logs_dir, module_name))
 
-        if not os.path.exists("{0}/{1}".format(logs_dir, curdate)):
-            os.mkdir("{0}/{1}".format(logs_dir, curdate))
+        log_date_path = "{0}/{1}".format(logs_dir, curdate)
+        if not os.path.exists(log_date_path):
+            os.mkdir(log_date_path)
 
-        if not os.path.exists("{0}/{1}/{2}".format(logs_dir, curdate, curtime)):
-            os.mkdir("{0}/{1}/{2}".format(logs_dir, curdate, curtime))
+        logs_time_path = "{0}/{1}".format(log_date_path, curtime)
+        if not os.path.exists(logs_time_path):
+            try:
+                os.mkdir(logs_time_path)
+            except OSError:
+                logs_time_path += "_" + str(random.randint(100, 900))
+                os.mkdir(logs_time_path)
 
         if have_items:
-            self.items_dir = "{0}/{1}/{2}/items".format(logs_dir, curdate, curtime)
+            self.items_dir = "{0}/items".format(logs_time_path)
             os.mkdir(self.items_dir)
 
         self.logs_dir = "{0}/{1}/{2}".format(logs_dir, curdate, curtime)
