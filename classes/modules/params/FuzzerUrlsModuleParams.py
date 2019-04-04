@@ -21,4 +21,4 @@ class FuzzerUrlsModuleParams(AbstractFuzzerModuleParams):
                 "selenium",
             ]
         )
-        self.add_option("browser-recreate-re", "browser-recreate-phrase")
+        self.add_option("browser-recreate-re")

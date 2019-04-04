@@ -29,7 +29,7 @@ class FuzzerThreadParams:
         if 'ddos-detect-phrase' in options:
             self.ddos_detect_phrase = options['ddos-detect-phrase'].value
         if 'browser-recreate-phrase' in options:
-            self.browser_recreate_phrase = options['browser-recreate-phrase'].value
+            self.browser_recreate_phrase = options['browser-recreate-re'].value
 
         self.bad_words = file_to_list(Registry().get('wr_path') + "/bases/bad-words.txt")
         self.headers = file_to_list(Registry().get('wr_path') + "/bases/fuzzer-headers.txt")

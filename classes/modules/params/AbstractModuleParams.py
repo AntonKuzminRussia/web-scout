@@ -85,6 +85,13 @@ class AbstractModuleParams:
             False,
             ['--not-found-re']
         ),
+        "http-not-found-re": WSOption(
+            "http-not-found-re",
+            "Regex for detect 'Not found' response (404)",
+            "",
+            False,
+            ['--http-not-found-re']
+        ),
         "not-found-ex": WSOption(
             "not-found-ex",
             "Phrase for detect 'Not found' exception (perceived as 404)",
@@ -176,6 +183,13 @@ class AbstractModuleParams:
             False,
             ['--proxies']
         ),
+        "http-proxies": WSOption(
+            "http-proxies",
+            "File with list of proxies",
+            "",
+            False,
+            ['--http-proxies']
+        ),
         "headers-file": WSOption(
             "headers-file",
             "File with list of HTTP headers",
@@ -203,6 +217,13 @@ class AbstractModuleParams:
             "",
             False,
             ['--retest-phrase']
+        ),
+        "http-retest-phrase": WSOption(
+            "http-retest-phrase",
+            "Phrase in response for retest",
+            "",
+            False,
+            ['--http-retest-phrase']
         ),
         "zone": WSOption(
             "zone",

@@ -138,7 +138,7 @@ class Pre(WSModule):
 
     def _response_404(self, resp):
         """ Check answers on 404 request """
-        nf_phrase = self.options['not-found-phrase'].value if len(self.options['not-found-phrase'].value) else False
+        nf_phrase = self.options['not-found-re'].value if len(self.options['not-found-re'].value) else False
 
         return resp.status_code in self.nf_codes or (nf_phrase and resp.content.lower().count(nf_phrase.lower()))
 

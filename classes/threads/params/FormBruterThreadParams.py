@@ -37,7 +37,7 @@ class FormBruterThreadParams:
         self.delay = int(options['delay'].value)
         self.ddos_human_action = options['ddos-human-action'].value
         self.ddos_detect_phrase = options['ddos-detect-phrase'].value
-        self.browser_recreate_phrase = options['browser-recreate-phrase'].value
+        self.browser_recreate_phrase = options['browser-recreate-re'].value
         self.conffile = options['conffile'].value
         self.first_stop = options['first-stop'].value.lower()
         self.login = options['login'].value

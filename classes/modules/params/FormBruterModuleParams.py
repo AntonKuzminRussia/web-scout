@@ -39,4 +39,4 @@ class FormBruterModuleParams(AbstractModuleParams):
                 'follow-redirects',
             ]
         )
-        self.add_option("browser-recreate-re", "browser-recreate-phrase")
+        self.add_option("browser-recreate-re")

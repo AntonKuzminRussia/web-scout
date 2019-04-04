@@ -25,5 +25,5 @@ class PreModuleParams(AbstractModuleParams):
                 'dns',
             ]
         )
-        self.add_option('http-protocol', 'protocol')
-        self.add_option("not-found-re", "not-found-phrase")
+        self.add_option('http-protocol')
+        self.add_option("not-found-re")
