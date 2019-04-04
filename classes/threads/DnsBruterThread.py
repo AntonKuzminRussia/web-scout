@@ -23,6 +23,7 @@ from libs.common import is_binary_content_type
 from classes.kernel.WSException import WSException
 from classes.threads.params.DnsBruterThreadParams import DnsBruterThreadParams
 from classes.threads.AbstractThread import AbstractThread
+from classes.ErrorsCounter import ErrorsCounter
 
 
 class DnsBruterThread(AbstractThread):
@@ -92,7 +93,9 @@ class DnsBruterThread(AbstractThread):
 
                 try:
                     result = req_func(query, self.dns_srv, timeout=5)
+                    ErrorsCounter.flush()
                 except EOFError:
+                    ErrorsCounter.up()
                     time.sleep(3)
                     need_retest = True
                     break

@@ -21,6 +21,7 @@ from classes.jobs.FuzzerUrlsJob import FuzzerUrlsJob
 from classes.generators.FileGenerator import FileGenerator
 from classes.threads.pools.FuzzerUrlsThreadPool import FuzzerUrlsThreadsPool
 from classes.modules.params.FuzzerUrlsModuleParams import FuzzerUrlsModuleParams
+from classes.ErrorsCounter import ErrorsCounter
 
 
 class FuzzerUrls(WSModule):
@@ -114,7 +115,7 @@ class FuzzerUrls(WSModule):
         pool.start()
 
         while pool.isAlive():
-            if Registry().get('positive_limit_stop'):
+            if Registry().get('proxy_many_died') or Registry().get('positive_limit_stop') or ErrorsCounter.is_limit():
                 pool.kill_all()
             time.sleep(1)
 

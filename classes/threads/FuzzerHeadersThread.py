@@ -18,7 +18,7 @@ from requests.exceptions import ConnectionError
 from classes.Registry import Registry
 from classes.threads.params.FuzzerThreadParams import FuzzerThreadParams
 from classes.threads.HttpThread import HttpThread
-
+from classes.ErrorsCounter import ErrorsCounter
 
 class FuzzerHeadersThread(HttpThread):
     """ Thread class for FuzzerHeaders module """
@@ -59,7 +59,9 @@ class FuzzerHeadersThread(HttpThread):
                             url,
                             headers={header.lower(): Registry().get('fuzzer_evil_value')},
                         )
+                        ErrorsCounter.flush()
                     except ConnectionError:
+                        ErrorsCounter.up()
                         need_retest = True
                         self.http.change_proxy()
                         continue

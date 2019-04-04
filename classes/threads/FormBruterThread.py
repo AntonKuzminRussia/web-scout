@@ -18,6 +18,7 @@ from libs.common import get_response_size
 from classes.threads.HttpThread import HttpThread
 from classes.threads.params.FormBruterThreadParams import FormBruterThreadParams
 from classes.Registry import Registry
+from classes.ErrorsCounter import ErrorsCounter
 
 
 class FormBruterThread(HttpThread):
@@ -99,7 +100,9 @@ class FormBruterThread(HttpThread):
                     resp = self.http.post(
                         self.url, data=work_conf
                     )
+                    ErrorsCounter.flush()
                 except ConnectionError:
+                    ErrorsCounter.up()
                     need_retest = True
                     self.http.change_proxy()
                     continue

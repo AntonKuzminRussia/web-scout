@@ -16,6 +16,7 @@ import os
 from requests.exceptions import ChunkedEncodingError, ConnectionError
 from classes.threads.HttpThread import HttpThread
 from classes.threads.params.ParamsBruterThreadParams import ParamsBruterThreadParams
+from classes.ErrorsCounter import ErrorsCounter
 
 from libs.common import file_put_contents
 
@@ -179,7 +180,9 @@ class ParamsBruterThread(HttpThread):
 
                 try:
                     resp = self.request_params(params_str)
+                    ErrorsCounter.flush()
                 except ConnectionError:
+                    ErrorsCounter.up()
                     need_retest = True
                     self.http.change_proxy()
                     continue

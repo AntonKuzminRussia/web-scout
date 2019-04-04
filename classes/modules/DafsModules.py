@@ -45,7 +45,7 @@ class DafsModules(WSModule):
         pool.start()
 
         while pool.isAlive():
-            if Registry().get('positive_limit_stop') or ErrorsCounter.is_limit():
+            if Registry().get('proxy_many_died') or Registry().get('positive_limit_stop') or ErrorsCounter.is_limit():
                 pool.kill_all()
             time.sleep(1)
 

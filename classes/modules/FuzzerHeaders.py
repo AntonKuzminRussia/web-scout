@@ -21,6 +21,7 @@ from classes.threads.pools.FuzzerHeadersThreadPool import FuzzerHeadersThreadsPo
 from classes.modules.params.FuzzerHeadersModuleParams import FuzzerHeadersModuleParams
 from classes.generators.FileGenerator import FileGenerator
 from libs.common import file_put_contents
+from classes.ErrorsCounter import ErrorsCounter
 
 
 class FuzzerHeaders(WSModule):
@@ -63,7 +64,7 @@ class FuzzerHeaders(WSModule):
         pool.start()
 
         while pool.isAlive():
-            if Registry().get('positive_limit_stop'):
+            if Registry().get('proxy_many_died') or Registry().get('positive_limit_stop') or ErrorsCounter.is_limit():
                 pool.kill_all()
             time.sleep(1)
 

@@ -18,6 +18,7 @@ from classes.kernel.WSException import WSException
 from classes.kernel.WSModule import WSModule
 from classes.jobs.DnsBruteJob import DnsBruteJob
 from classes.threads.pools.DnsBruterThreadsPool import DnsBruterThreadsPool
+from classes.ErrorsCounter import ErrorsCounter
 
 
 class DnsBruterModules(WSModule):
@@ -47,7 +48,7 @@ class DnsBruterModules(WSModule):
         pool.start()
 
         while pool.isAlive():
-            if Registry().get('proxy_many_died') or Registry().get('positive_limit_stop'):
+            if Registry().get('proxy_many_died') or Registry().get('positive_limit_stop') or ErrorsCounter.is_limit():
                 pool.kill_all()
             time.sleep(1)
 

@@ -17,6 +17,7 @@ from requests.exceptions import ConnectionError
 
 from classes.threads.params.FuzzerThreadParams import FuzzerThreadParams
 from classes.threads.HttpThread import HttpThread
+from classes.ErrorsCounter import ErrorsCounter
 
 
 class FuzzerUrlsThread(HttpThread):
@@ -54,7 +55,9 @@ class FuzzerUrlsThread(HttpThread):
 
                 try:
                     resp = req_func(url)
+                    ErrorsCounter.flush()
                 except ConnectionError:
+                    ErrorsCounter.up()
                     need_retest = True
                     self.http.change_proxy()
                     continue

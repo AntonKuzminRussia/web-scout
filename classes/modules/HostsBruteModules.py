@@ -16,6 +16,7 @@ from classes.kernel.WSException import WSException
 from classes.kernel.WSCounter import WSCounter
 from classes.jobs.HostsBruteJob import HostsBruteJob
 from classes.threads.pools.HostsBruterThreadsPool import HostsBruterThreadsPool
+from classes.ErrorsCounter import ErrorsCounter
 
 
 class HostsBruteModules(WSModule):
@@ -53,7 +54,7 @@ class HostsBruteModules(WSModule):
         pool.start()
 
         while pool.isAlive():
-            if Registry().get('positive_limit_stop'):
+            if Registry().get('proxy_many_died') or Registry().get('positive_limit_stop') or ErrorsCounter.is_limit():
                 pool.kill_all()
             time.sleep(1)
 

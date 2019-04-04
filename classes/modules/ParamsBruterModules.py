@@ -12,10 +12,10 @@ import time
 
 from classes.Registry import Registry
 from classes.kernel.WSModule import WSModule
-from classes.kernel.WSException import WSException
 from classes.kernel.WSCounter import WSCounter
 from classes.jobs.ParamsBruterJob import ParamsBruterJob
 from classes.threads.pools.ParamsBruterThreadsPool import ParamsBruterThreadsPool
+from classes.ErrorsCounter import ErrorsCounter
 
 
 class ParamsBruterModules(WSModule):
@@ -44,7 +44,7 @@ class ParamsBruterModules(WSModule):
         pool.start()
 
         while pool.isAlive():
-            if Registry().get('positive_limit_stop'):
+            if Registry().get('proxy_many_died') or Registry().get('positive_limit_stop') or ErrorsCounter.is_limit():
                 pool.kill_all()
             time.sleep(1)
 
