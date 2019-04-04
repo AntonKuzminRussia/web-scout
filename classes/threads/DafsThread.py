@@ -43,6 +43,7 @@ class DafsThread(HttpThread):
         self.result = result
         self.ignore_words_re = params.ignore_words_re
         self.not_found_re = params.not_found_re
+        self.found_re = params.found_re
         self.not_found_ex = params.not_found_ex
         self.not_found_size = int(params.not_found_size)
         self.method = params.method
@@ -50,6 +51,22 @@ class DafsThread(HttpThread):
         self.retest_codes = params.retest_codes
         self.retest_phrase = params.retest_phrase
         self.delay = params.delay
+
+    def is_response_right(self, resp):
+        """
+        Return true if response has not false or not-found respose attribute(s)
+        :param resp:
+        :return:
+        """
+        if resp is None:
+            return False
+
+        if self.found_re and not self.is_response_content_binary(resp) and (
+                    self.found_re.findall(resp.content) or
+                    self.found_re.findall(self.get_headers_text(resp))):
+            return True
+
+        return HttpThread.is_response_right(self, resp)
 
     def run(self):
         """ Run thread """

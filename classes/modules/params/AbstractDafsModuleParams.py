@@ -8,6 +8,7 @@ class AbstractDafsModuleParams(AbstractModuleParams):
             [
                 'msymbol',
                 'not-found-re',
+                'found-re',
                 'not-found-ex',
                 'not-found-size',
                 'not-found-codes',

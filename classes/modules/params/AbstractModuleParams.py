@@ -78,6 +78,13 @@ class AbstractModuleParams:
             True,
             ['--combine-template']
         ),
+        "found-re": WSOption(
+            "found-re",
+            "Regex for detect 'Found' response (200)",
+            "",
+            False,
+            ['--found-re']
+        ),
         "not-found-re": WSOption(
             "not-found-re",
             "Regex for detect 'Not found' response (404)",

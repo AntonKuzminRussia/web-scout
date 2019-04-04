@@ -16,6 +16,7 @@ class DafsThreadParams:
     method = None
     msymbol = None
     not_found_re = None
+    found_re = None
     not_found_ex = None
     not_found_size = None
     not_found_codes = None
@@ -32,6 +33,7 @@ class DafsThreadParams:
         self.msymbol = options['msymbol'].value
         self.delay = int(options['delay'].value)
         self.not_found_re = False if not len(options['not-found-re'].value) else re.compile(options['not-found-re'].value)
+        self.found_re = False if not len(options['found-re'].value) else re.compile(options['found-re'].value)
         self.not_found_ex = False if not len(options['not-found-ex'].value) else options['not-found-ex'].value
         self.not_found_size = options['not-found-size'].value
         self.ddos_detect_phrase = options['ddos-detect-phrase'].value
