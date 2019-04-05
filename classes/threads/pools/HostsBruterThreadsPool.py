@@ -10,13 +10,13 @@ Common module class form Dafs* modules
 """
 
 from classes.threads.pools.AbstractPool import AbstractPool
-from classes.threads.params.HostBruterThreadParams import HostBruterThreadParams
+from classes.threads.params.HostsBruterThreadParams import HostsBruterThreadParams
 from classes.threads.HostsBruterThread import HostsBruterThread
 
 
 class HostsBruterThreadsPool(AbstractPool):
     def build_threads_params(self):
-        return HostBruterThreadParams(self.options)
+        return HostsBruterThreadParams(self.options)
 
     def born_thread(self):
         thrd = HostsBruterThread(self.queue, self.counter, self.result, self.threads_params)
