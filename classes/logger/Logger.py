@@ -67,7 +67,7 @@ class Logger(object):
     def log(self, _str, new_str=True, _print=True):
         """ Write string in log and print it if need """
         self.log_fh.write(
-            (t("[%H:%M:%S] ") if new_str else '') + _str + ('\n' if new_str else '')
+            (t("[%H:%M:%S] ") if new_str else '') + str(_str) + ('\n' if new_str else '')
         )
         self.log_fh.flush()
         if _print:
