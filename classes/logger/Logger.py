@@ -113,8 +113,9 @@ class Logger(object):
     def ex(self, _exception):
         """ Log func for exceptions """
         exc_type, exc_obj, exc_tb = sys.exc_info()
-        tb_text = ""
+        tb_text = "\n"
         tb_text += "{0:=^20}\n".format("")
+        tb_text += "Exception: " + str(exc_obj) + "\n"
         for tb_line in traceback.extract_tb(exc_tb):
             tb_file, tb_strnum, tb_where, tb_call = tb_line
             log_str = "{0}:{1} in '{2}' => {3}\n".format(tb_file, tb_strnum, tb_where, tb_call)
