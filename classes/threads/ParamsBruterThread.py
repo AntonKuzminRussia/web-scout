@@ -63,12 +63,14 @@ class ParamsBruterThread(HttpThread):
         self.files_params_fh = open(self.tmp_filepath, "rb")
 
     def build_params_str(self):
+        count = 0
         if self.method in ['get', 'post']:
             params_str = "" if not len(self.last_word) else "{0}={1}&".format(self.last_word, self.value)
             self.last_word = ""
             while len(params_str) < self.max_params_length:
                 try:
                     word = self.queue.get()
+                    count += 1
                 except Queue.Empty:
                     self.queue_is_empty = True
                     if params_str == "":
@@ -85,7 +87,7 @@ class ParamsBruterThread(HttpThread):
                 if self.is_test():
                     break
 
-            return params_str[:-(len(self.last_word) + 3)]
+            return count, params_str[:-(len(self.last_word) + 3)]
         elif self.method == 'cookies':
             cookies = {self.last_word: self.value} if len(self.last_word) else {}
 
@@ -93,6 +95,7 @@ class ParamsBruterThread(HttpThread):
             while len(cookies) < self.max_params_length:
                 try:
                     word = self.queue.get()
+                    count += 1
                 except Queue.Empty:
                     self.queue_is_empty = True
                     if len(cookies) == 0:
@@ -106,7 +109,7 @@ class ParamsBruterThread(HttpThread):
 
                 self.last_word = word
 
-            return cookies
+            return count, cookies
         elif self.method == 'files':
             files = {self.last_word: self.files_params_fh} if len(self.last_word) else {}
 
@@ -114,6 +117,7 @@ class ParamsBruterThread(HttpThread):
             while len(files) < self.max_params_length:
                 try:
                     word = self.queue.get()
+                    count += 1
                 except Queue.Empty:
                     self.queue_is_empty = True
                     if len(files) == 0:
@@ -126,7 +130,7 @@ class ParamsBruterThread(HttpThread):
                 files[word] = self.files_params_fh
 
                 self.last_word = word
-            return files
+            return count, files
         else:
             raise BaseException("Unknown work type - {0}".format(self.method))
 
@@ -176,7 +180,7 @@ class ParamsBruterThread(HttpThread):
 
             try:
                 if not need_retest:
-                    params_str = self.build_params_str()
+                    params_count, params_str = self.build_params_str()
 
                 try:
                     resp = self.request_params(params_str)
@@ -226,8 +230,8 @@ class ParamsBruterThread(HttpThread):
                 self.check_positive_limit_stop(self.result)
 
                 need_retest = False
-
-                self.counter.up()
+                for _ in range(0, params_count):
+                    self.counter.up()
             except Queue.Empty:
                 self.done = True
                 break

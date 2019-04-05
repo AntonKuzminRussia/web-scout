@@ -38,6 +38,8 @@ class ParamsBruterModules(WSModule):
         )
 
         self.counter = WSCounter.factory(loaded['all'] if not loaded['end'] else loaded['end']-loaded['start'])
+        self.counter.point *= 10
+        self.counter.new_str *= 10
 
     def start_pool(self):
         pool = ParamsBruterThreadsPool(self.queue, self.counter, self.result, self.options, self.logger)
