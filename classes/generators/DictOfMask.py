@@ -33,7 +33,7 @@ class DictOfMask(object):
     def __init__(self, mask, parts=0, part=0):
         self.mask = mask
         self.masks = self.generate_masks(self.mask)
-        self._prepare()
+        self.prepare()
 
         if parts and part:
             one_part_count = int(self.all_objects_count/parts)
@@ -146,14 +146,14 @@ class DictOfMask(object):
             dicts.extend(_dict)
         return dicts
 
-    def _prepare(self):
+    def prepare(self):
         """ Internal method for build self.symbols_points from current mask """
         self.work_mask = self.masks.keys()[self.mask_num]
         self.symbols_points = {}
         for n in self.masks[self.work_mask].keys():
             self.symbols_points[n] = 0
 
-    def _up_last_point(self):
+    def up_last_point(self):
         """ Method up internal point counter. It`s need for generator. """
         last_point = max(self.symbols_points.keys())
         self.symbols_points[last_point] += 1
@@ -180,7 +180,7 @@ class DictOfMask(object):
                             return
 
                         self.mask_num += 1
-                        self._prepare()
+                        self.prepare()
 
                     changed = True
 
@@ -211,5 +211,5 @@ class DictOfMask(object):
                 time.sleep(0.1)
                 return self._get()
 
-        self._up_last_point()
+        self.up_last_point()
         return to_return

@@ -36,7 +36,7 @@ class Pre(WSModule):
     logger_have_items = False
     options = PreModuleParams().get_options()
 
-    def _get_default_dns_proto(self):
+    def get_default_dns_proto(self):
         """ Check default dns protocol """
         if self.dns_proto is None:
             try:
@@ -55,7 +55,7 @@ class Pre(WSModule):
         return self.dns_proto
 
     def get_ns_zone_txt_response(self, domain, zone):
-        req_func = getattr(dns.query, self._get_default_dns_proto())
+        req_func = getattr(dns.query, self.get_default_dns_proto())
         query = dns.message.make_query(domain, zone)
         result = req_func(query, self.options['dns'].value, timeout=2)
         return result.to_text()
@@ -87,7 +87,7 @@ class Pre(WSModule):
         domain = self.options['host'].value
         check_list = ['wekjmwei82hjnb2ou82g2', 'wklmehf7e03he3fgb', 'dmvbfyf7393jhfvv']
 
-        req_func = getattr(dns.query, self._get_default_dns_proto())
+        req_func = getattr(dns.query, self.get_default_dns_proto())
 
         for check_name in check_list:
             ipRe = re.compile(r"(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})")
@@ -101,7 +101,7 @@ class Pre(WSModule):
 
             return True
 
-    def _parse_sitemap_links(self, content, domain):
+    def parse_sitemap_links(self, content, domain):
         """ Parsing sitemap links """
         links = re.findall("<loc>http(?:s|)://" + domain.replace(".", "\\.") + "(.*?)</loc>", content)
         return map(str.strip, map(str, links))
@@ -112,9 +112,9 @@ class Pre(WSModule):
         sitemap_links = []
 
         r = requests.get(self.root_url + 'sitemap.xml', allow_redirects=True, verify=False)
-        if not self._response_404(r):
+        if not self.response_404(r):
             links.append('/sitemap.xml')
-            links.extend(self._parse_sitemap_links(r.content, self.options['host'].value))
+            links.extend(self.parse_sitemap_links(r.content, self.options['host'].value))
             sitemap_links.append(self.root_url + 'sitemap.xml')
 
         if robots_txt:
@@ -129,14 +129,14 @@ class Pre(WSModule):
                 #    sitemap_url.replace("//", "/")
 
                 r = requests.get(self.root_url + sitemap, allow_redirects=True, verify=False)
-                if not self._response_404(r):
-                    links.extend(self._parse_sitemap_links(r.content, self.options['host'].value))
+                if not self.response_404(r):
+                    links.extend(self.parse_sitemap_links(r.content, self.options['host'].value))
 
         return {
             'links': map(str.strip, map(str, sitemap_links)),
         }
 
-    def _response_404(self, resp):
+    def response_404(self, resp):
         """ Check answers on 404 request """
         nf_phrase = self.options['not-found-re'].value if len(self.options['not-found-re'].value) else False
 
@@ -163,7 +163,7 @@ class Pre(WSModule):
 
         for url in check:
             r = Http.get(self.root_url + url)
-            if not self._response_404(r):
+            if not self.response_404(r):
                 result.append({'url': self.root_url + url, 'code': r.status_code})
 
         return result
@@ -194,7 +194,7 @@ class Pre(WSModule):
         result['sitemap'] = self.check_sitemap(result['robots_txt'])
         result['dafs_dirs'] = self.check_dafs('dirs') if result['nf']['dirs'] else []
         result['dafs_files'] = self.check_dafs('files') if result['nf']['files'] else []
-        result['encodings'] = self._get_encodings()
+        result['encodings'] = self.get_encodings()
         result['headers'] = self.check_headers()
 
         if len(result['ns']):
@@ -218,7 +218,7 @@ class Pre(WSModule):
         if result['robots_txt']:
             self.logger.log("Check robots.txt")
             self.logger.log("\t" + self.root_url + "robots.txt")
-            urls = self._get_urls_from_robots_txt(
+            urls = self.get_urls_from_robots_txt(
                 requests.get(
                     self.root_url + "robots.txt",
                     allow_redirects=False,
@@ -267,7 +267,7 @@ class Pre(WSModule):
 
         self.done = True
 
-    def _get_encodings(self):
+    def get_encodings(self):
         """ Get encoding from headers and pages """
         url = self.root_url
         encs = {}
@@ -296,7 +296,7 @@ class Pre(WSModule):
 
         return encs
 
-    def _get_urls_from_robots_txt(self, content):
+    def get_urls_from_robots_txt(self, content):
         """ Extract urls from robots.txt """
         content = content.split("\n")
         urls = []
@@ -318,7 +318,7 @@ class Pre(WSModule):
         ipRe = re.compile(r"(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})")
         nsRespRe = re.compile(r";ANSWER\s(?P<data>(.|\s)*)\s;AUTHORITY", re.M)
 
-        req_func = getattr(dns.query, self._get_default_dns_proto())
+        req_func = getattr(dns.query, self.get_default_dns_proto())
 
         ns_names = file_to_list(Registry().get('wr_path') + "/bases/pre-domain-names.txt")
         for name in ns_names:
@@ -376,7 +376,7 @@ class Pre(WSModule):
         _dict = open(Registry().get('wr_path') + '/bases/pre-dafs-{0}.txt'.format(_type), 'r').read().split("\n")
         for obj in _dict:
             r = Http.get(self.root_url + obj)
-            if r is not None and not self._response_404(r):
+            if r is not None and not self.response_404(r):
                 result.append({'url': "/" + obj, 'code': r.status_code, 'time': 0})
 
         return result

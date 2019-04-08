@@ -55,7 +55,7 @@ class FormBruterThread(HttpThread):
 
         self.http.allow_redirects = params.follow_redirects
 
-    def _make_conf_from_str(self, confstr):
+    def make_conf_from_str(self, confstr):
         result = {}
         tmp = confstr.split("&")
         for tmp_row in tmp:
@@ -63,7 +63,7 @@ class FormBruterThread(HttpThread):
             result[field] = value
         return result
 
-    def _fill_conf(self, conf, login, password):
+    def fill_conf(self, conf, login, password):
         for field in conf.keys():
             conf[field] = conf[field].replace("^USER^", login).replace("^PASS^", password)
         return conf
@@ -79,7 +79,7 @@ class FormBruterThread(HttpThread):
         need_retest = False
         word = False
 
-        conf = self._make_conf_from_str(self.confstr)
+        conf = self.make_conf_from_str(self.confstr)
 
         while not self.done and not self.pass_found():
             try:
@@ -95,7 +95,7 @@ class FormBruterThread(HttpThread):
                         (self.pass_max_len and len(word) > self.pass_max_len):
                     continue
 
-                work_conf = self._fill_conf(dict(conf), self.login, word)
+                work_conf = self.fill_conf(dict(conf), self.login, word)
                 try:
                     resp = self.http.post(
                         self.url, data=work_conf
