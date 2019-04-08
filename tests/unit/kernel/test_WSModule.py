@@ -20,6 +20,7 @@ class ModuleMock(WSModule):
 
 class LoggerMock():
     result = ""
+    logs_dir = "/tmp"
 
     def log(self, s):
         self.result += s
@@ -201,6 +202,7 @@ class Test_WSModule(object):
 
         Registry().set('proxy_many_died', True)
         Registry().set('positive_limit_stop', True)
+        Registry().set('config', {"main": {"errors_limit": 10}})
 
         module.output()
 

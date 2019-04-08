@@ -16,13 +16,6 @@ class ResponseMock():
         self.headers = headers
 
 
-class SessionMock():
-    mock_to_return = ResponseMock()
-
-    def get(self, url, verify=None, allow_redirects=None, headers=None, stream=None, proxies=None, timeout=None):
-        return self.mock_to_return
-
-
 class ProxiesMock():
     changed_count = 0
     def get_proxy(self):
@@ -36,7 +29,7 @@ class SessionMock():
     def __init__(self):
         self.requests = []
 
-    def request(self, url, verify, allow_redirects, headers, stream, proxies, timeout, data=None):
+    def request(self, url, verify, allow_redirects, headers, stream, proxies, timeout, data=None, cookies=None, files=None):
         request = {
                 'url': url,
                 'verify': verify,
@@ -45,37 +38,41 @@ class SessionMock():
                 'stream': stream,
                 'proxies': proxies,
                 'timeout': timeout,
+                'cookies': cookies,
+                'files': files,
             }
         if data is not None:
             request['data'] = data
         self.requests.append(request)
         return ResponseMock()
 
-    def get(self, url, verify, allow_redirects, headers, stream, proxies, timeout):
-        return self.request(url, verify, allow_redirects, headers, stream, proxies, timeout)
+    def get(self, url, verify, allow_redirects, headers, stream, proxies, timeout, cookies=None, files=None):
+        return self.request(url, verify, allow_redirects, headers, stream, proxies, timeout, cookies=cookies, files=files)
 
-    def post(self, url, verify, allow_redirects, headers, stream, proxies, timeout, data):
-        return self.request(url, verify, allow_redirects, headers, stream, proxies, timeout, data=data)
+    def post(self, url, verify, allow_redirects, headers, stream, proxies, timeout, data, cookies=None, files=None):
+        return self.request(url, verify, allow_redirects, headers, stream, proxies, timeout, data=data, cookies=cookies, files=files)
 
-    def head(self, url, verify, allow_redirects, headers, proxies, timeout):
-        return self.request(url, verify, allow_redirects, headers, False, proxies, timeout)
+    def head(self, url, verify, allow_redirects, headers, proxies, timeout, cookies=None, files=None):
+        return self.request(url, verify, allow_redirects, headers, False, proxies, timeout, cookies=cookies, files=files)
 
 
 class Test_Http(object):
     get_params_provider = [
-        ("get", "testurl1", True, {}, True, {'url': 'testurl1', 'verify': True, 'headers': {'User-Agent': 'TestUA'}, 'allow_redirects': True}),
-        ("get", "testurl2", True, {'A': 'B'}, True, {'url': 'testurl2', 'verify': True, 'headers': {'A': 'B', 'User-Agent': 'TestUA'}, 'allow_redirects': True}),
-        ("get", "testurl3", False, {}, False, {'url': 'testurl3', 'verify': False, 'headers': {'User-Agent': 'TestUA'}, 'allow_redirects': False}),
-        ("post", "testurl1", True, {}, True, {'url': 'testurl1', 'verify': True, 'headers': {'User-Agent': 'TestUA'}, 'allow_redirects': True, 'data': {'postparam': 'postvalue'}}),
-        ("post", "testurl2", True, {'A': 'B'}, True, {'url': 'testurl2', 'verify': True, 'headers': {'A': 'B', 'User-Agent': 'TestUA'}, 'allow_redirects': True, 'data': {'postparam': 'postvalue'}}),
-        ("post", "testurl3", False, {}, False, {'url': 'testurl3', 'verify': False, 'headers': {'User-Agent': 'TestUA'}, 'allow_redirects': False, 'data': {'postparam': 'postvalue'}}),
-        ("head", "testurl1", True, {}, True, {'url': 'testurl1', 'verify': True, 'headers': {'User-Agent': 'TestUA'}, 'allow_redirects': True}),
-        ("head", "testurl2", True, {'A': 'B'}, True, {'url': 'testurl2', 'verify': True, 'headers': {'A': 'B', 'User-Agent': 'TestUA'}, 'allow_redirects': True}),
-        ("head", "testurl3", False, {}, False, {'url': 'testurl3', 'verify': False, 'headers': {'User-Agent': 'TestUA'}, 'allow_redirects': False}),
+        ("get", "testurl1", True, {}, True, None, None, {'url': 'testurl1', 'verify': True, 'headers': {'User-Agent': 'TestUA'}, 'allow_redirects': True, 'cookies': None, 'files': None}),
+        ("get", "testurl2", True, {'A': 'B'}, True, None, None, {'url': 'testurl2', 'verify': True, 'headers': {'A': 'B', 'User-Agent': 'TestUA'}, 'allow_redirects': True, 'cookies': None, 'cookies': None, 'files': None}),
+        ("get", "testurl3", False, {}, False, None, None, {'url': 'testurl3', 'verify': False, 'headers': {'User-Agent': 'TestUA'}, 'allow_redirects': False, 'cookies': None, 'cookies': None, 'files': None}),
+        ("get", "testurl3", False, {}, False, 'xcookie', None, {'url': 'testurl3', 'verify': False, 'headers': {'User-Agent': 'TestUA'}, 'allow_redirects': False, 'cookies': 'xcookie', 'files': None}),
+        ("post", "testurl1", True, {}, True, None, None, {'url': 'testurl1', 'verify': True, 'headers': {'User-Agent': 'TestUA'}, 'allow_redirects': True, 'data': {'postparam': 'postvalue'}, 'cookies': None, 'cookies': None, 'files': None}),
+        ("post", "testurl2", True, {'A': 'B'}, True, None, None, {'url': 'testurl2', 'verify': True, 'headers': {'A': 'B', 'User-Agent': 'TestUA'}, 'allow_redirects': True, 'data': {'postparam': 'postvalue'}, 'cookies': None, 'cookies': None, 'files': None}),
+        ("post", "testurl3", False, {}, False, None, None, {'url': 'testurl3', 'verify': False, 'headers': {'User-Agent': 'TestUA'}, 'allow_redirects': False, 'data': {'postparam': 'postvalue'}, 'cookies': None, 'cookies': None, 'files': None}),
+        ("post", "testurl1", True, {}, True, 'xcookies', 'xfiles', {'url': 'testurl1', 'verify': True, 'headers': {'User-Agent': 'TestUA'}, 'allow_redirects': True, 'data': {'postparam': 'postvalue'}, 'cookies': 'xcookies', 'files': 'xfiles'}),
+        ("head", "testurl1", True, {}, True, None, None, {'url': 'testurl1', 'verify': True, 'headers': {'User-Agent': 'TestUA'}, 'allow_redirects': True, 'cookies': None, 'cookies': None, 'files': None}),
+        ("head", "testurl2", True, {'A': 'B'}, True, None, None, {'url': 'testurl2', 'verify': True, 'headers': {'A': 'B', 'User-Agent': 'TestUA'}, 'allow_redirects': True, 'cookies': None, 'cookies': None, 'files': None}),
+        ("head", "testurl3", False, {}, False, None, None, {'url': 'testurl3', 'verify': False, 'headers': {'User-Agent': 'TestUA'}, 'allow_redirects': False, 'cookies': None, 'cookies': None, 'files': None}),
     ]
 
-    @pytest.mark.parametrize("reqtype,url,verify,headers,allow_redirects,expected", get_params_provider)
-    def test_get_params(self, reqtype, url, verify, headers, allow_redirects, expected):
+    @pytest.mark.parametrize("reqtype,url,verify,headers,allow_redirects,cookies,files,expected", get_params_provider)
+    def test_get_params(self, reqtype, url, verify, headers, allow_redirects, cookies, files, expected):
         Registry().set('proxies', ProxiesMock())
         Registry().set('ua', 'TestUA')
         Registry().set('config', {'main': {'http_timeout': 5, 'requests_per_proxy': 1}})
@@ -85,16 +82,17 @@ class Test_Http(object):
             sess_creation_mock.return_value = session_mock
             http = Http()
             if reqtype == "get":
-                http.get(url, verify=verify, headers=headers, allow_redirects=allow_redirects)
+                http.get(url, verify=verify, headers=headers, allow_redirects=allow_redirects, cookies=cookies)
             elif reqtype == "head":
                 http.head(url, verify=verify, headers=headers, allow_redirects=allow_redirects)
             elif reqtype == "post":
-                http.post(url, verify=verify, headers=headers, allow_redirects=allow_redirects, data={'postparam': 'postvalue'})
+                http.post(url, verify=verify, headers=headers, allow_redirects=allow_redirects, data={'postparam': 'postvalue'}, cookies=cookies, files=files)
 
             test_data = session_mock.requests[0]
             del test_data['proxies']
             del test_data['timeout']
             del test_data['stream']
+
 
             assert expected == test_data
 
