@@ -19,9 +19,9 @@ class Roller(object):
 
     def __init__(self, file_name):
         self.file_name = file_name
-        self.fh = open(file_name)
         if not os.path.exists(file_name):
             raise BaseException("File not found: " + file_name)
+        self.fh = open(file_name)
 
     def get(self):
         """ Method get next list item """
@@ -34,4 +34,4 @@ class Roller(object):
             return self.get()
 
         self.first_line_flag = True
-        return line
+        return line.strip()
