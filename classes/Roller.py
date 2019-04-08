@@ -8,30 +8,30 @@ Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pr
 
 Class of roller list (get last element - next first element)
 """
-from libs.common import file_to_list
+import os
 
 
 class Roller(object):
     """ Class of roller list (get last element - next first element) """
-    data = None
-    current_index = None
+    fh = None
+    first_line_flag = False
+    file_name = None
 
-    def __init__(self):
-        self.data = []
-        self.current_index = 0
-
-    def load_file(self, file_name):
-        """ Method load file in inner list """
-        for line in file_to_list(file_name, False):
-            if len(line):
-                self.data.append(line)
+    def __init__(self, file_name):
+        self.file_name = file_name
+        self.fh = open(file_name)
+        if not os.path.exists(file_name):
+            raise BaseException("File not found: " + file_name)
 
     def get(self):
         """ Method get next list item """
-        to_return = self.data[self.current_index]
+        line = self.fh.readline()
+        if not line:
+            if not self.first_line_flag:
+                raise BaseException("File %s has not lines" % self.file_name)
 
-        if self.current_index == len(self.data)-1:
-            self.current_index = 0
-        else:
-            self.current_index += 1
-        return to_return
+            self.fh.seek(0)
+            return self.get()
+
+        self.first_line_flag = True
+        return line
