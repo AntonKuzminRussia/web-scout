@@ -55,7 +55,10 @@ class Logger(object):
 
         if have_items:
             self.items_dir = "{0}/items".format(logs_time_path)
-            os.mkdir(self.items_dir)
+            if not os.path.exists(self.items_dir):
+                os.mkdir(self.items_dir)
+            else:
+                self.log("!!! Concurrency bug, logs/items content may be shuffled with other ws process !!!")
 
         self.logs_dir = "{0}/{1}/{2}".format(logs_dir, curdate, curtime)
 
