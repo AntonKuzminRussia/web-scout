@@ -39,7 +39,7 @@ class Logger(object):
         curtime = t("%H_%M_%S")
 
         if not os.path.exists(logs_dir):
-            raise WSException("LOGGER ERROR: Path {0} for module {1} not exists!".format(logs_dir, module_name))
+            os.mkdir(logs_dir)
 
         log_date_path = "{0}/{1}".format(logs_dir, curdate)
         if not os.path.exists(log_date_path):
