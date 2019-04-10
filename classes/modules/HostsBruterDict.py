@@ -9,12 +9,12 @@ Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pr
 Class of module for HostsBrute by Dict
 """
 
-from classes.modules.HostsBruteModules import HostsBruteModules
+from classes.modules.HostsBruterModules import HostsBruterModules
 from classes.generators.FileGenerator import FileGenerator
 from classes.modules.params.HostsBruterDictModuleParams import HostsBruterDictModuleParams
 
 
-class HostsBruteDict(HostsBruteModules):
+class HostsBruterDict(HostsBruterModules):
     """ Class of module for HostsBrute by Dict """
     model = None
     mode = 'dict'

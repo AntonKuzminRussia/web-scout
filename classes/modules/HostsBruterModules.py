@@ -19,7 +19,7 @@ from classes.threads.pools.HostsBruterThreadsPool import HostsBruterThreadsPool
 from classes.ErrorsCounter import ErrorsCounter
 
 
-class HostsBruteModules(WSModule):
+class HostsBruterModules(WSModule):
     """ Common module class form HostsBrute* modules """
     logger_enable = True
     logger_name = 'hosts'
@@ -28,7 +28,7 @@ class HostsBruteModules(WSModule):
 
     def validate_main(self):
         """ Check users params """
-        super(HostsBruteModules, self).validate_main()
+        super(HostsBruterModules, self).validate_main()
 
         if (not self.options['false-phrase'].value or not len(self.options['false-phrase'].value)) and (not self.options['false-size'].value or not len(self.options['false-size'].value)):
             raise WSException(

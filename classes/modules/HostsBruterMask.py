@@ -9,12 +9,12 @@ Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pr
 Class of module for HostsBrute by Mask
 """
 
-from classes.modules.HostsBruteModules import HostsBruteModules
+from classes.modules.HostsBruterModules import HostsBruterModules
 from classes.generators.DictOfMask import DictOfMask
 from classes.modules.params.HostsBruterMaskModuleParams import HostsBruterMaskModuleParams
 
 
-class HostsBruteMask(HostsBruteModules):
+class HostsBruterMask(HostsBruterModules):
     """ Class of module for HostsBrute by Mask """
     model = None
     mode = 'dict'
