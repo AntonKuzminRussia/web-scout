@@ -23,7 +23,7 @@ class ContentDiscoveryModuleParams(AbstractModuleParams):
                 'headers-file',
                 'template',
                 'method',
-
+                'found-re',
                 "urls-file",
                 "discovery-exts",
             ]
