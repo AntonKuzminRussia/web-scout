@@ -94,7 +94,7 @@ class Logger(object):
 
         ext = "bin" if binary else "txt"
 
-        fh = codecs.open("{0}/{1}.{2}".format(self.items_dir, name, ext), 'wb', 'utf-8')
+        fh = codecs.open("{0}/{1}.{2}".format(self.items_dir, name, ext), 'ab', 'utf-8')
 
         if binary:
             try:
