@@ -29,11 +29,12 @@ class FuzzerUrls(WSModule):
     model = None
     logger_enable = True
     logger_name = 'fuzzer-urls'
-    logger_have_items = False
+    logger_have_items = True
     log_path = '/dev/null'
     time_count = True
     options = FuzzerUrlsModuleParams().get_options()
     source_temp_file = '/tmp/fuzzer-urls-random330484736363783.txt'
+    logger_scan_name_option = 'url'
 
     def validate_main(self):
         """ Check users params """

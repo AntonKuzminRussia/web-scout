@@ -38,6 +38,8 @@ class FuzzerHeadersThread(HttpThread):
         self.bad_words = params.bad_words
         self.headers = params.headers
         self.delay = params.delay
+        self.retest_codes = params.retest_codes
+        self.retest_phrase = params.retest_phrase
 
     def run(self):
         """ Run thread """

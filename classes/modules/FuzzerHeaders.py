@@ -33,6 +33,7 @@ class FuzzerHeaders(WSModule):
     logger_name = 'fuzzer-headers'
     logger_have_items = False
     options = FuzzerHeadersModuleParams().get_options()
+    logger_scan_name_option = 'url'
 
     def validate_main(self):
         """ Check users params """
