@@ -36,8 +36,6 @@ class SFormBruterThread(SeleniumThread):
         self.retested_words = {}
 
         self.queue = queue
-        self.protocol = params.protocol
-        self.host = params.host
         self.url = params.url
         self.delay = params.delay
         self.ddos_phrase = params.ddos_detect_phrase
@@ -57,7 +55,7 @@ class SFormBruterThread(SeleniumThread):
         self.counter = counter
         self.result = result
 
-        Registry().set('url_for_proxy_check', "{0}://{1}".format(params.protocol, params.host))
+        Registry().set('url_for_proxy_check', params.url)
 
     def pass_found(self):
         return Registry().get('pass_found')
@@ -74,7 +72,7 @@ class SFormBruterThread(SeleniumThread):
             if not len(line.strip()):
                 continue
 
-            point, selector = line.strip().split("    ")
+            point, selector = line.strip().split("\t")
             to_return[point] = selector
         return to_return
 
@@ -85,7 +83,7 @@ class SFormBruterThread(SeleniumThread):
 
         brute_conf = self.parse_brute_config(self.conffile)
 
-        while not self.pass_found and not self.done:
+        while not self.pass_found() and not self.done:
             try:
                 self.last_action = int(time.time())
 
@@ -103,7 +101,7 @@ class SFormBruterThread(SeleniumThread):
                         self.reload_form_page or \
                        (not self.browser.element_exists(By.CSS_SELECTOR, brute_conf['^USER^']) or
                         not self.browser.element_exists(By.CSS_SELECTOR, brute_conf['^PASS^'])):
-                    self.browser.get(self.protocol + "://" + self.host + self.url)
+                    self.browser.get(self.url)
 
                 # self.browser.get(self.protocol + "://" + self.host + self.url)
 

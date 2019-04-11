@@ -33,8 +33,6 @@ class SParamsBruterThread(SeleniumThread):
         """
         SeleniumThread.__init__(self)
         self.queue = queue
-        self.protocol = params.protocol
-        self.host = params.host
         self.method = 'get'
         self.url = params.url
         self.max_params_length = params.max_params_length
@@ -43,13 +41,14 @@ class SParamsBruterThread(SeleniumThread):
         self.result = result
         self.value = params.value
         self.not_found_re = params.not_found_re
+        self.not_found_size = params.not_found_size
         self.recreate_re = params.browser_recreate_re
         self.delay = params.delay
         self.ddos_phrase = params.ddos_detect_phrase
         self.ddos_human = params.ddos_human_action
         self.ignore_words_re = params.ignore_words_re
 
-        Registry().set('url_for_proxy_check', "{0}://{1}".format(self.protocol, self.host))
+        Registry().set('url_for_proxy_check', self.url)
 
         self.browser_create()
 
@@ -74,6 +73,14 @@ class SParamsBruterThread(SeleniumThread):
 
         return params_str[:-(len(self.last_word) + 3)]
 
+    def is_positive_response(self):
+        print(len(self.browser.page_source))
+        if self.not_found_re and not self.not_found_re.findall(self.browser.page_source):
+            return True
+        if self.not_found_size is not None and len(self.browser.page_source) == self.not_found_size:
+            return True
+        return False
+
     def run(self):
         """ Run thread """
         need_retest = False
@@ -88,7 +95,7 @@ class SParamsBruterThread(SeleniumThread):
                 if not need_retest:
                     params_str = params_str = self.build_params_str()
 
-                self.browser.get(self.protocol + "://" + self.host + self.url + params_str)
+                self.browser.get(self.url + "?" + params_str)
 
                 if self.recreate_re and self.recreate_re.findall(self.browser.page_source):
                     need_retest = True
@@ -97,12 +104,13 @@ class SParamsBruterThread(SeleniumThread):
                     continue
 
                 positive_item = False
-                if not self.not_found_re.findall(self.browser.page_source):
+                found_item = None
+                if self.is_positive_response():
                     param_found = False
                     for one_param in params_str.split("&"):
-                        self.browser.get(self.protocol + "://" + self.host + self.url + one_param)
+                        self.browser.get(self.url + "?" + one_param)
 
-                        if not self.not_found_re.findall(self.browser.page_source):
+                        if self.is_positive_response():
                             self.result.append(one_param)
                             self.xml_log({'param': one_param})
                             param_found = True
@@ -115,7 +123,8 @@ class SParamsBruterThread(SeleniumThread):
 
                     positive_item = True
 
-                self.logger.item(found_item, self.browser.page_source, True, positive=positive_item)
+                if found_item is not None:
+                    self.logger.item(found_item, self.browser.page_source, True, positive=positive_item)
 
                 if Registry().isset('tester'):
                     Registry().get('tester').put(

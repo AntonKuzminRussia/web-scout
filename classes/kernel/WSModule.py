@@ -126,8 +126,9 @@ class WSModule(object):
     def validate_main(self):
         """ Common user params validate functions """
         if 'selenium' in self.options.keys() and self.options['selenium'].value:
-            if 'not-found-re' in self.options.keys() and not self.options['not-found-re'].value:
-                raise WSException("Selenium enabled, module need a not found phrase (--not-found-re) for work!")
+            if ('not-found-re' in self.options.keys() and not self.options['not-found-re'].value) and \
+                    ('not-found-size' in self.options.keys() and not len(self.options['not-found-size'].value)):
+                raise WSException("Selenium enabled, module need a not found phrase (--not-found-re) or not found size (--not-found-size) for work!")
 
             if int(self.options['threads'].value) > int(Registry().get('config')['selenium']['max_threads']):
                 raise WSException(

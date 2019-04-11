@@ -24,7 +24,7 @@ class SDafsThread(SeleniumThread):
     """ Thread class for Dafs modules (selenium) """
     method = None
     mask_symbol = None
-    url = None
+    template = None
 
     def __init__(self, queue, counter, result, params):
         """
@@ -33,7 +33,7 @@ class SDafsThread(SeleniumThread):
         """
         super(SDafsThread, self).__init__()
         self.queue = queue
-        self.url = params.url
+        self.template = params.template
         self.method = params.method
         self.mask_symbol = params.msymbol
         self.counter = counter
@@ -45,7 +45,7 @@ class SDafsThread(SeleniumThread):
         self.ddos_human = params.ddos_human_action
         self.ignore_words_re = params.ignore_words_re
 
-        Registry().set('url_for_proxy_check', "{0}://{1}".format(self.protocol, self.host))
+        Registry().set('url_for_proxy_check', self.template)
 
         self.browser_create()
 
@@ -66,7 +66,7 @@ class SDafsThread(SeleniumThread):
                         continue
 
                 try:
-                    url = self.url.replace(self.mask_symbol, word)
+                    url = self.template.replace(self.mask_symbol, word)
                 except UnicodeDecodeError:
                     self.logger.log(
                         "URL build error (UnicodeDecodeError) with word '{0}', skip it".format(pprint.pformat(word)),
