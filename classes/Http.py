@@ -177,6 +177,8 @@ class Http(object):
 
         if 'User-Agent' not in headers.keys():
             headers['User-Agent'] = Registry().get('ua')
+        if files is None and 'Content-Type' not in headers.keys():
+            headers['Content-Type'] = "application/x-www-form-urlencoded"
 
         resp = self.session.post(
             url,
@@ -185,7 +187,7 @@ class Http(object):
             allow_redirects=allow_redirects,
             headers=headers,
             stream=True,
-            proxies=self.get_current_proxy(),
+            proxies={'http':'127.0.0.1:8080'},
             timeout=int(Registry().get('config')['main']['http_timeout']),
             cookies=cookies,
             files=files
