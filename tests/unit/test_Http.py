@@ -62,9 +62,9 @@ class Test_Http(object):
         ("get", "testurl2", True, {'A': 'B'}, True, None, None, {'url': 'testurl2', 'verify': True, 'headers': {'A': 'B', 'User-Agent': 'TestUA'}, 'allow_redirects': True, 'cookies': None, 'cookies': None, 'files': None}),
         ("get", "testurl3", False, {}, False, None, None, {'url': 'testurl3', 'verify': False, 'headers': {'User-Agent': 'TestUA'}, 'allow_redirects': False, 'cookies': None, 'cookies': None, 'files': None}),
         ("get", "testurl3", False, {}, False, 'xcookie', None, {'url': 'testurl3', 'verify': False, 'headers': {'User-Agent': 'TestUA'}, 'allow_redirects': False, 'cookies': 'xcookie', 'files': None}),
-        ("post", "testurl1", True, {}, True, None, None, {'url': 'testurl1', 'verify': True, 'headers': {'User-Agent': 'TestUA'}, 'allow_redirects': True, 'data': {'postparam': 'postvalue'}, 'cookies': None, 'cookies': None, 'files': None}),
-        ("post", "testurl2", True, {'A': 'B'}, True, None, None, {'url': 'testurl2', 'verify': True, 'headers': {'A': 'B', 'User-Agent': 'TestUA'}, 'allow_redirects': True, 'data': {'postparam': 'postvalue'}, 'cookies': None, 'cookies': None, 'files': None}),
-        ("post", "testurl3", False, {}, False, None, None, {'url': 'testurl3', 'verify': False, 'headers': {'User-Agent': 'TestUA'}, 'allow_redirects': False, 'data': {'postparam': 'postvalue'}, 'cookies': None, 'cookies': None, 'files': None}),
+        ("post", "testurl1", True, {}, True, None, None, {'url': 'testurl1', 'verify': True, 'headers': {'User-Agent': 'TestUA', 'Content-Type': "application/x-www-form-urlencoded"}, 'allow_redirects': True, 'data': {'postparam': 'postvalue'}, 'cookies': None, 'cookies': None, 'files': None}),
+        ("post", "testurl2", True, {'A': 'B'}, True, None, None, {'url': 'testurl2', 'verify': True, 'headers': {'A': 'B', 'User-Agent': 'TestUA', 'Content-Type': "application/x-www-form-urlencoded"}, 'allow_redirects': True, 'data': {'postparam': 'postvalue'}, 'cookies': None, 'cookies': None, 'files': None}),
+        ("post", "testurl3", False, {}, False, None, None, {'url': 'testurl3', 'verify': False, 'headers': {'User-Agent': 'TestUA', 'Content-Type': "application/x-www-form-urlencoded"}, 'allow_redirects': False, 'data': {'postparam': 'postvalue'}, 'cookies': None, 'cookies': None, 'files': None}),
         ("post", "testurl1", True, {}, True, 'xcookies', 'xfiles', {'url': 'testurl1', 'verify': True, 'headers': {'User-Agent': 'TestUA'}, 'allow_redirects': True, 'data': {'postparam': 'postvalue'}, 'cookies': 'xcookies', 'files': 'xfiles'}),
         ("head", "testurl1", True, {}, True, None, None, {'url': 'testurl1', 'verify': True, 'headers': {'User-Agent': 'TestUA'}, 'allow_redirects': True, 'cookies': None, 'cookies': None, 'files': None}),
         ("head", "testurl2", True, {'A': 'B'}, True, None, None, {'url': 'testurl2', 'verify': True, 'headers': {'A': 'B', 'User-Agent': 'TestUA'}, 'allow_redirects': True, 'cookies': None, 'cookies': None, 'files': None}),
@@ -92,7 +92,6 @@ class Test_Http(object):
             del test_data['proxies']
             del test_data['timeout']
             del test_data['stream']
-
 
             assert expected == test_data
 
