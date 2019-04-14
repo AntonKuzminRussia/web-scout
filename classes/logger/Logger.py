@@ -9,16 +9,14 @@ Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pr
 Class for logging WS output
 """
 
-import Queue
 import sys
 import os
 import traceback
-import time
 import re
 import codecs
 import random
 
-from libs.common import t, md5
+from libs.common import t
 from classes.Registry import Registry
 from classes.kernel.WSException import WSException
 
@@ -131,4 +129,5 @@ class Logger(object):
             Registry().get('xml').put_error(str(_exception), tb_text)
 
     def stop(self):
-        self.log_fh.close()
+        if not self.log_fh.closed:
+            self.log_fh.close()
