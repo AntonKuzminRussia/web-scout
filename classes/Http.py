@@ -187,7 +187,7 @@ class Http(object):
             allow_redirects=allow_redirects,
             headers=headers,
             stream=True,
-            proxies={'http':'127.0.0.1:8080'},
+            proxies=self.get_current_proxy(),
             timeout=int(Registry().get('config')['main']['http_timeout']),
             cookies=cookies,
             files=files
