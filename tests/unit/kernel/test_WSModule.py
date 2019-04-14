@@ -46,12 +46,15 @@ class Test_WSModule(object):
             option_nf = WSOption("not-found-re", "Regex for detect 'Not found' response (404)", "", False, ['--not-found-re'])
             option_nf.value = ""
 
+            option_nfs = WSOption("not-found-size", "Size", "-1", False, ['--not-found-size'])
+            option_nfs.value = "-1"
+
             option_threads = WSOption("threads", "Threads count, default 10", 10, False, ['--threads'])
             option_threads.value = 1
 
             Registry().set('config', {'selenium': {'max_threads': 5}})
 
-            return {"selenium": option_selenium, "not-found-re": option_nf, "threads": option_threads}, "module need a not found phrase"
+            return {"selenium": option_selenium, "not-found-re": option_nf, "threads": option_threads, "not-found-size": option_nfs}, "module need a not found phrase"
         elif test_name == "selenium2":
             option_selenium = WSOption("selenium", "Use Selenium for scanning", "", False, ['--selenium'])
             option_selenium.value = 1

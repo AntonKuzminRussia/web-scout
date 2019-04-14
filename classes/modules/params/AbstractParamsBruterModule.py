@@ -10,7 +10,6 @@ class AbstractParamsBruterModule(AbstractModuleParams):
                 'url',
                 "max-params-length",
                 "value",
-                "msymbol",
                 "method",
                 "not-found-re",
                 "not-found-size",

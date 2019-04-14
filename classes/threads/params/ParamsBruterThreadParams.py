@@ -33,7 +33,6 @@ class ParamsBruterThreadParams:
         self.max_params_length = int(options['max-params-length'].value)
         self.value = options['value'].value
         self.method = options['method'].value.lower()
-        self.msymbol = options['msymbol'].value
         self.not_found_re = options['not-found-re'].value
         self.delay = int(options['delay'].value)
         self.ddos_detect_phrase = options['ddos-detect-phrase'].value
