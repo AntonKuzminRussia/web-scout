@@ -74,7 +74,6 @@ class SParamsBruterThread(SeleniumThread):
         return params_str[:-(len(self.last_word) + 3)]
 
     def is_positive_response(self):
-        print(len(self.browser.page_source))
         if self.not_found_re and not self.not_found_re.findall(self.browser.page_source):
             return True
         if self.not_found_size is not None and len(self.browser.page_source) == self.not_found_size:

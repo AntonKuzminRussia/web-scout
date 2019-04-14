@@ -24,8 +24,6 @@ from libs.common import file_put_contents
 class ParamsBruterThread(HttpThread):
     """ Thread class for ParamsBrute modules """
     method = None
-    template = None
-    mask_symbol = None
     retested_words = None
     ignore_words_re = None
     queue_is_empty = False
@@ -43,7 +41,6 @@ class ParamsBruterThread(HttpThread):
 
         self.queue = queue
         self.url = params.url
-        self.mask_symbol = params.msymbol
         self.counter = counter
         self.result = result
         self.value = params.value
@@ -163,7 +160,7 @@ class ParamsBruterThread(HttpThread):
         elif self.method in ['cookies', 'files']:
             to_return = ""
             for k in param:
-                to_return += "{0}".format(k)
+                to_return += "{0}={1}".format(k, self.value)
             return to_return
         else:
             raise BaseException("Unknown work type - {0}".format(self.method))
@@ -202,6 +199,7 @@ class ParamsBruterThread(HttpThread):
                 positive_item = False
                 if self.is_response_right(resp):
                     param_found = False
+
                     for one_param in self.split_params(params_str):
                         try:
                             resp = self.request_params(one_param)

@@ -12,6 +12,7 @@ import time
 
 from classes.Registry import Registry
 from classes.kernel.WSModule import WSModule
+from classes.kernel.WSException import WSException
 from classes.kernel.WSCounter import WSCounter
 from classes.jobs.ParamsBruterJob import ParamsBruterJob
 from classes.threads.pools.ParamsBruterThreadsPool import ParamsBruterThreadsPool
@@ -24,6 +25,15 @@ class ParamsBruterModules(WSModule):
     logger_name = 'params-bruter'
     logger_have_items = True
     logger_scan_name_option = 'url'
+
+    def validate_main(self):
+        """ Check users params """
+        super(ParamsBruterModules, self).validate_main()
+
+        if self.options['method'].value.lower() not in ['get', 'post'] and int(self.options['max-params-length'].value) > 100:
+            raise WSException(
+                "Attention! Too big --max-params-length. Big value here allowed only in GET and POST modes"
+            )
 
     def make_queue(self):
         self.queue = ParamsBruterJob()
