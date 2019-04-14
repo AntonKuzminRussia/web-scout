@@ -126,13 +126,29 @@ class WSModule(object):
     def validate_main(self):
         """ Common user params validate functions """
         if 'selenium' in self.options.keys() and self.options['selenium'].value:
-            if ('not-found-re' in self.options.keys() and not self.options['not-found-re'].value) and \
-                    ('not-found-size' in self.options.keys() and not len(self.options['not-found-size'].value)):
+            if ('not-found-re' in self.options.keys() or 'not-found-size' in self.options.keys()) or \
+                    (('not-found-re' in self.options.keys() and not self.options['not-found-re'].value) and \
+                    ('not-found-size' in self.options.keys() and not len(self.options['not-found-size'].value))):
                 raise WSException("Selenium enabled, module need a not found phrase (--not-found-re) or not found size (--not-found-size) for work!")
 
             if int(self.options['threads'].value) > int(Registry().get('config')['selenium']['max_threads']):
                 raise WSException(
                     "Selenium enabled, very many threads value ({0}), see docs.".format(self.options['threads'].value)
+                )
+
+            if 'method' in self.options.keys() and self.options['method'].value.lower() != 'get':
+                raise WSException(
+                    "In Selenium mode only GET method allowed"
+                )
+
+            if 'not-found-codes' in self.options.keys() and self.options['not-found-codes'].value != "404":
+                raise WSException(
+                    "In Selenium mode param --not-found-codes not allowed"
+                )
+
+            if 'headers-file' in self.options.keys() and self.options['headers-file'].value != "":
+                raise WSException(
+                    "In Selenium mode param --headers-file not allowed"
                 )
 
         if 'protocol' in self.options.keys() and self.options['protocol'].value.lower() not in ['http', 'https']:

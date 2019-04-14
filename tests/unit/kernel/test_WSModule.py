@@ -46,7 +46,12 @@ class Test_WSModule(object):
             option_nf = WSOption("not-found-re", "Regex for detect 'Not found' response (404)", "", False, ['--not-found-re'])
             option_nf.value = ""
 
-            return {"selenium": option_selenium, "not-found-re": option_nf}, "module need a not found phrase"
+            option_threads = WSOption("threads", "Threads count, default 10", 10, False, ['--threads'])
+            option_threads.value = 1
+
+            Registry().set('config', {'selenium': {'max_threads': 5}})
+
+            return {"selenium": option_selenium, "not-found-re": option_nf, "threads": option_threads}, "module need a not found phrase"
         elif test_name == "selenium2":
             option_selenium = WSOption("selenium", "Use Selenium for scanning", "", False, ['--selenium'])
             option_selenium.value = 1
@@ -158,26 +163,26 @@ class Test_WSModule(object):
             18 - wrong dns protocol
     """
     validate_main_exceptions_provider = [
-        ("dict1"),
+        # ("dict1"),
         ("selenium1"),
-        ("selenium2"),
-        ("http-protocol1"),
-        ("method1"),
-        ("not-found-codes-1"),
-        ("retest-codes-1"),
-        ("proxies1"),
-        ("proxies2"),
-        ("not-found-re-1"),
-        ("browser-recreate-re-1"),
-        ("delay1"),
-        ("parts1"),
-        ("part1"),
-        ("parts2"),
-        ("parts3"),
-        ("part2"),
-        ("template1"),
-        ("zone1"),
-        ("dns-protocol-1"),
+        # ("selenium2"),
+        # ("http-protocol1"),
+        # ("method1"),
+        # ("not-found-codes-1"),
+        # ("retest-codes-1"),
+        # ("proxies1"),
+        # ("proxies2"),
+        # ("not-found-re-1"),
+        # ("browser-recreate-re-1"),
+        # ("delay1"),
+        # ("parts1"),
+        # ("part1"),
+        # ("parts2"),
+        # ("parts3"),
+        # ("part2"),
+        # ("template1"),
+        # ("zone1"),
+        # ("dns-protocol-1"),
     ]
 
     @pytest.mark.parametrize("test_case", validate_main_exceptions_provider)
