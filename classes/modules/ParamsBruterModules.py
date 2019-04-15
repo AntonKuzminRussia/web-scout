@@ -30,7 +30,7 @@ class ParamsBruterModules(WSModule):
         """ Check users params """
         super(ParamsBruterModules, self).validate_main()
 
-        if self.options['method'].value.lower() not in ['get', 'post'] and int(self.options['max-params-length'].value) > 100:
+        if self.options['params-method'].value.lower() not in ['get', 'post'] and int(self.options['max-params-length'].value) > 100:
             raise WSException(
                 "Attention! Too big --max-params-length. Big value here allowed only in GET and POST modes"
             )

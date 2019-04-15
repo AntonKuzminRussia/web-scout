@@ -138,7 +138,8 @@ class WSModule(object):
                     "Selenium enabled, very many threads value ({0}), see docs.".format(self.options['threads'].value)
                 )
 
-            if 'method' in self.options.keys() and self.options['method'].value.lower() != 'get':
+            if ('method' in self.options.keys() and self.options['method'].value.lower() != 'get') or \
+                    ('params-method' in self.options.keys() and self.options['params-method'].value.lower() != 'get'):
                 raise WSException(
                     "In Selenium mode only GET method allowed"
                 )
@@ -159,7 +160,13 @@ class WSModule(object):
                 format(self.options['protocol'].value)
             )
 
-        if 'method' in self.options.keys() and self.options['method'].value.lower() not in ['head', 'get', 'post', 'cookies', 'files']:
+        if 'params-method' in self.options.keys() and self.options['params-method'].value.lower() not in ['get', 'post', 'cookies', 'files']:
+            raise WSException(
+                "Method param must be only 'get', 'post', 'cookies', 'files', but have value '{0}' !".
+                format(self.options['params-method'].value)
+            )
+
+        if 'method' in self.options.keys() and self.options['method'].value.lower() not in ['head', 'get', 'post']:
             raise WSException(
                 "Method param must be only 'head', 'get' or 'post', but have value '{0}' !".
                 format(self.options['method'].value)

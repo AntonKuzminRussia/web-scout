@@ -57,6 +57,13 @@ class AbstractModuleParams:
             False,
             ['--method']
         ),
+        "params-method": WSOption(
+            "params-method",
+            "Requests method (default - GET)",
+            "GET",
+            False,
+            ['--params-method']
+        ),
         "dict": WSOption(
             "dict",
             "Dictionary for work",
