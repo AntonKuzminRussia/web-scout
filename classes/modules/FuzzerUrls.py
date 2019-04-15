@@ -10,21 +10,19 @@ Class of FuzzerUrls module
 """
 
 import time
-import os
 from urlparse import urlparse
 
 from classes.kernel.WSModule import WSModule
 from classes.Registry import Registry
-from classes.kernel.WSException import WSException
 from classes.kernel.WSCounter import WSCounter
 from classes.jobs.FuzzerUrlsJob import FuzzerUrlsJob
 from classes.generators.FileGenerator import FileGenerator
 from classes.threads.pools.FuzzerUrlsThreadPool import FuzzerUrlsThreadsPool
 from classes.modules.params.FuzzerUrlsModuleParams import FuzzerUrlsModuleParams
-from classes.ErrorsCounter import ErrorsCounter
+from classes.modules.FuzzerModules import FuzzerModules
 
 
-class FuzzerUrls(WSModule):
+class FuzzerUrls(FuzzerModules):
     """ Class of FuzzerUrls module """
     model = None
     logger_enable = True
@@ -34,19 +32,6 @@ class FuzzerUrls(WSModule):
     time_count = True
     options = FuzzerUrlsModuleParams().get_options()
     source_temp_file = '/tmp/fuzzer-urls-random330484736363783.txt'
-    logger_scan_name_option = 'url'
-
-    def validate_main(self):
-        """ Check users params """
-        super(FuzzerUrls, self).validate_main()
-
-        if not len(self.options['urls-file'].value) and not len(self.options['url'].value):
-            raise WSException("You must specify 'url' or 'urls-file' param")
-
-        if len(self.options['urls-file'].value) and not os.path.exists(self.options['urls-file'].value):
-            raise WSException(
-                "File with urls '{0}' not exists!".format(self.options['urls-file'].value)
-            )
 
     def parse_params(self, query):
         """ Parse url params string to dict """
