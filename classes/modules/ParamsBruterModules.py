@@ -24,7 +24,6 @@ class ParamsBruterModules(WSModule):
     logger_enable = True
     logger_name = 'params-bruter'
     logger_have_items = True
-    logger_scan_name_option = 'url'
 
     def validate_main(self):
         """ Check users params """

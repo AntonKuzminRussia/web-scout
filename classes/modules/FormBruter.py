@@ -33,7 +33,6 @@ class FormBruter(WSModule):
     logger_have_items = True
     time_count = True
     options = FormBruterModuleParams().get_options()
-    logger_scan_name_option = 'url'
 
     def validate_main(self):
         """ Check users params """

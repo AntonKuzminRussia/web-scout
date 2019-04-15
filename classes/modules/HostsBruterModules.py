@@ -10,13 +10,11 @@ Common module class form HostsBrute* modules
 """
 import time
 
-from classes.Registry import Registry
 from classes.kernel.WSModule import WSModule
 from classes.kernel.WSException import WSException
 from classes.kernel.WSCounter import WSCounter
 from classes.jobs.HostsBruteJob import HostsBruteJob
 from classes.threads.pools.HostsBruterThreadsPool import HostsBruterThreadsPool
-from classes.ErrorsCounter import ErrorsCounter
 
 
 class HostsBruterModules(WSModule):
@@ -24,7 +22,6 @@ class HostsBruterModules(WSModule):
     logger_enable = True
     logger_name = 'hosts'
     logger_have_items = True
-    logger_scan_name_option = 'template'
 
     def validate_main(self):
         """ Check users params """

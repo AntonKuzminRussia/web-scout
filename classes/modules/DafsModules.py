@@ -23,7 +23,6 @@ class DafsModules(WSModule):
     logger_enable = True
     logger_name = 'dafs'
     logger_have_items = True
-    logger_scan_name_option = 'template'
 
     def make_queue(self):
         self.queue = DafsJob()

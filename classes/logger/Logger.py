@@ -18,7 +18,6 @@ import random
 
 from libs.common import t
 from classes.Registry import Registry
-from classes.kernel.WSException import WSException
 
 
 class Logger(object):
@@ -62,9 +61,6 @@ class Logger(object):
 
         self.log_fh = open("{0}/run.log".format(self.logs_dir), "w")
 
-    def set_scan_name(self, scan_name):
-        self.scan_name = scan_name
-
     def log(self, _str, new_str=True, _print=True):
         """ Write string in log and print it if need """
         self.log_fh.write(
@@ -80,8 +76,6 @@ class Logger(object):
 
     def item(self, name, content, binary=False, positive=False):
         """ Write item and it content in file """
-        if self.scan_name is None:
-            raise WSException("Scan name must be specified before logging")
 
         if not positive or not len(name):
             return

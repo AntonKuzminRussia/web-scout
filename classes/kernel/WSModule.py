@@ -33,8 +33,6 @@ class WSModule(object):
     queue = None
     result = []
 
-    logger_scan_name_option = None
-
     DNS_ZONE_CNAME = 'CNAME'
     DNS_ZONE_A = 'A'
     POSSIBLE_DNS_ZONES = [DNS_ZONE_A, DNS_ZONE_CNAME]
@@ -91,8 +89,6 @@ class WSModule(object):
         """ Turn on logger """
         self.logger = Registry().get('logger')
 
-        if self.logger_scan_name_option is not None:
-            self.logger.set_scan_name(self.options[self.logger_scan_name_option].value)
 
     def pre_start_inf(self):
         """ Show options values before work start """

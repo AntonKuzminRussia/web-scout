@@ -22,7 +22,6 @@ class Test_Logger(object):
 
         Registry().set('wr_path', test_tmp_dir)
         self.logger = Logger('dafs', True)
-        self.logger.set_scan_name("test")
 
         assert self.logger.logs_dir is not None
 

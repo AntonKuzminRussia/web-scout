@@ -26,7 +26,6 @@ class DnsBruterModules(WSModule):
     logger_enable = True
     logger_name = 'dns'
     logger_have_items = True
-    logger_scan_name_option = 'template'
 
     def validate_main(self):
         """ Check users params """
