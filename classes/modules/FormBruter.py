@@ -100,7 +100,7 @@ class FormBruter(WSModule):
         pool.start()
 
         while pool.isAlive():
-            if Registry().get('proxy_many_died') or Registry().get('positive_limit_stop') or ErrorsCounter.is_limit():
+            if self.is_critical_stop():
                 pool.kill_all()
             time.sleep(1)
 

@@ -6,6 +6,7 @@ from classes.kernel.WSException import WSException
 from classes.kernel.WSModule import WSModule
 from classes.kernel.WSOption import WSOption
 from classes.Registry import Registry
+from classes.ErrorsCounter import ErrorsCounter
 
 from libs.common import file_put_contents
 
@@ -256,3 +257,62 @@ class Test_WSModule(object):
         assert "test2name" in logger.result
         assert "test1value" in logger.result
         assert "test2value" in logger.result
+
+    is_critical_stop_provider = [
+        (True, True, True, True),
+        (False, False, False, False),
+        (True, False, False, True),
+        (False, True, False, True),
+        (False, False, True, True),
+    ]
+    @pytest.mark.parametrize("proxy_many_died,positive_limit_stop,errors_limit,expected", is_critical_stop_provider)
+    def test_is_critical_stop(self, proxy_many_died, positive_limit_stop, errors_limit, expected):
+        Registry().set('config', {"main": {"errors_limit": "10"}})
+        Registry().set('proxy_many_died', proxy_many_died)
+        Registry().set('positive_limit_stop', positive_limit_stop)
+        ErrorsCounter.counter = 100 if errors_limit else 0
+
+        module = ModuleMock(False)
+        assert expected == module.is_critical_stop()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

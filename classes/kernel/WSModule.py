@@ -53,6 +53,9 @@ class WSModule(object):
     def work_end_error(self):
         exit(1)
 
+    def is_critical_stop(self):
+        return Registry().get('proxy_many_died') or Registry().get('positive_limit_stop') or ErrorsCounter.is_limit()
+
     def output(self):
         if Registry().get('proxy_many_died'):
             self.logger.log("Proxy many died, stop scan")
