@@ -1,4 +1,4 @@
-from classes.Tester import Tester
+from classes.Tester import Tester as TClass
 from classes.Registry import Registry
 
 
@@ -7,18 +7,18 @@ class Test_Tester(object):
         Registry().set('config', {'test': {'display_items_content': True, 'requests_count': 3}})
 
     def test_init(self):
-        tester = Tester()
+        tester = TClass()
         assert tester.display_items_content
         assert 3 == tester.requests_count
 
     def test_done(self):
-        tester = Tester()
+        tester = TClass()
         assert not tester.done()
         tester.items = {'a': 'b', 'c': 'd', 'e': 'f'}
         assert tester.done()
 
     def test_put(self):
-        tester = Tester()
+        tester = TClass()
         tester.put("a", 1)
         tester.put("b", 2)
         tester.put("c", 3)
@@ -26,7 +26,7 @@ class Test_Tester(object):
         assert 3 == len(tester.items)
 
     def test_put_duplicate(self):
-        tester = Tester()
+        tester = TClass()
         tester.put("a", {'b': 'c'})
         tester.put("a", {'b': 'd'})
         assert 1 == len(tester.items)
