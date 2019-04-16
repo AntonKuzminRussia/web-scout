@@ -25,6 +25,9 @@ class HttpThread(AbstractThread):
         AbstractThread.__init__(self)
         self.http = copy.deepcopy(Registry().get('http'))
 
+    def get_response_full_text(self,  resp):
+        return self.get_headers_text(resp) + "\r\n" + resp.text
+
     def test_log(self, url, resp, positive_item):
         """
         Log data for test mode
@@ -74,18 +77,17 @@ class HttpThread(AbstractThread):
         if resp is None:
             return False
 
-        if self.not_found_size != -1 and self.not_found_size == len(resp.content):
-            return False
+        if self.not_found_size != -1 and self.not_found_size != len(resp.content):
+            return True
 
-        if self.not_found_re and not self.is_response_content_binary(resp) and (
-                    self.not_found_re.findall(resp.content) or
-                    self.not_found_re.findall(self.get_headers_text(resp))):
-            return False
+        if self.not_found_re and not self.is_response_content_binary(resp) and \
+                not self.not_found_re.findall(self.get_response_full_text(resp)):
+            return True
 
-        if str(resp.status_code) in self.not_found_codes:
-            return False
+        if str(resp.status_code) not in self.not_found_codes:
+            return True
 
-        return True
+        return False
 
     def log_item(self, item_str, resp, is_positive):
         """

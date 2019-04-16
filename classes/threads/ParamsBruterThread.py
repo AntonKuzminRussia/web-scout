@@ -165,6 +165,28 @@ class ParamsBruterThread(HttpThread):
         else:
             raise BaseException("Unknown work type - {0}".format(self.method))
 
+    def is_response_right(self, resp):
+        """
+        Return true if response has not false or not-found respose attribute(s)
+        :param resp:
+        :return:
+        """
+        if resp is None:
+            return False
+
+        if self.not_found_size != -1 and self.not_found_size == len(resp.content):
+            return False
+
+        if self.not_found_re and not self.is_response_content_binary(resp) and (
+                    self.not_found_re.findall(resp.content) or
+                    self.not_found_re.findall(self.get_headers_text(resp))):
+            return False
+
+        if str(resp.status_code) in self.not_found_codes:
+            return False
+
+        return True
+
     def run(self):
         """ Run thread """
         need_retest = False
