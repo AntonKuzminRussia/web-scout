@@ -129,7 +129,12 @@ class WSModule(object):
                     (not len(self.options['not-found-re'].value) and self.options['not-found-size'].value == "-1"):
                 raise WSException("Selenium enabled, module need a not found phrase (--not-found-re) or not found size (--not-found-size) for work!")
 
-            if int(self.options['threads'].value) > int(Registry().get('config')['selenium']['max_threads']):
+            threads_count = int(self.options['threads'].value)
+            if threads_count == 10:
+                threads_count = int(Registry().get('config')['selenium']['default_threads_count'])
+                self.options['threads'].value = int(Registry().get('config')['selenium']['default_threads_count'])
+
+            if threads_count != 10 and threads_count > int(Registry().get('config')['selenium']['max_threads']):
                 raise WSException(
                     "Selenium enabled, very many threads value ({0}), see docs.".format(self.options['threads'].value)
                 )
