@@ -117,7 +117,25 @@ class SDafsThread(SeleniumThread):
                 self.logger.ex(e)
                 need_retest = False
             except TimeoutException as e:
-                need_retest = True
+                item_data = {'url': url, 'code': 0, 'time': int(time.time()) - rtime}
+                self.xml_log(item_data)
+                self.result.append(item_data)
+                positive_item = True
+
+                if Registry().isset('tester'):
+                    Registry().get('tester').put(
+                        url,
+                        {
+                            'code': 0,
+                            'positive': positive_item,
+                            'size': len(self.browser.page_source),
+                            'content': self.browser.page_source,
+                        }
+                    )
+
+                self.logger.item(word, self.browser.page_source, False, positive_item)
+
+                # need_retest = True
                 self.browser_close()
                 self.browser_create()
                 continue
