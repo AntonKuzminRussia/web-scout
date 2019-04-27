@@ -77,6 +77,7 @@ class SeleniumThread(AbstractThread):
             profile.set_preference('dom.ipc.plugins.enabled.libflashplayer.so', 'false')
 
         profile.set_preference("browser.startup.homepage", "about:blank")
+        profile.set_preference("browser.formfill.enable", "false")
         profile.set_preference("startup.homepage_welcome_url", "about:blank")
         profile.set_preference("startup.homepage_welcome_url.additional", "about:blank")
 
