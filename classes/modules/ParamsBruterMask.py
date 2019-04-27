@@ -6,7 +6,7 @@ Docs RU: http://hack4sec.pro/wiki/index.php/WebScout
 License: MIT
 Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pro> (en)
 
-Class of module for DAFS by mask
+Module class of ParamsBruter by mask
 """
 from classes.generators.DictOfMask import DictOfMask
 from classes.modules.ParamsBruterModules import ParamsBruterModules
@@ -14,7 +14,6 @@ from classes.modules.params.ParamsBruterMaskModuleParams import ParamsBruterMask
 
 
 class ParamsBruterMask(ParamsBruterModules):
-    """ Class of module for DAFS by mask """
     model = None
     mode = 'mask'
     log_path = '/dev/null'

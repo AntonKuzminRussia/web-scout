@@ -56,6 +56,7 @@ class FormBruterThread(HttpThread):
         self.http.allow_redirects = params.follow_redirects
 
     def make_conf_from_str(self, confstr):
+        """ Build brute config from --confstr """
         result = {}
         tmp = confstr.split("&")
         for tmp_row in tmp:
@@ -64,14 +65,17 @@ class FormBruterThread(HttpThread):
         return result
 
     def fill_conf(self, conf, login, password):
+        """ Put login and password on their places in config """
         for field in conf.keys():
             conf[field] = conf[field].replace("^USER^", login).replace("^PASS^", password)
         return conf
 
-    def pass_found(self):
+    def is_pass_found(self):
+        """ Are password found? """
         return Registry().get('pass_found')
 
     def set_pass_found(self, value):
+        """ Set pass_found value """
         return Registry().set('pass_found', value)
 
     def run(self):
@@ -81,7 +85,7 @@ class FormBruterThread(HttpThread):
 
         conf = self.make_conf_from_str(self.confstr)
 
-        while not self.done and not self.pass_found():
+        while not self.done and not self.is_pass_found():
             try:
                 self.last_action = int(time.time())
 

@@ -55,12 +55,22 @@ class Pre(WSModule):
         return self.dns_proto
 
     def get_ns_zone_txt_response(self, domain, zone):
+        """
+        Return text dns response of zone+domain
+        :param domain:
+        :param zone:
+        :return:
+        """
         req_func = getattr(dns.query, self.get_default_dns_proto())
         query = dns.message.make_query(domain, zone)
         result = req_func(query, self.options['dns'].value, timeout=2)
         return result.to_text()
 
     def get_interest_ns(self):
+        """
+        Return list of dns records answers which may be interesting
+        :return:
+        """
         result = {}
         domain = self.options['host'].value
         zones = ['MX', 'SPF', 'NS', 'PTR', 'SOA']

@@ -33,6 +33,10 @@ class HostsBruterModules(WSModule):
             )
 
     def make_queue(self):
+        """
+        Make work queue
+        :return:
+        """
         self.queue = HostsBruteJob()
 
         loaded = self.load_objects(self.queue)
@@ -47,6 +51,7 @@ class HostsBruterModules(WSModule):
         self.counter = WSCounter.factory(loaded['all'] if not loaded['end'] else loaded['end']-loaded['start'])
 
     def start_pool(self):
+        """ Start threads pool and control it live """
         pool = HostsBruterThreadsPool(self.queue, self.counter, self.result, self.options, self.logger)
         pool.start()
 
@@ -56,6 +61,10 @@ class HostsBruterModules(WSModule):
             time.sleep(1)
 
     def output(self):
+        """
+        Output in the end of work
+        :return:
+        """
         WSModule.output(self)
 
         self.logger.log("\nFound {0} hosts:".format(len(self.result)))

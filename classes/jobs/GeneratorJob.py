@@ -10,9 +10,9 @@ Common job class for generator jobs
 """
 import Queue
 
+
 class GeneratorJob(object):
-    """ Job class for DnsBrute* modules """
-    collection_name = None
+    """ Common job class for generator jobs """
     generator = None
 
     def set_generator(self, generator):

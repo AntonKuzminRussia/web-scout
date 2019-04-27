@@ -1,3 +1,14 @@
+# -*- coding: utf-8 -*-
+"""
+This is part of WebScout software
+Docs EN: http://hack4sec.pro/wiki/index.php/WebScout_en
+Docs RU: http://hack4sec.pro/wiki/index.php/WebScout
+License: MIT
+Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pro> (en)
+
+Abstract module params class, contains all possible params description
+"""
+
 from classes.kernel.WSOption import WSOption
 from classes.kernel.WSException import WSException
 from classes.Registry import Registry

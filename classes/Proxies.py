@@ -6,7 +6,7 @@ Docs RU: http://hack4sec.pro/wiki/index.php/WebScout
 License: MIT
 Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pro> (en)
 
-Class for work with proxy
+Class for work with proxies
 """
 
 import random
@@ -17,7 +17,7 @@ from libs.common import file_to_list
 
 
 class Proxies(object):
-    """ Class for work with proxy """
+    """ Class for work with proxies """
     _proxies = None
     died_limit = 0
     died_count = 0
@@ -27,6 +27,7 @@ class Proxies(object):
         self.died_limit = int(Registry().get('config')['main']['proxies_died_limit'])
 
     def count(self):
+        """ Proxies count """
         return len(self._proxies)
 
     def load(self, path):
@@ -53,11 +54,9 @@ class Proxies(object):
                 requests.get(Registry().get('url_for_proxy_check'), timeout=5, allow_redirects=False, proxies=proxies)
             else:
                 requests.get('http://google.com', timeout=5, allow_redirects=False, proxies=proxies)
-            #print 'Proxy {0} is alive'.format(proxy)
             self.died_count = 0
             return True
         except BaseException:
-            #print 'Proxy {0} is dead'.format(proxy)
             self.died_count += 1
             if self.died_count >= self.died_limit:
                 Registry().set('proxy_many_died', True)

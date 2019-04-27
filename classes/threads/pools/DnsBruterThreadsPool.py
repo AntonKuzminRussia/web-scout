@@ -6,7 +6,7 @@ Docs RU: http://hack4sec.pro/wiki/index.php/WebScout
 License: MIT
 Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pro> (en)
 
-Threads pool class for DnsBrute* modules
+Threads pool class
 """
 
 import socket
@@ -39,6 +39,7 @@ class DnsBruterThreadsPool(AbstractPool):
         return thrd
 
     def get_next_server(self):
+        """ Get next DNS server from list, checking it protocol and return both """
         we_need_server = True
         while we_need_server:
             we_need_server = False

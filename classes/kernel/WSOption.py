@@ -18,7 +18,6 @@ class WSOption(object):
     flags = None
     module = None
 
-    """ Kernel class of run args """
     def __init__(self, name, description, value, required, flags, module=None):
         self.name = name
         self.description = description

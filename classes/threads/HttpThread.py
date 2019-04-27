@@ -6,7 +6,7 @@ Docs RU: http://hack4sec.pro/wiki/index.php/WebScout
 License: MIT
 Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pro> (en)
 
-Thread class for HostsBrute modules
+Common parent for all threads working with raw http (not by selenium)
 """
 
 import copy
@@ -26,6 +26,7 @@ class HttpThread(AbstractThread):
         self.http = copy.deepcopy(Registry().get('http'))
 
     def get_response_full_text(self,  resp):
+        """ Return headers and body of response """
         return self.get_headers_text(resp) + "\r\n" + resp.text
 
     def test_log(self, url, resp, positive_item):

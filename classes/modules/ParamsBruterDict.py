@@ -6,7 +6,7 @@ Docs RU: http://hack4sec.pro/wiki/index.php/WebScout
 License: MIT
 Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pro> (en)
 
-Class of module for DAFS by Dict
+Class of module ParamsBruterDict
 """
 
 from classes.modules.ParamsBruterModules import ParamsBruterModules
@@ -15,7 +15,6 @@ from classes.modules.params.ParamsBruterDictModuleParams import ParamsBruterDict
 
 
 class ParamsBruterDict(ParamsBruterModules):
-    """ Class of module for DAFS by Dict """
     model = None
     mode = 'dict'
     log_path = '/dev/null'

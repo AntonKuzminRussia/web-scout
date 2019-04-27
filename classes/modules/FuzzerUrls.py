@@ -64,6 +64,10 @@ class FuzzerUrls(FuzzerModules):
         return result
 
     def build_queue_source_file(self):
+        """
+        Build dict with target possible urls
+        :return:
+        """
         fh_work = open(self.source_temp_file, 'w')
         if len(self.options['urls-file'].value):
             fh_base = open(self.options['urls-file'].value, 'r')
@@ -84,6 +88,10 @@ class FuzzerUrls(FuzzerModules):
         fh_work.close()
 
     def make_queue(self):
+        """
+        Make work queue
+        :return:
+        """
         self.queue = FuzzerUrlsJob()
 
         generator = FileGenerator(self.source_temp_file)
@@ -93,10 +101,12 @@ class FuzzerUrls(FuzzerModules):
         self.counter = WSCounter.factory(generator.lines_count)
 
     def do_work(self):
+        """ Start work """
         self.build_queue_source_file()
         WSModule.do_work(self)
 
     def start_pool(self):
+        """ Start threads pool and control it live """
         pool = FuzzerUrlsThreadsPool(self.queue, self.counter, self.result, self.options, self.logger)
         pool.start()
 
@@ -106,6 +116,10 @@ class FuzzerUrls(FuzzerModules):
             time.sleep(1)
 
     def output(self):
+        """
+        Output in the end of work
+        :return:
+        """
         WSModule.output(self)
 
         self.logger.log("\n")

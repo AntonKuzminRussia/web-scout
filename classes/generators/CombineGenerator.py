@@ -80,7 +80,6 @@ class CombineGenerator(object):
 
         return to_return
 
-
     def get_next_mask(self):
         """ Get next mask string from mask generator """
         return self.mask_generator.get()

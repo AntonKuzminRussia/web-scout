@@ -12,13 +12,11 @@ Common class for DnsBrute modules
 import time
 import re
 
-from classes.Registry import Registry
 from classes.kernel.WSCounter import WSCounter
 from classes.kernel.WSException import WSException
 from classes.kernel.WSModule import WSModule
 from classes.jobs.DnsBruteJob import DnsBruteJob
 from classes.threads.pools.DnsBruterThreadsPool import DnsBruterThreadsPool
-from classes.ErrorsCounter import ErrorsCounter
 
 
 class DnsBruterModules(WSModule):
@@ -43,6 +41,10 @@ class DnsBruterModules(WSModule):
             )
 
     def start_pool(self):
+        """
+        Start threads pool and check it alive
+        :return:
+        """
         pool = DnsBruterThreadsPool(self.queue, self.counter, self.result, self.options, self.logger)
         pool.start()
 
@@ -52,6 +54,10 @@ class DnsBruterModules(WSModule):
             time.sleep(1)
 
     def make_queue(self):
+        """
+        Make queue for work
+        :return:
+        """
         self.queue = DnsBruteJob()
 
         loaded = self.load_objects(self.queue)
@@ -64,6 +70,10 @@ class DnsBruterModules(WSModule):
         self.counter = WSCounter.factory(loaded['all'] if not loaded['end'] else loaded['end'] - loaded['start'])
 
     def output(self):
+        """
+        Write output in the end of work
+        :return:
+        """
         WSModule.output(self)
 
         self.logger.log("\nFound hosts (full):")

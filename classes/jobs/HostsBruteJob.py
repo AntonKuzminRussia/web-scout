@@ -13,7 +13,7 @@ from classes.jobs.GeneratorJob import GeneratorJob
 
 
 class HostsBruteJob(GeneratorJob):
-    """ Job class for Dafs* modules """
+    """ Job class for HostsBrute* modules """
     pass
 
 

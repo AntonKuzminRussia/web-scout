@@ -25,12 +25,6 @@ class XmlOutput:
     errors_counter = 0
     errors_limit = 100
 
-    def flush_result(self):
-        eTree.ElementTree(self.results_root).write(self.report_name + "-result.xml")
-
-    def flush_errors(self):
-        eTree.ElementTree(self.errors_root).write(self.report_name + "-errors.xml")
-
     def __init__(self, report_name):
         self.report_name = report_name
 
@@ -42,7 +36,16 @@ class XmlOutput:
         self.results_doc = eTree.SubElement(self.results_root, "results")
         self.flush_result()
 
+    def flush_result(self):
+        """ Write results data to file """
+        eTree.ElementTree(self.results_root).write(self.report_name + "-result.xml")
+
+    def flush_errors(self):
+        """ Write errors data to file """
+        eTree.ElementTree(self.errors_root).write(self.report_name + "-errors.xml")
+
     def put_progress(self, count_now, full_count, percent_done, time_now, time_left, speed):
+        """ Write progress data to file """
         progress_root = eTree.Element("root")
         progress_doc = eTree.SubElement(progress_root, "progress")
 
@@ -56,6 +59,7 @@ class XmlOutput:
         eTree.ElementTree(progress_root).write(self.report_name + "-progress.xml")
 
     def put_result(self, data):
+        """ Add result item as element in xml  """
         for field in data.keys():
             data[field] = str(data[field])
         item = eTree.SubElement(self.results_doc, "item")
@@ -64,6 +68,8 @@ class XmlOutput:
         self.flush_result()
 
     def put_error(self, error_text, trace_str):
+        """ Put error item as element in xml """
+
         # This decision using because counting&loggins errors
         # e1  - 1, e2 - 2, e3 - 3
         # has realization (same errors has text with small differences)  and

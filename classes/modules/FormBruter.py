@@ -20,7 +20,6 @@ from classes.kernel.WSException import WSException
 from classes.kernel.WSCounter import WSCounter
 from classes.threads.pools.FormBruterThreadsPool import FormBruterThreadsPool
 from classes.modules.params.FormBruterModuleParams import FormBruterModuleParams
-from classes.ErrorsCounter import ErrorsCounter
 
 
 class FormBruter(WSModule):
@@ -81,6 +80,10 @@ class FormBruter(WSModule):
         return {'all': generator.lines_count, 'start': generator.first_border, 'end': generator.second_border}
 
     def make_queue(self):
+        """
+        Make work queue
+        :return:
+        """
         self.queue = FormBruterJob()
         loaded = self.load_objects(self.queue)
 
@@ -94,6 +97,7 @@ class FormBruter(WSModule):
         self.counter = WSCounter.factory(loaded['all'] if not loaded['end'] else loaded['end'] - loaded['start'])
 
     def start_pool(self):
+        """ Start threads pool and control it live """
         Registry().set('pass_found', False)
         pool = FormBruterThreadsPool(self.queue, self.counter, self.result, self.options, self.logger)
         pool.start()
@@ -104,6 +108,10 @@ class FormBruter(WSModule):
             time.sleep(1)
 
     def output(self):
+        """
+        Output in the end of work
+        :return:
+        """
         WSModule.output(self)
 
         self.logger.log("")

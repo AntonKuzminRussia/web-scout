@@ -6,7 +6,7 @@ Docs RU: http://hack4sec.pro/wiki/index.php/WebScout
 License: MIT
 Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pro> (en)
 
-Common module class form Dafs* modules
+Threads pool class
 """
 
 from classes.threads.ParamsBruterThread import ParamsBruterThread

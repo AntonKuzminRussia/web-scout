@@ -102,7 +102,6 @@ class Logger(object):
                     symbol = '?'
                 decoded_content += symbol.decode('utf8', 'ignore')
             fh.write(decoded_content)
-            # codecs.encode(content, 'utf8', 'ignore') - not work!
         fh.close()
 
     def ex(self, _exception):
@@ -123,5 +122,6 @@ class Logger(object):
             Registry().get('xml').put_error(str(_exception), tb_text)
 
     def stop(self):
+        """ Stop logger """
         if not self.log_fh.closed:
             self.log_fh.close()

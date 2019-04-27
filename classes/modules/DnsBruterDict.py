@@ -9,9 +9,6 @@ Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pr
 Class of WS Module for DNS Brute by dict
 """
 
-import os
-
-from classes.kernel.WSException import WSException
 from classes.modules.DnsBruterModules import DnsBruterModules
 from classes.generators.FileGenerator import FileGenerator
 from classes.modules.params.DnsBruterDictModuleParams import DnsBruterDictModuleParams

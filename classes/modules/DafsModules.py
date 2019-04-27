@@ -10,9 +10,7 @@ Threads pool class for Dafs* modules
 """
 import time
 
-from classes.Registry import Registry
 from classes.kernel.WSModule import WSModule
-from classes.ErrorsCounter import ErrorsCounter
 from classes.kernel.WSCounter import WSCounter
 from classes.jobs.DafsJob import DafsJob
 from classes.threads.pools.DafsThreadsPool import DafsThreadsPool

@@ -12,7 +12,7 @@ Kernel base class. Prepare work, load config, connect db, etc
 from classes.Registry import Registry
 
 
-class ErrorsCounter():
+class ErrorsCounter:
     counter = 0
     reported = False
 
@@ -25,6 +25,7 @@ class ErrorsCounter():
 
     @staticmethod
     def is_limit():
+        """ Is we get errors count limit? """
         return ErrorsCounter.counter > int(Registry().get('config')['main']['errors_limit'])
 
     @staticmethod

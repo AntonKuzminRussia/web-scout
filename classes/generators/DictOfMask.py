@@ -45,7 +45,6 @@ class DictOfMask(object):
                     self._get()
                     self.current_counter += 1
 
-
     def keys_in_str(self, _str, keys):
         """ Are the key-symbols (?d,etc) in this str? """
         for key in keys:
@@ -90,7 +89,6 @@ class DictOfMask(object):
         for mask in masks:
             mask_object_count = 1
             for x in masks[mask]:
-                #mask_object_count += pow(len(masks[mask][x]), x)
                 mask_object_count *= len(masks[mask][x])
             self.all_objects_count += mask_object_count
 

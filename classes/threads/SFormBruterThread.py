@@ -57,10 +57,12 @@ class SFormBruterThread(SeleniumThread):
 
         Registry().set('url_for_proxy_check', params.url)
 
-    def pass_found(self):
+    def is_pass_found(self):
+        """ Is password found? """
         return Registry().get('pass_found')
 
     def set_pass_found(self, value):
+        """ Set pass_found value """
         return Registry().set('pass_found', value)
 
     def parse_brute_config(self, path):
@@ -83,7 +85,7 @@ class SFormBruterThread(SeleniumThread):
 
         brute_conf = self.parse_brute_config(self.conffile)
 
-        while not self.pass_found() and not self.done:
+        while not self.is_pass_found() and not self.done:
             try:
                 self.last_action = int(time.time())
 

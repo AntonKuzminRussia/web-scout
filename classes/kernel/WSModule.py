@@ -43,18 +43,34 @@ class WSModule(object):
             raise WSException('Module must have log path!')
 
     def prepare(self):
+        """
+        Preparing module to run
+        :return:
+        """
         self.enable_logger()
         self.validate_main()
         self.pre_start_inf()
         self.load_proxies()
 
     def work_end_error(self):
+        """
+        Exit by error
+        :return:
+        """
         exit(1)
 
     def is_critical_stop(self):
+        """
+        Is we has critical sign for immidiately stop?
+        :return:
+        """
         return Registry().get('proxy_many_died') or Registry().get('positive_limit_stop') or ErrorsCounter.is_limit()
 
     def output(self):
+        """
+        Print output in the end of work
+        :return:
+        """
         if Registry().get('proxy_many_died'):
             self.logger.log("Proxy many died, stop scan")
             self.work_end_error()
@@ -71,6 +87,10 @@ class WSModule(object):
             self.work_end_error()
 
     def load_proxies(self):
+        """
+        Load proxies if we has it in options
+        :return:
+        """
         for option_key in ['proxies', 'http-proxies']:
             if option_key in self.options.keys() and self.options[option_key].value:
                 Registry().get('proxies').load(self.options[option_key].value)
@@ -80,15 +100,16 @@ class WSModule(object):
         raise WSException("This method must be described in child-class")
 
     def make_queue(self):
+        """ Abstract method for queue make """
         raise WSException("This method must be described in child-class")
 
     def start_pool(self):
+        """ Abstract method for make threads pool """
         raise WSException("This method must be decsribed in child-class")
 
     def enable_logger(self):
         """ Turn on logger """
         self.logger = Registry().get('logger')
-
 
     def pre_start_inf(self):
         """ Show options values before work start """

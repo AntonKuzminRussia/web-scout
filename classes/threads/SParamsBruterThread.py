@@ -6,7 +6,7 @@ Docs RU: http://hack4sec.pro/wiki/index.php/WebScout
 License: MIT
 Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pro> (en)
 
-Thread class for Dafs modules (selenium)
+Worker thread of selenium mode ParamsBruter modules
 """
 
 import Queue
@@ -53,6 +53,7 @@ class SParamsBruterThread(SeleniumThread):
         self.browser_create()
 
     def build_params_str(self):
+        """ Building params str by bruteforce type """
         params_str = "" if not len(self.last_word) else "{0}={1}&".format(self.last_word, self.value)
         self.last_word = ""
         while len(params_str) < self.max_params_length:

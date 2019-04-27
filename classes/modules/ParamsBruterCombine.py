@@ -6,7 +6,7 @@ Docs RU: http://hack4sec.pro/wiki/index.php/WebScout
 License: MIT
 Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pro> (en)
 
-Class of module for DAFS by Dict+Mask
+Class of module ParamsBruterCombine
 """
 
 
@@ -16,7 +16,6 @@ from classes.modules.params.ParamsBruterCombineModuleParams import ParamsBruterC
 
 
 class ParamsBruterCombine(ParamsBruterModules):
-    """ Class of module for DAFS by Dict+Mask """
     model = None
     mode = 'dict'
     log_path = '/dev/null'

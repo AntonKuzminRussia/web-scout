@@ -11,6 +11,7 @@ Class for test run
 
 from classes.Registry import Registry
 
+
 class Tester:
     """ Class for test run """
     items = None

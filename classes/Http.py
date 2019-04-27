@@ -15,6 +15,7 @@ import requests
 from classes.Registry import Registry
 from classes.kernel.WSException import WSException
 
+
 class HttpMaxSizeException(BaseException):
     """ Exception class for max-size error """
     pass
@@ -101,6 +102,7 @@ class Http(object):
         } if self.current_proxy else None
 
     def is_response_length_less_than_limit(self, url, resp):
+        """ Checking response length by Content-Length header """
         if 'content-length' in resp.headers and \
                         int(resp.headers['content-length']) > int(Registry().get('config')['main']['max_size']):
             self.errors['maxsize'].append(

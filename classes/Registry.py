@@ -9,6 +9,7 @@ Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pr
 Class of registry
 """
 
+
 class Registry(object):
     """ Class of registry """
     data = {}

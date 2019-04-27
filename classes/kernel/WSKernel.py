@@ -9,6 +9,7 @@ Copyright (c) Alexey Meshcheryakov <tank1st99@gmail.com>
 Kernel class
 """
 
+
 class WSKernel(object):
     """ Kernel class """
     pool = []

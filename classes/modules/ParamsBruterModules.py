@@ -10,13 +10,11 @@ Common module class form Dafs* modules
 """
 import time
 
-from classes.Registry import Registry
 from classes.kernel.WSModule import WSModule
 from classes.kernel.WSException import WSException
 from classes.kernel.WSCounter import WSCounter
 from classes.jobs.ParamsBruterJob import ParamsBruterJob
 from classes.threads.pools.ParamsBruterThreadsPool import ParamsBruterThreadsPool
-from classes.ErrorsCounter import ErrorsCounter
 
 
 class ParamsBruterModules(WSModule):
@@ -35,6 +33,10 @@ class ParamsBruterModules(WSModule):
             )
 
     def make_queue(self):
+        """
+        Make work queue
+        :return:
+        """
         self.queue = ParamsBruterJob()
 
         loaded = self.load_objects(self.queue)
@@ -51,6 +53,7 @@ class ParamsBruterModules(WSModule):
         self.counter.new_str *= 10
 
     def start_pool(self):
+        """ Start threads pool and control it live """
         pool = ParamsBruterThreadsPool(self.queue, self.counter, self.result, self.options, self.logger)
         pool.start()
 
@@ -60,6 +63,10 @@ class ParamsBruterModules(WSModule):
             time.sleep(1)
 
     def output(self):
+        """
+        Output in the end of work
+        :return:
+        """
         WSModule.output(self)
 
         self.logger.log("\n")

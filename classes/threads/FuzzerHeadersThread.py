@@ -20,6 +20,7 @@ from classes.threads.params.FuzzerThreadParams import FuzzerThreadParams
 from classes.threads.HttpThread import HttpThread
 from classes.ErrorsCounter import ErrorsCounter
 
+
 class FuzzerHeadersThread(HttpThread):
     """ Thread class for FuzzerHeaders module """
     method = None

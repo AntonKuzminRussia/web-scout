@@ -31,6 +31,10 @@ class FuzzerHeaders(FuzzerModules):
     options = FuzzerHeadersModuleParams().get_options()
 
     def make_queue(self):
+        """
+        Make work queue
+        :return:
+        """
         self.queue = FuzzerHeadersJob()
         generator = FileGenerator(self.options['urls-file'].value)
 
@@ -40,6 +44,7 @@ class FuzzerHeaders(FuzzerModules):
         self.counter = WSCounter.factory(generator.lines_count)
 
     def start_pool(self):
+        """ Start threads pool and control it live """
         pool = FuzzerHeadersThreadsPool(self.queue, self.counter, self.result, self.options, self.logger)
         pool.start()
 
@@ -49,6 +54,10 @@ class FuzzerHeaders(FuzzerModules):
             time.sleep(1)
 
     def output(self):
+        """
+        Output in the end of work
+        :return:
+        """
         WSModule.output(self)
 
         self.logger.log("\n")

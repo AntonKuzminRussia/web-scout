@@ -43,19 +43,24 @@ class AbstractPool(threading.Thread):
         self.threads_params = self.build_threads_params()
 
     def build_threads_params(self):
+        """ Abstract method for build params set """
         raise Exception("This method must be declared in child object")
 
     def born_thread(self):
+        """ Abstract method for born worker thread """
         raise Exception("This method must be declared in child object")
 
     def kill_all(self):
+        """ Stop all threads """
         for thrd in self.pool:
             thrd.done = True
 
     def is_selenium(self):
+        """ Is selenium mode now? """
         return 'selenium' in self.options and self.options['selenium'].value
 
     def run(self):
+        """ Running threads in pool and control their live """
         for _ in range(int(self.options['threads'].value)):
             self.pool.append(self.born_thread())
 

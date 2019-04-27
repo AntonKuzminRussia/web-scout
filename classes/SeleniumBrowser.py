@@ -11,11 +11,8 @@ Class of selenium browser - main object for selenium work
 
 import time
 
-#import selenium.common
 from selenium import webdriver
-#from selenium.webdriver.common.proxy import *
-#from selenium.webdriver.common.action_chains import ActionChains
-#from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
+
 
 class SeleniumBrowser(webdriver.Firefox):
     """ Class of selenium browser - main object for selenium work """

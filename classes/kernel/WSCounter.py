@@ -24,6 +24,7 @@ class WSCounter(object):
 
     @staticmethod
     def factory(_all=0):
+        """ Build counter object by WS config """
         return WSCounter(
             int(Registry().get('config')['main']['counter_step']),
             int(Registry().get('config')['main']['counter_step']) * int(Registry().get('config')['main']['counter_steps_for_new_string']),
@@ -50,7 +51,7 @@ class WSCounter(object):
                     print "({0})".format(self.counter)
                 else:
                     percents = round(self.counter/(self.all/100)) if round(self.counter/(self.all/100)) > 0 else 1
-                    # Костыль если 0 секунд прошло, а уже есть что выводить
+                    # For cases when 0 secs passed, but we already has results
                     time_now = int(time.time()) - self.start_time if int(time.time()) - self.start_time > 0 else 1
                     time_left = round((100-percents)*(time_now/percents))
 

@@ -167,6 +167,7 @@ class DnsBruterThread(AbstractThread):
         self.test_log(answers, positive_item)
 
     def additional_hostname_validation(self, name):
+        """ If we found hostname, be better if we re-check it some times """
         dns_server = Registry().get('config')['dns']['additional_domains_check_dns']
         myResolver = dns.resolver.Resolver()
         myResolver.nameservers = [dns_server]
@@ -276,7 +277,7 @@ class DnsBruterThread(AbstractThread):
                 break
 
     def is_response_content_binary(self, resp):
-        """ Is it bynary http content? """
+        """ Is it binary http content? """
         return resp is not None \
             and 'content-type' in resp.headers \
             and is_binary_content_type(resp.headers['content-type'])

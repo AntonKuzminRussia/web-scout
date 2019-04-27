@@ -6,7 +6,7 @@ Docs RU: http://hack4sec.pro/wiki/index.php/WebScout
 License: MIT
 Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pro> (en)
 
-Thread class for Dafs modules
+Thread class for ParamsBruter modules
 """
 
 import Queue
@@ -60,6 +60,7 @@ class ParamsBruterThread(HttpThread):
         self.files_params_fh = open(self.tmp_filepath, "rb")
 
     def build_params_str(self):
+        """ Building params str by bruteforce type """
         count = 0
         if self.method in ['get', 'post']:
             params_str = "" if not len(self.last_word) else "{0}={1}&".format(self.last_word, self.value)
@@ -132,6 +133,7 @@ class ParamsBruterThread(HttpThread):
             raise BaseException("Unknown work type - {0}".format(self.method))
 
     def request_params(self, params):
+        """ Make request with target params """
         if self.method == 'get':
             return self.http.get(self.url + "?" + params)
         elif self.method == 'post':
@@ -144,6 +146,7 @@ class ParamsBruterThread(HttpThread):
             raise BaseException("Unknown work type - {0}".format(self.method))
 
     def split_params(self, params):
+        """ Split params set. Using when we found positive detection and now search one concrete param """
         if self.method in ['get', 'post']:
             return params.split("&")
         elif self.method in ['cookies', 'files']:
@@ -155,6 +158,7 @@ class ParamsBruterThread(HttpThread):
             raise BaseException("Unknown work type - {0}".format(self.method))
 
     def param_str_repr(self, param):
+        """ Params set string replresentation """
         if self.method in ['get', 'post']:
             return param
         elif self.method in ['cookies', 'files']:
