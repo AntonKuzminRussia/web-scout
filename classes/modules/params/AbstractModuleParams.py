@@ -223,7 +223,7 @@ class AbstractModuleParams:
             ['--headers-file']
         ),
         "dns-protocol": WSOption(
-            "protocol",
+            "dns-protocol",
             "TCP or UDP connection to DNS server (default - auto)",
             "auto",
             False,
