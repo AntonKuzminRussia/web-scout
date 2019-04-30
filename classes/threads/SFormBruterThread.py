@@ -38,7 +38,6 @@ class SFormBruterThread(SeleniumThread):
         self.queue = queue
         self.url = params.url
         self.delay = params.delay
-        self.ddos_phrase = params.ddos_detect_phrase
         self.ddos_human = params.ddos_human_action
         self.recreate_phrase = params.browser_recreate_phrase
         self.conffile = params.conffile

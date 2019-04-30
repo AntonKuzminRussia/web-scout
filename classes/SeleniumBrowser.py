@@ -21,9 +21,8 @@ class SeleniumBrowser(webdriver.Firefox):
     ]
     profile_path = None
 
-    def __init__(self, profile, firefox_binary, ddos_phrase, ddos_human, proxy=None):
+    def __init__(self, profile, firefox_binary, ddos_human, proxy=None):
         super(SeleniumBrowser, self).__init__(profile, firefox_binary=firefox_binary, proxy=proxy)
-        self.ddos_phrase = ddos_phrase
         self.ddos_human = ddos_human
         self.profile_path = profile.path
 
@@ -38,9 +37,6 @@ class SeleniumBrowser(webdriver.Firefox):
                 #print "re-phrase detected"
                 time.sleep(5)
                 return self.get(url)
-
-        while len(self.ddos_phrase) and self.page_source.count(self.ddos_phrase):
-            time.sleep(1)
 
         if len(self.ddos_human):
             while self.page_source.count(self.ddos_human):

@@ -99,7 +99,6 @@ class SeleniumThread(AbstractThread):
             self.browser = SeleniumBrowser(
                 profile,
                 firefox_binary=binary,
-                ddos_phrase=self.ddos_phrase,
                 proxy=proxy,
                 ddos_human=self.ddos_human,
             )

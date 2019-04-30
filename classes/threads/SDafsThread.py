@@ -41,7 +41,6 @@ class SDafsThread(SeleniumThread):
         self.not_found_re = params.not_found_re
         self.recreate_re = params.browser_recreate_re
         self.delay = params.delay
-        self.ddos_phrase = params.ddos_detect_phrase
         self.ddos_human = params.ddos_human_action
         self.ignore_words_re = params.ignore_words_re
 
