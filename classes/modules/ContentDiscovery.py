@@ -57,7 +57,7 @@ class ContentDiscovery(DafsDict):
         if may_be_file and basename.count("."):
             basenames.append(basename[:basename.rfind(".")])
 
-        schemas = file_to_list(Registry().get('wr_path') + "/bases/backup-schemas.txt")
+        schemas = file_to_list(Registry().get('wr_path') + "/bases/content-discovery/backup-schemas.txt")
         for basename in basenames:
             for schema in schemas:
                 results.append(schema.replace("|name|", basename))
@@ -164,7 +164,7 @@ class ContentDiscovery(DafsDict):
                 c += 1
 
                 gens.extend(self.gen_backups_variants(part, c == len(parts)))
-                if c == len(parts):
+                if c == len(parts): # It`s may be file
                     gens.extend(self.gen_numbers_variants(part, True))
                 gens.extend(self.gen_numbers_variants(part, False))
 
