@@ -3,3 +3,4 @@ fatal
 warning
 notice
 critical
+<title>phpinfo()</title>
