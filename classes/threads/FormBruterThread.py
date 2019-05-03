@@ -56,7 +56,7 @@ class FormBruterThread(HttpThread):
         self.http.allow_redirects = params.follow_redirects
 
     def make_conf_from_str(self, confstr):
-        """ Build brute config from --confstr """
+        """ Build brute config from --conf-str """
         result = {}
         tmp = confstr.split("&")
         for tmp_row in tmp:

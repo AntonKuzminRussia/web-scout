@@ -334,19 +334,19 @@ class AbstractModuleParams:
             False,
             ['--reload-form-page']
         ),
-        "confstr": WSOption(
-            "confstr",
+        "conf-str": WSOption(
+            "conf-str",
             "String with bruter config",
             "",
             False,
-            ['--confstr']
+            ['--conf-str']
         ),
-        "conffile": WSOption(
-            "conffile",
+        "conf-file": WSOption(
+            "conf-file",
             "File with bruter config (selenium)",
             "",
             False,
-            ['--conffile']
+            ['--conf-file']
         ),
         "first-stop": WSOption(
             "first-stop",

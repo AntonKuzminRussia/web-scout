@@ -38,30 +38,30 @@ class FormBruter(WSModule):
         super(FormBruter, self).validate_main()
 
         if self.options['selenium'].value:
-            if not len(self.options['conffile'].value.strip()):
+            if not len(self.options['conf-file'].value.strip()):
                 raise WSException(
-                    "You must specify param --conffile"
+                    "You must specify param --conf-file"
                 )
 
-            if not os.path.exists(self.options['conffile'].value):
+            if not os.path.exists(self.options['conf-file'].value):
                 raise WSException(
                     "Config file '{0}' not exists or not readable!"
-                    .format(self.options['conffile'].value)
+                    .format(self.options['conf-file'].value)
                 )
 
         else:
-            if not len(self.options['confstr'].value.strip()):
+            if not len(self.options['conf-str'].value.strip()):
                 raise WSException(
-                    "You must specify param --confstr"
+                    "You must specify param --conf-str"
                 )
-            if not self.options['confstr'].value.count("^USER^"):
+            if not self.options['conf-str'].value.count("^USER^"):
                 raise WSException(
-                    "--confstr must have a ^USER^ fragment"
+                    "--conf-str must have a ^USER^ fragment"
                 )
 
-            if not self.options['confstr'].value.count("^PASS^"):
+            if not self.options['conf-str'].value.count("^PASS^"):
                 raise WSException(
-                    "--confstr must have a ^PASS^ fragment"
+                    "--conf-str must have a ^PASS^ fragment"
                 )
 
         if not len(self.options['true-phrase'].value) and not len(self.options['false-phrase'].value) and not self.options['false-size'].value:
