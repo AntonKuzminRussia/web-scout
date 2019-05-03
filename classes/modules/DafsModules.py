@@ -27,7 +27,7 @@ class DafsModules(WSModule):
         """ Check users params """
         super(DafsModules, self).validate_main()
 
-        if self.options['false-size'].value != "-1" and self.options['method'].value.lower() == 'head':
+        if self.options['not-found-size'].value != "-1" and self.options['method'].value.lower() == 'head':
             raise WSException(
                 "You can`t use HEAD method with --false-size param"
             )
