@@ -44,7 +44,7 @@ class FuzzerUrls(FuzzerModules):
 
     def generate_fuzz_urls(self, url):
         """ Parse urls and make a fuzzer urls from it """
-        templates = open(Registry().get('wr_path') + "/bases/fuzzer-templates.txt").readlines()
+        templates = open(Registry().get('wr_path') + "/bases/fuzzer/templates.txt").readlines()
         result = []
         url = urlparse(url)
         if len(url.query):

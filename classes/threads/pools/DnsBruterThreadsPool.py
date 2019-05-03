@@ -27,7 +27,7 @@ class DnsBruterThreadsPool(AbstractPool):
     def __init__(self, queue, counter, result, options, logger):
         AbstractPool.__init__(self, queue, counter, result, options, logger)
 
-        self.servers_roller = Roller(Registry().get('wr_path') + '/bases/dns-servers.txt')
+        self.servers_roller = Roller(Registry().get('wr_path') + '/bases/dns/servers.txt')
 
     def build_threads_params(self):
         return DnsBruterThreadParams(self.options)

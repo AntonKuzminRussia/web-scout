@@ -39,7 +39,7 @@ class WSBase(object):
         R.set('tmp_files', [])
         R.set(
             'fuzzer_evil_value',
-            file_get_contents(Registry().get('wr_path') + "/bases/fuzzer-evil-value.txt").strip()
+            file_get_contents(Registry().get('wr_path') + "/bases/fuzzer/evil-value.txt").strip()
         )
         R.set('proxy_many_died', False)
         R.set('positive_limit_stop', False)

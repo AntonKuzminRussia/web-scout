@@ -31,7 +31,7 @@ class FuzzerThreadParams:
         if 'browser-recreate-phrase' in options:
             self.browser_recreate_phrase = options['browser-recreate-re'].value
 
-        self.bad_words = file_to_list(Registry().get('wr_path') + "/bases/bad-words.txt")
-        self.headers = file_to_list(Registry().get('wr_path') + "/bases/fuzzer-headers.txt")
+        self.bad_words = file_to_list(Registry().get('wr_path') + "/bases/fuzzer/bad-words.txt")
+        self.headers = file_to_list(Registry().get('wr_path') + "/bases/fuzzer/headers.txt")
         self.retest_codes = list(set(options['retest-codes'].value.split(','))) if len(options['retest-codes'].value) else []
         self.retest_phrase = options['retest-phrase'].value if len(options['retest-phrase'].value) else None
