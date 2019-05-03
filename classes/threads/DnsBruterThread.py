@@ -19,7 +19,7 @@ import dns.message
 import dns.resolver
 
 from classes.Registry import Registry
-from libs.common import is_binary_content_type
+from libs.common import is_binary_content_type, get_full_response_text
 from classes.kernel.WSException import WSException
 from classes.threads.params.DnsBruterThreadParams import DnsBruterThreadParams
 from classes.threads.AbstractThread import AbstractThread
@@ -40,6 +40,12 @@ class DnsBruterThread(AbstractThread):
         "Cannot connect to proxy.",
         "Connection aborted",
         "Max retries exceeded with url",
+    ]
+
+    dns_retest_exceptions = [
+        "Connection refused",
+        "Connection reset by peer",
+        "[Errno 104]",
     ]
 
     def __init__(self, queue, proto, dns_srv, result, counter, params):
@@ -70,6 +76,19 @@ class DnsBruterThread(AbstractThread):
         self.http = copy.deepcopy(Registry().get('http'))
         self.http.every_request_new_session = True
 
+    def is_valid_hostname(self, hostname):
+        if not len(hostname.strip()):
+            return False
+        if self.ignore_words_re and self.ignore_words_re.findall(hostname):
+            return False
+        return True
+
+    def is_dns_retest_need(self, ex_str):
+        for retest_text in self.dns_retest_exceptions:
+            if ex_str.count(retest_text):
+                return True
+        return False
+
     def run(self):
         """ Run thread """
         req_func = getattr(dns.query, self.proto.lower())
@@ -85,7 +104,7 @@ class DnsBruterThread(AbstractThread):
             try:
                 if not need_retest:
                     check_host = self.queue.get()
-                    if not len(check_host.strip()) or (self.ignore_words_re and self.ignore_words_re.findall(check_host)):
+                    if not self.is_valid_hostname(check_host):
                         continue
 
                 self.check_name = self.template.replace(self.msymbol, check_host.decode('utf8', 'ignore'))
@@ -100,14 +119,11 @@ class DnsBruterThread(AbstractThread):
                     need_retest = True
                     break
                 except BaseException as e:
-                    if str(e).count("Connection refused") or\
-                            str(e).count("Connection reset by peer") or\
-                            str(e).count("[Errno 104]"):
+                    if self.is_dns_retest_need(str(e)):
                         time.sleep(3)
                         need_retest = True
-                        break
-                    else:
-                        raise e
+                        continue
+                    raise e
 
                 self.current_response_text = str(result.to_text())
                 response = self.re['ns_resp'].search(result.to_text())
@@ -118,7 +134,6 @@ class DnsBruterThread(AbstractThread):
                         self.parse_zone_cname(result)
                     else:
                         raise WSException("Wrong dns zone '{0}'".format(self.zone))
-                self.test_log('', False)
 
                 if len(self.result) >= int(Registry().get('config')['main']['positive_limit_stop']):
                     Registry().set('positive_limit_stop', True)
@@ -151,20 +166,9 @@ class DnsBruterThread(AbstractThread):
     def parse_zone_cname(self, dns_result):
         """ Parsing CNAME zone answer """
         answers = self.re['cname'].findall(dns_result.to_text())
-        positive_item = False
         for answer in answers:
-            positive_item = True
-            item_data = {'name': self.check_name, 'ip': answer, 'dns': self.dns_srv}
-            self.result.append(item_data)
-            self.logger.item(
-                self.check_name,
-                self.current_response_text,
-                False,
-                positive=True
-            )
-            self.xml_log(item_data)
-
-        self.test_log(answers, positive_item)
+            self.positive_item(answer, self.current_response_text)
+            self.test_log(answer, True)
 
     def additional_hostname_validation(self, name):
         """ If we found hostname, be better if we re-check it some times """
@@ -185,34 +189,53 @@ class DnsBruterThread(AbstractThread):
 
         return result
 
+    def positive_item(self, ip, response_data):
+        item_data = {'name': self.check_name, 'ip': ip, 'dns': self.dns_srv}
+        self.result.append(item_data)
+        self.logger.item(self.check_name, response_data, False, positive=True)
+        self.xml_log(item_data)
+        self.test_log(ip, True)
+
+    def ignore_this_ip(self, ip):
+        return len(self.ignore_ip) and ip == self.ignore_ip
+
+    def validate_additional(self):
+        if Registry().get('config')['dns']['additional_domains_check'] != '1':
+            return True
+
+        if self.additional_hostname_validation(self.check_name):
+            return True
+
+        self.logger.log("Domain {0} not pass additional validation, skip it".format(self.check_name))
+        return False
+
     def parse_zone_a(self, response):
         """ Parsing A zone answer """
-        positive_item = False
-        additional_validation_passed = False
-        for ip in self.re['ip'].findall(response.group('data')):
-            if Registry().get('config')['dns']['additional_domains_check'] == '1' and not additional_validation_passed:
-                if self.additional_hostname_validation(self.check_name):
-                    additional_validation_passed = True
-                else:
-                    self.logger.log("Domain {0} with ip {1} not pass additional validation, skip it".format(self.check_name, ip))
-                    return
+        if not self.validate_additional():
+            return
 
-            if self.http_nf_re is None and (not len(self.ignore_ip) or ip != self.ignore_ip):
-                positive_item = True
-                item_data = {'name': self.check_name, 'ip': ip, 'dns': self.dns_srv}
-                self.result.append(item_data)
-                self.logger.item(
-                    self.check_name,
-                    self.current_response_text,
-                    False,
-                    positive=True
-                )
-                self.xml_log(item_data)
-                self.test_log('', positive_item)
+        for ip in self.re['ip'].findall(response.group('data')):
+            if self.ignore_this_ip(ip):
+                self.test_log(ip, False)
                 continue
 
-            if self.http_nf_re is not None:
-                self.http_test(ip)
+            if self.http_nf_re is None:
+                self.positive_item(ip, self.current_response_text)
+                break
+
+            http_result, http_response = self.http_test(ip)
+            if http_result:
+                self.positive_item(ip, self.current_response_text + "\n" + http_response)
+                break
+
+            self.test_log(ip, False)
+
+    def http_proxy_error(self, ex_str):
+        if Registry().get('proxies').count() > 0:
+            for proxyError in self.proxyErrors:
+                if ex_str.count(proxyError):
+                    return True
+        return False
 
     def http_test(self, ip):
         """ Make HTTP(S) test for found ip """
@@ -221,60 +244,28 @@ class DnsBruterThread(AbstractThread):
                 resp = self.http.get(
                     "{0}://{1}/".format(self.http_protocol, ip),
                     headers={'Host': self.check_name},
-                    allow_redirects=False)
+                    allow_redirects=False
+                )
 
-                text_for_search = ""
-                for header in resp.headers:
-                    text_for_search += "{0}: {1}\r\n".format(header, resp.headers[header])
-                text_for_search += "\r\n"
-                text_for_search += resp.text
+                text_for_search = get_full_response_text(resp)
 
-                if len(self.http_retest_phrase) and \
-                        text_for_search.replace('\r', '').replace('\n', '') \
-                                .count(self.http_retest_phrase):
+                if len(self.http_retest_phrase) and text_for_search.count(self.http_retest_phrase):
                     if i == self.retest_limit - 1:
-                        self.logger.log(
-                            "Too many retest actions for {0}".format(self.check_name))
+                        self.logger.log("Too many retest actions for {0}".format(self.check_name))
                     time.sleep(self.retest_delay)
                     continue
 
-                positive_item = False
-                if not self.http_nf_re.findall(
-                        text_for_search.replace('\r', '').replace('\n', '')):
-                    positive_item = True
-                    item_data = {'name': self.check_name, 'ip': ip, 'dns': self.dns_srv}
-                    self.result.append(item_data)
-                    self.xml_log(item_data)
-                    self.logger.item(
-                        self.check_name,
-                        text_for_search,
-                        self.is_response_content_binary(resp),
-                        positive=positive_item
-                    )
-                self.test_log(ip, positive_item)
-                break
-            except (requests.exceptions.ConnectionError,
-                    requests.exceptions.ChunkedEncodingError) as e:
+                if not self.http_nf_re.findall(text_for_search):
+                    return True, text_for_search
 
-                if Registry().get('proxies').count() > 0:
-                    is_proxy_error = False
-                    for proxyError in self.proxyErrors:
-                        if str(e).count(proxyError):
-                            is_proxy_error = True
-                    if is_proxy_error:
-                        self.http.change_proxy()
-                        continue
-
-                item_data = {'name': self.check_name, 'ip': ip, 'dns': self.dns_srv}
-                self.result.append(item_data)
-                self.xml_log(item_data)
-                self.logger.item(
-                    self.check_name,
-                    'ERROR: ' + str(e),
-                    False,
-                    positive=True
-                )
                 break
+            except (requests.exceptions.ConnectionError, requests.exceptions.ChunkedEncodingError) as e:
+                if self.http_proxy_error(str(e)):
+                    self.http.change_proxy()
+                    continue
+                return True, 'ERROR: ' + str(e),
+
+        return False, ""
 
     def is_response_content_binary(self, resp):
         """ Is it binary http content? """

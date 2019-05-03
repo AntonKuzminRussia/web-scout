@@ -23,6 +23,7 @@ import configparser
 
 from classes.Registry import Registry
 
+
 def file_to_list(path, unique=True):
     """ Split text file on lines, remove dups (if need), and return list of it """
     result = map(str.strip, open(path).readlines())
@@ -179,6 +180,15 @@ def md5sum(path):
 
 def get_response_size(resp):
     return len(resp.content)
+
+
+def get_full_response_text(resp):
+    text = ""
+    for header in resp.headers:
+        text += "{0}: {1}\r\n".format(header, resp.headers[header])
+    text += "\r\n"
+    text += resp.text
+    return text
 
 
 def random_ua():
