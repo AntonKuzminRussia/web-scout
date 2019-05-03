@@ -12,6 +12,7 @@ import time
 
 from classes.kernel.WSModule import WSModule
 from classes.kernel.WSCounter import WSCounter
+from classes.kernel.WSException import WSException
 from classes.jobs.DafsJob import DafsJob
 from classes.threads.pools.DafsThreadsPool import DafsThreadsPool
 
@@ -21,6 +22,16 @@ class DafsModules(WSModule):
     logger_enable = True
     logger_name = 'dafs'
     logger_have_items = True
+
+    def validate_main(self):
+        """ Check users params """
+        super(DafsModules, self).validate_main()
+
+        if self.options['false-size'].value != "-1" and self.options['method'].value.lower() == 'head':
+            raise WSException(
+                "You can`t use HEAD method with --false-size param"
+            )
+
 
     def make_queue(self):
         self.queue = DafsJob()
