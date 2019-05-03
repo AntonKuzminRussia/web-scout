@@ -15,7 +15,7 @@ import pprint
 
 from requests.exceptions import ChunkedEncodingError, ConnectionError
 
-from libs.common import get_response_size
+from libs.common import get_response_size, get_full_response_text
 from classes.threads.HttpThread import HttpThread
 from classes.threads.params.HostsBruterThreadParams import HostsBruterThreadParams
 
@@ -51,6 +51,22 @@ class HostsBruterThread(HttpThread):
         self.method = 'get'
         self.ignore_words_re = params.ignore_words_re
 
+    def is_poitive_item(self, resp):
+        if resp is None:
+            return False
+
+        if self.false_size is not None and get_response_size(resp) != self.false_size:
+            return True
+
+        search_scope = get_full_response_text(resp)
+        if not search_scope.count(self.false_phrase):
+            return True
+
+        return False
+
+    def ignore_word(self, word):
+        return not len(word.strip()) or (self.ignore_words_re and self.ignore_words_re.findall(word))
+
     def run(self):
         """ Run thread """
         req_func = getattr(self.http, self.method)
@@ -67,7 +83,7 @@ class HostsBruterThread(HttpThread):
                 if not need_retest:
                     word = self.queue.get()
 
-                if not len(word.strip()) or (self.ignore_words_re and self.ignore_words_re.findall(word)):
+                if self.ignore_word(word):
                     continue
 
                 try:
@@ -91,20 +107,13 @@ class HostsBruterThread(HttpThread):
                     need_retest = True
                     continue
 
-                search_scope = ""
-                for header in resp.headers:
-                    search_scope += "{0}: {1}\r\n".format(header.title(), resp.headers[header])
-                search_scope += '\r\n\r\n' + resp.text
-
                 positive_item = False
-                if resp is not None and (not search_scope.count(self.false_phrase) or (self.false_size is not None and get_response_size(resp) != self.false_size)):
+                if self.is_poitive_item(resp):
+                    positive_item = True
                     self.result.append(hostname)
                     self.xml_log({'hostname': hostname})
-                    positive_item = True
-
+                    self.log_item(word, resp, True)
                 self.test_log(hostname, resp, positive_item)
-
-                self.log_item(word, resp, positive_item)
 
                 self.check_positive_limit_stop(self.result)
 
