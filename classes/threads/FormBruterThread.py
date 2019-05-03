@@ -78,6 +78,19 @@ class FormBruterThread(HttpThread):
         """ Set pass_found value """
         return Registry().set('pass_found', value)
 
+    def ignore_word(self, word):
+        return self.pass_min_len and len(word) < self.pass_min_len or \
+               self.pass_max_len and len(word) > self.pass_max_len
+
+    def is_positive(self, resp):
+        if self.false_size is not None and get_response_size(resp) != self.false_size:
+            return True
+        if len(self.false_phrase) and not resp.content.count(self.false_phrase):
+            return True
+        if len(self.true_phrase) and resp.content.count(self.true_phrase):
+            return True
+        return False
+
     def run(self):
         """ Run thread """
         need_retest = False
@@ -95,15 +108,12 @@ class FormBruterThread(HttpThread):
                 if not need_retest:
                     word = self.queue.get()
 
-                if (self.pass_min_len and len(word) < self.pass_min_len) or \
-                        (self.pass_max_len and len(word) > self.pass_max_len):
+                if self.ignore_word(word):
                     continue
 
                 work_conf = self.fill_conf(dict(conf), self.login, word)
                 try:
-                    resp = self.http.post(
-                        self.url, data=work_conf
-                    )
+                    resp = self.http.post(self.url, data=work_conf)
                     ErrorsCounter.flush()
                 except ConnectionError:
                     ErrorsCounter.up()
@@ -117,20 +127,14 @@ class FormBruterThread(HttpThread):
                     continue
 
                 positive_item = False
-
-                if (len(self.false_phrase) and
-                        not resp.content.count(self.false_phrase)) or \
-                        (len(self.true_phrase) and resp.content.count(self.true_phrase) or
-                             (self.false_size is not None and get_response_size(resp) != self.false_size)):
+                if self.is_positive(resp):
+                    positive_item = True
                     item_data = {'word': word, 'content': resp.content, 'size': get_response_size(resp)}
                     self.result.append(item_data)
                     self.xml_log(item_data)
-                    positive_item = True
                     self.logger.log("F", False)
-
+                    self.log_item(word, resp, positive_item)
                     self.check_positive_limit_stop(self.result)
-
-                self.log_item(word, resp, positive_item)
 
                 self.test_log(word, resp, positive_item)
 
