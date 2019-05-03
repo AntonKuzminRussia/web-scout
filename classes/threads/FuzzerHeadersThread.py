@@ -95,8 +95,6 @@ class FuzzerHeadersThread(HttpThread):
                         self.result.append({"url": url, "words": found_words, "header": header})
                         self.xml_log(item_data)
 
-                #self.log_item(str(found_words), resp, len(found_words) > 0)
-
                 self.counter.up()
 
                 self.check_positive_limit_stop(self.result)
