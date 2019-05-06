@@ -330,7 +330,7 @@ class AbstractModuleParams:
         "reload-form-page": WSOption(
             "reload-form-page",
             "Reload page with form before every auth request",
-            "1",
+            "0",
             False,
             ['--reload-form-page']
         ),
