@@ -51,9 +51,12 @@ class Proxies(object):
                 "https": "https://" + proxy,
             }
             if Registry().isset('url_for_proxy_check'):
-                requests.get(Registry().get('url_for_proxy_check'), timeout=5, allow_redirects=False, proxies=proxies)
+                requests.get(
+                    Registry().get('url_for_proxy_check'), timeout=5, allow_redirects=False, proxies=proxies,
+                    verify=False
+                )
             else:
-                requests.get('http://google.com', timeout=5, allow_redirects=False, proxies=proxies)
+                requests.get('http://google.com', timeout=5, allow_redirects=False, proxies=proxies, verify=False)
             self.died_count = 0
             return True
         except BaseException:
