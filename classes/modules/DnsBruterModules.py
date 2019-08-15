@@ -34,6 +34,11 @@ class DnsBruterModules(WSModule):
                 "Bad template structure, dot not found"
             )
 
+        if not self.options['template'].endswith(".onion"):
+            raise WSException(
+                "DNS bruteforce for .onion is pointless"
+            )
+
         if re.search('[^a-zA-Z0-9\-\.]', self.options['template'].value.replace(self.options['msymbol'].value, '')):
             raise WSException(
                 "Template contains bad symbols, check it. Allowed only a-zA-Z0-9, -, ., " +
