@@ -137,6 +137,10 @@ class Http(object):
         if 'User-Agent' not in headers.keys():
             headers['User-Agent'] = Registry().get('ua')
 
+        timeout = int(Registry().get('config')['main']['http_timeout']) if \
+            not Registry().isset('tor') else \
+            int(Registry().get('config')['tor']['http_timeout'])
+
         resp = self.session.get(
             url,
             verify=verify,
@@ -144,7 +148,7 @@ class Http(object):
             headers=headers,
             stream=True,
             proxies=self.get_current_proxy(),
-            timeout=int(Registry().get('config')['main']['http_timeout']),
+            timeout=timeout,
             cookies=cookies
         )
 
@@ -189,6 +193,9 @@ class Http(object):
         if files is None and 'Content-Type' not in headers.keys():
             headers['Content-Type'] = "application/x-www-form-urlencoded"
 
+        timeout = int(Registry().get('config')['main']['http_timeout']) if \
+            not Registry().isset('tor') else \
+            int(Registry().get('config')['tor']['http_timeout'])
         resp = self.session.post(
             url,
             data=data,
@@ -197,7 +204,7 @@ class Http(object):
             headers=headers,
             stream=True,
             proxies=self.get_current_proxy(),
-            timeout=int(Registry().get('config')['main']['http_timeout']),
+            timeout=timeout,
             cookies=cookies,
             files=files
         )
@@ -219,13 +226,17 @@ class Http(object):
         if 'User-Agent' not in headers.keys():
             headers['User-Agent'] = Registry().get('ua')
 
+        timeout = int(Registry().get('config')['main']['http_timeout']) if \
+            not Registry().isset('tor') else \
+            int(Registry().get('config')['tor']['http_timeout'])
+
         resp = self.session.head(
             url,
             verify=verify,
             allow_redirects=allow_redirects,
             headers=headers,
             proxies=self.get_current_proxy(),
-            timeout=int(Registry().get('config')['main']['http_timeout'])
+            timeout=timeout
         )
 
         if 'content-length' in resp.headers and \
