@@ -82,6 +82,10 @@ class ContentDiscovery(DafsDict):
             basenames.append(basename[:basename.rfind(".")])
 
         for basename in basenames:
+            basename = basename.strip()
+            if not len(basename):
+                continue
+
             if re.match("\d", basename[-1]):
                 for i in range(0, 10):
                     results.append(basename[:-1] + str(i) + ext)
