@@ -87,6 +87,13 @@ class Http(object):
 
     def get_current_proxy(self):
         """ Check current proxy, get next if need (max requests per proxy made) """
+        if Registry().isset('tor'):
+            proxy_str = Registry().get('config')['tor']['ip'] + ":" + Registry().get('config')['tor']['port']
+            return {
+                "http": "socks5h://" + proxy_str,
+                "https": "socks5h://" + proxy_str,
+            }
+
         if self.current_proxy_counter >= int(Registry().get('config')['main']['requests_per_proxy']):
             self.current_proxy = None
             self.current_proxy_counter = 0

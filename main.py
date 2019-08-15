@@ -18,6 +18,7 @@ import time
 import logging
 import os
 import urllib3
+from urlparse import urlparse
 
 from libs.common import secs_to_text, main_help, t
 
@@ -89,6 +90,15 @@ for option in args.keys():
         if option == 'test' and args[option].strip():
             Registry().set('tester', Tester())
             module.options["threads"].value = "1"
+
+        if option == 'tor' and args[option].strip():
+            Registry().set('tor', True)
+
+        if (option == 'url' and args[option].strip()) or \
+                (option == 'template' and args[option].strip()):
+            value = args[option].strip()
+            if urlparse(value).netloc.endswith('.onion'):
+                Registry().set('tor', True)
 
         if option == 'headers-file':
             try:

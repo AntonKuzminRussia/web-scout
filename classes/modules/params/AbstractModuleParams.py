@@ -404,11 +404,19 @@ class AbstractModuleParams:
             False,
             ['--discovery-exts']
         ),
+        "tor": WSOption(
+            "tor",
+            "Use TOR",
+            "",
+            False,
+            ['--tor']
+        ),
     }
 
     def __init__(self):
         self.add_options(
             [
+                'tor',
                 'test',
                 'xml-report',
                 'threads',
