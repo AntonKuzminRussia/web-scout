@@ -97,7 +97,7 @@ for option in args.keys():
         if (option == 'url' and args[option].strip()) or \
                 (option == 'template' and args[option].strip()):
             value = args[option].strip()
-            if urlparse(value).netloc.endswith('.onion'):
+            if urlparse(value).netloc.endswith('.onion') or value.count(".onion:"):
                 Registry().set('tor', True)
 
         if option == 'headers-file':
