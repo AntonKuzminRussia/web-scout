@@ -34,7 +34,7 @@ class DnsBruterModules(WSModule):
                 "Bad template structure, dot not found"
             )
 
-        if not self.options['template'].endswith(".onion"):
+        if not self.options['template'].value.endswith(".onion"):
             raise WSException(
                 "DNS bruteforce for .onion is pointless"
             )
