@@ -63,6 +63,53 @@ class ContentDiscovery(DafsDict):
                 results.append(schema.replace("|name|", basename))
         return results
 
+    def gen_letters_variants(self, basename, may_be_file):
+        """
+        Generate list of letters variants for files names with letters in start/end of name
+        aaa.php => baa.php, caa.php, ...
+        aaa.php => aab.php, aac.php, ...
+        AAA.php => BAA.php, CAA.php, ...
+        AAA.php => AAB.php, AAC.php, ...
+        :param basename:
+        :param may_be_file:
+        :return:
+        """
+        letters_lower_case = [chr(n) for n in range(97, 123)]
+        letters_upper_case = [chr(n) for n in range(65, 91)]
+
+        return self._gen_letters_variants(basename, may_be_file, '[a-z]', letters_lower_case) + \
+               self._gen_letters_variants(basename, may_be_file, '[A-Z]', letters_upper_case)
+
+    def _gen_letters_variants(self, basename, may_be_file, letters_regexp, letters_charset):
+        """
+        Generate list of letters variants for files names with letters in start/end of name
+        aaa.php => baa.php, caa.php, ...
+        aaa.php => aab.php, aac.php, ...
+        :param basename:
+        :param may_be_file:
+        :return:
+        """
+        results = []
+        basenames = [basename]
+
+        ext = ""
+        if may_be_file and basename.count("."):
+            ext = basename[basename.rfind("."):]
+            basenames.append(basename[:basename.rfind(".")])
+
+        for basename in basenames:
+            basename = basename.strip()
+            if not len(basename):
+                continue
+
+            if re.match(letters_regexp, basename[-1]):
+                for i in letters_charset:
+                    results.append(basename[:-1] + str(i) + ext)
+            if re.match(letters_regexp, basename[0]):
+                for i in letters_charset:
+                    results.append(str(i) + basename[1:] + ext)
+        return results
+
     def gen_numbers_variants(self, basename, may_be_file):
         """
         Generate list of numbers variants for files names with digit in start/end of name + both variants in same time
@@ -168,6 +215,7 @@ class ContentDiscovery(DafsDict):
                 c += 1
 
                 gens.extend(self.gen_backups_variants(part, c == len(parts)))
+                gens.extend(self.gen_letters_variants(part, c == len(parts)))
                 if c == len(parts): # It`s may be file
                     gens.extend(self.gen_numbers_variants(part, True))
                 gens.extend(self.gen_numbers_variants(part, False))
