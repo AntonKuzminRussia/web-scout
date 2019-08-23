@@ -19,134 +19,20 @@ from classes.modules.DafsModules import DafsModules
 from classes.modules.params.ContentDiscoveryModuleParams import ContentDiscoveryModuleParams
 from classes.kernel.WSModule import WSModule
 from classes.Registry import Registry
-from libs.common import file_to_list
 from classes.kernel.WSOption import WSOption
 from classes.generators.DictOfMask import DictOfMask
+from classes.generators.ContentDiscoveryNameGenerator import ContentDiscoveryNameGenerator
 
 
 class ContentDiscovery(DafsDict):
     """ ContentDiscovery module class """
     logger_name = 'content_discovery'
+    exts = []
 
     def __init__(self, kernel):
         DafsModules.__init__(self, kernel)
         self.options = ContentDiscoveryModuleParams().get_options()
-
-    def gen_exts_variants(self, basename):
-        """
-        Return target exts list parsed from config
-        :param basename:
-        :return:
-        """
-        result = [basename]
-        for ext in self.options['discovery-exts'].value.split(","):
-            ext = ext.strip()
-            result.append(basename + "." + ext)
-        return result
-
-    def gen_backups_variants(self, basename, may_be_file):
-        """
-        Generate backups variants by schames
-        :param basename:
-        :param may_be_file:
-        :return:
-        """
-        results = []
-        basenames = [basename]
-
-        if may_be_file and basename.count("."):
-            basenames.append(basename[:basename.rfind(".")])
-
-        schemas = file_to_list(Registry().get('wr_path') + "/bases/content-discovery/backup-schemas.txt")
-        for basename in basenames:
-            for schema in schemas:
-                results.append(schema.replace("|name|", basename))
-        return results
-
-    def gen_letters_variants(self, basename, may_be_file):
-        """
-        Generate list of letters variants for files names with letters in start/end of name
-        aaa.php => baa.php, caa.php, ...
-        aaa.php => aab.php, aac.php, ...
-        AAA.php => BAA.php, CAA.php, ...
-        AAA.php => AAB.php, AAC.php, ...
-        :param basename:
-        :param may_be_file:
-        :return:
-        """
-        letters_lower_case = [chr(n) for n in range(97, 123)]
-        letters_upper_case = [chr(n) for n in range(65, 91)]
-
-        return self._gen_letters_variants(basename, may_be_file, '[a-z]', letters_lower_case) + \
-               self._gen_letters_variants(basename, may_be_file, '[A-Z]', letters_upper_case)
-
-    def _gen_letters_variants(self, basename, may_be_file, letters_regexp, letters_charset):
-        """
-        Generate list of letters variants for files names with letters in start/end of name
-        aaa.php => baa.php, caa.php, ...
-        aaa.php => aab.php, aac.php, ...
-        :param basename:
-        :param may_be_file:
-        :return:
-        """
-        results = []
-        basenames = [basename]
-
-        ext = ""
-        if may_be_file and basename.count("."):
-            ext = basename[basename.rfind("."):]
-            basenames.append(basename[:basename.rfind(".")])
-
-        for basename in basenames:
-            basename = basename.strip()
-            if not len(basename):
-                continue
-
-            if re.match(letters_regexp, basename[-1]):
-                for i in letters_charset:
-                    results.append(basename[:-1] + str(i) + ext)
-            if re.match(letters_regexp, basename[0]):
-                for i in letters_charset:
-                    results.append(str(i) + basename[1:] + ext)
-        return results
-
-    def gen_numbers_variants(self, basename, may_be_file):
-        """
-        Generate list of numbers variants for files names with digit in start/end of name + both variants in same time
-        aaa1.php => aaa2.php, aaa3.php, ...
-        1aaa.php => 2aaa.php, 3aaa.php, ...
-        1aaa1.php => 2aaa2.php, 3aaa3.php, ...
-        :param basename:
-        :param may_be_file:
-        :return:
-        """
-        results = []
-        basenames = [basename]
-
-        ext = ""
-        if may_be_file and basename.count("."):
-            ext = basename[basename.rfind("."):]
-            basenames.append(basename[:basename.rfind(".")])
-
-        for basename in basenames:
-            basename = basename.strip()
-            if not len(basename):
-                continue
-
-            if re.match("\d", basename[-1]):
-                for i in range(0, 10):
-                    results.append(basename[:-1] + str(i) + ext)
-            if re.match("\d", basename[0]):
-                for i in range(0, 10):
-                    results.append(str(i) + basename[1:] + ext)
-            if re.match("\d", basename[-1]) and re.match("\d", basename[0]):
-                for i in range(0, 10):
-                    results.append(str(i) + basename[1:-1] + str(i) + ext)
-            if not re.match("\d", basename[-1]) and not re.match("\d", basename[0]):
-                for i in range(0, 10):
-                    results.append(basename + str(i) + ext)
-                    results.append(str(i) + basename + ext)
-        return results
+        self.exts = self.options['discovery-exts'].value.split(",")
 
     def write_bases_variants(self, base_fh):
         """
@@ -162,7 +48,7 @@ class ContentDiscovery(DafsDict):
                 break
             line = line.strip()
 
-            gens = self.gen_exts_variants(line)
+            gens = ContentDiscoveryNameGenerator.gen_exts_variants(line, self.exts)
             for gen in gens:
                 base_fh.write(gen + "\n")
 
@@ -214,18 +100,18 @@ class ContentDiscovery(DafsDict):
                 gens = []
                 c += 1
 
-                gens.extend(self.gen_backups_variants(part, c == len(parts)))
-                gens.extend(self.gen_letters_variants(part, c == len(parts)))
+                gens.extend(ContentDiscoveryNameGenerator.gen_backups_variants(part, c == len(parts)))
+                gens.extend(ContentDiscoveryNameGenerator.gen_letters_variants(part, c == len(parts)))
                 if c == len(parts): # It`s may be file
-                    gens.extend(self.gen_numbers_variants(part, True))
-                gens.extend(self.gen_numbers_variants(part, False))
+                    gens.extend(ContentDiscoveryNameGenerator.gen_numbers_variants(part, True))
+                gens.extend(ContentDiscoveryNameGenerator.gen_numbers_variants(part, False))
 
                 if c == len(parts):  # It`s may be file
                     baseword = part[:part.rfind(".")] if part.count(".") else part
                 else:
                     baseword = part
 
-                gens.extend(self.gen_exts_variants(baseword))
+                gens.extend(ContentDiscoveryNameGenerator.gen_exts_variants(baseword, self.exts))
                 for gen in gens:
                     base_fh.write(gen + "\n")
 
@@ -244,7 +130,7 @@ class ContentDiscovery(DafsDict):
             if line is None:
                 break
 
-            gens = self.gen_exts_variants(line)
+            gens = ContentDiscoveryNameGenerator.gen_exts_variants(line, self.exts)
             for gen in gens:
                 base_fh.write(gen + "\n")
         del dom
