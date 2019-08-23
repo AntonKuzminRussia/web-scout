@@ -20,7 +20,7 @@ class HostsBruterThreadParams:
     retest_codes = None
     delay = None
     ignore_words_re = None
-    retest_phrase = None
+    retest_re = None
     false_size = None
 
     def __init__(self, options):
@@ -32,5 +32,5 @@ class HostsBruterThreadParams:
         self.retest_codes = list(set(options['retest-codes'].value.lower().split(','))) if len(options['retest-codes'].value.lower()) else []
         self.delay = int(options['delay'].value)
         self.ignore_words_re = False if not len(options['ignore-words-re'].value) else re.compile(options['ignore-words-re'].value)
-        self.retest_phrase = options['retest-phrase'].value if len(options['retest-phrase'].value) else None
+        self.retest_re = False if not len(options['retest-re'].value) else re.compile(options['retest-re'].value)
         self.false_size = int(options['false-size'].value) if options['false-size'].value is not None else None

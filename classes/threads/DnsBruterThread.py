@@ -68,7 +68,7 @@ class DnsBruterThread(AbstractThread):
         self.http_nf_re = params.http_not_found_re
         self.ignore_words_re = params.ignore_words_re
         self.http_protocol = params.http_protocol
-        self.http_retest_phrase = params.http_retest_phrase
+        self.http_retest_re = params.http_retest_re
         self.zone = params.zone
 
         self.check_name = ""
@@ -249,7 +249,7 @@ class DnsBruterThread(AbstractThread):
 
                 text_for_search = get_full_response_text(resp)
 
-                if len(self.http_retest_phrase) and text_for_search.count(self.http_retest_phrase):
+                if len(self.http_retest_re) and text_for_search.count(self.http_retest_re):
                     if i == self.retest_limit - 1:
                         self.logger.log("Too many retest actions for {0}".format(self.check_name))
                     time.sleep(self.retest_delay)

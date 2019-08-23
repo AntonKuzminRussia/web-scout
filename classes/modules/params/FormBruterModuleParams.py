@@ -22,7 +22,7 @@ class FormBruterModuleParams(AbstractModuleParams):
                 'true-phrase',
                 'false-size',
                 "retest-codes",
-                "retest-phrase",
+                "retest-re",
                 'delay',
                 'selenium',
                 "browser-wait-re",

@@ -27,7 +27,7 @@ class AbstractParamsBruterModule(AbstractModuleParams):
                 "not-found-codes",
                 "ignore-words-re",
                 "retest-codes",
-                "retest-phrase",
+                "retest-re",
                 "delay",
                 "browser-wait-re",
                 "selenium",

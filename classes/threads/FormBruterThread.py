@@ -47,7 +47,7 @@ class FormBruterThread(HttpThread):
         self.counter = counter
         self.result = result
         self.retest_codes = params.retest_codes
-        self.retest_phrase = params.retest_phrase
+        self.retest_re = params.retest_re
 
         self.http.every_request_new_session = True
         self.pass_min_len = params.pass_min_len

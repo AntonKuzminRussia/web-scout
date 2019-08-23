@@ -25,7 +25,7 @@ class DafsThreadParams:
     browser_wait_re = None
     browser_recreate_re = None
     ignore_words_re = None
-    retest_phrase = None
+    retest_re = None
 
     def __init__(self, options):
         self.template = options['template'].value
@@ -44,8 +44,7 @@ class DafsThreadParams:
             self.method = 'get'
 
         not_found_codes = options['not-found-codes'].value.split(',')
-        #not_found_codes.append('404')
         self.not_found_codes = list(set(not_found_codes))
 
         self.retest_codes = list(set(options['retest-codes'].value.split(','))) if len(options['retest-codes'].value) else []
-        self.retest_phrase = options['retest-phrase'].value if len(options['retest-phrase'].value) else None
+        self.retest_re = False if not len(options['retest-re'].value) else re.compile(options['retest-re'].value)

@@ -25,7 +25,7 @@ class AbstractDafsModuleParams(AbstractModuleParams):
                 'not-found-codes',
                 'ignore-words-re',
                 'retest-codes',
-                'retest-phrase',
+                'retest-re',
                 'delay',
                 'selenium',
                 'browser-wait-re',

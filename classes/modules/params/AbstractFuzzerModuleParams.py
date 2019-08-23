@@ -23,6 +23,6 @@ class AbstractFuzzerModuleParams(AbstractModuleParams):
                 "headers-file",
                 "urls-file",
                 'retest-codes',
-                'retest-phrase',
+                'retest-re',
             ]
         )

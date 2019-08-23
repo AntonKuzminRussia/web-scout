@@ -27,7 +27,7 @@ class AbstractDnsModuleParams(AbstractModuleParams):
                 'zone',
                 "dns-protocol",
                 'http-not-found-re',
-                'http-retest-phrase',
+                'http-retest-re',
                 'http-proxies',
             ]
         )

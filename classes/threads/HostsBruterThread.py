@@ -47,7 +47,7 @@ class HostsBruterThread(HttpThread):
         self.false_phrase = params.false_phrase
         self.false_size = params.false_size
         self.retest_codes = params.retest_codes
-        self.retest_phrase = params.retest_phrase
+        self.retest_re = params.retest_re
         self.delay = params.delay
         self.method = 'get'
         self.ignore_words_re = params.ignore_words_re

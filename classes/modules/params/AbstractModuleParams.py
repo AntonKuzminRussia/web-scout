@@ -229,19 +229,19 @@ class AbstractModuleParams:
             False,
             ['--http-protocol']
         ),
-        "retest-phrase": WSOption(
-            "retest-phrase",
-            "Phrase in response for retest",
+        "retest-re": WSOption(
+            "retest-re",
+            "RegEx in response for retest",
             "",
             False,
-            ['--retest-phrase']
+            ['--retest-re']
         ),
-        "http-retest-phrase": WSOption(
-            "http-retest-phrase",
+        "http-retest-re": WSOption(
+            "http-retest-re",
             "Phrase in response for retest",
             "",
             False,
-            ['--http-retest-phrase']
+            ['--http-retest-re']
         ),
         "zone": WSOption(
             "zone",

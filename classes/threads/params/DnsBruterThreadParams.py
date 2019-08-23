@@ -19,7 +19,7 @@ class DnsBruterThreadParams:
     delay = None
     http_not_found_re = None
     http_protocol = None
-    http_retest_phrase = None
+    http_retest_re = None
     ignore_words_re = None
     zone = None
 
@@ -30,6 +30,6 @@ class DnsBruterThreadParams:
         self.delay = int(options['delay'].value)
         self.http_not_found_re = re.compile(options['http-not-found-re'].value) if len(options['http-not-found-re'].value) else None
         self.http_protocol = options['http-protocol'].value
-        self.http_retest_phrase = options['http-retest-phrase'].value
+        self.http_retest_re = False if not len(options['http-retest-re'].value) else re.compile(options['http-retest-re'].value)
         self.ignore_words_re = False if not len(options['ignore-words-re'].value) else re.compile(options['ignore-words-re'].value)
         self.zone = options['zone'].value.upper()

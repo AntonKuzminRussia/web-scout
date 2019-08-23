@@ -130,7 +130,7 @@ class HttpThread(AbstractThread):
         try:
             if resp is not None:
                 if (len(self.retest_codes) and str(resp.status_code) in self.retest_codes) or \
-                        (self.retest_phrase and len(self.retest_phrase) and self.retest_phrase in resp.content):
+                        (self.retest_re and self.retest_re.findall(resp.content)):
                     if word not in self.retested_words.keys():
                         self.retested_words[word] = 0
                     self.retested_words[word] += 1

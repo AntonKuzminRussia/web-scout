@@ -49,7 +49,7 @@ class DafsThread(HttpThread):
         self.method = params.method
         self.not_found_codes = params.not_found_codes
         self.retest_codes = params.retest_codes
-        self.retest_phrase = params.retest_phrase
+        self.retest_re = params.retest_re
         self.delay = params.delay
 
     def is_response_right(self, resp):
