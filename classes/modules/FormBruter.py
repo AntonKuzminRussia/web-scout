@@ -69,9 +69,9 @@ class FormBruter(WSModule):
                     "--conf-str must have a ^PASS^ fragment"
                 )
 
-        if not len(self.options['true-phrase'].value) and not len(self.options['false-phrase'].value) and not self.options['false-size'].value:
+        if not len(self.options['true-re'].value) and not len(self.options['false-re'].value) and not self.options['false-size'].value:
             raise WSException(
-                "You must specify --false-phrase param or --true-phrase param or --false-size param!"
+                "You must specify --false-re param or --true-re param or --false-size param!"
             )
 
     def load_objects(self, queue):

@@ -16,7 +16,7 @@ class HostsBruterThreadParams:
     ip = None
     template = None
     msymbol = None
-    false_phrase = None
+    false_re = None
     retest_codes = None
     delay = None
     ignore_words_re = None
@@ -28,7 +28,7 @@ class HostsBruterThreadParams:
         self.ip = options['ip'].value
         self.template = options['template'].value
         self.msymbol = options['msymbol'].value
-        self.false_phrase = options['false-phrase'].value
+        self.false_re = False if not len(options['false-re'].value) else re.compile(options['false-re'].value)
         self.retest_codes = list(set(options['retest-codes'].value.lower().split(','))) if len(options['retest-codes'].value.lower()) else []
         self.delay = int(options['delay'].value)
         self.ignore_words_re = False if not len(options['ignore-words-re'].value) else re.compile(options['ignore-words-re'].value)

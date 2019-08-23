@@ -41,8 +41,8 @@ class SFormBruterThread(SeleniumThread):
         self.browser_wait_re = params.browser_wait_re
         self.browser_recreate_re = params.browser_recreate_phrase
         self.conffile = params.conffile
-        self.false_phrase = params.false_phrase
-        self.true_phrase = params.true_phrase
+        self.false_re = params.false_re
+        self.true_re = params.true_re
         self.first_stop = params.first_stop
         self.login = params.login
         self.reload_form_page = params.reload_form_page
@@ -131,8 +131,8 @@ class SFormBruterThread(SeleniumThread):
                 time.sleep(1)
 
                 positive_item = False
-                if ((len(self.false_phrase) and not self.browser.page_source.count(self.false_phrase)) or
-                        (len(self.true_phrase) and self.browser.page_source.count(self.true_phrase))):
+                if ((len(self.false_re) and not self.false_re.findall(self.browser.page_source)) or
+                        (len(self.true_re) and self.true_re.findall(self.browser.page_source))):
                     item_data = {'word': word, 'content': self.browser.page_source}
                     self.result.append(item_data)
                     self.xml_log(item_data)

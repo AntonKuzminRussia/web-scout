@@ -18,8 +18,8 @@ class FormBruterModuleParams(AbstractModuleParams):
         self.add_options(
             [
                 'url',
-                'false-phrase',
-                'true-phrase',
+                'false-re',
+                'true-re',
                 'false-size',
                 "retest-codes",
                 "retest-re",

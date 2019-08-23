@@ -299,12 +299,12 @@ class AbstractModuleParams:
             False,
             ['--dns']
         ),
-        "false-phrase": WSOption(
-            "false-phrase",
-            "Phrase for detect false answer (auth is wrong)",
+        "false-re": WSOption(
+            "false-re",
+            "RegEx for detect false answer",
             "",
             False,
-            ['--false-phrase']
+            ['--false-re']
         ),
         "false-size": WSOption(
             "false-size",
@@ -313,12 +313,12 @@ class AbstractModuleParams:
             False,
             ['--false-size']
         ),
-        "true-phrase": WSOption(
-            "true-phrase",
-            "Phrase for detect true answer (auth is good)",
+        "true-re": WSOption(
+            "true-re",
+            "RegEx for detect true answer (auth is good)",
             "",
             False,
-            ['--true-phrase']
+            ['--true-re']
         ),
         "reload-form-page": WSOption(
             "reload-form-page",

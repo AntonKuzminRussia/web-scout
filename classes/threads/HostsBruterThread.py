@@ -44,7 +44,7 @@ class HostsBruterThread(HttpThread):
         self.mask_symbol = params.msymbol
         self.counter = counter
         self.result = result
-        self.false_phrase = params.false_phrase
+        self.false_re = params.false_re
         self.false_size = params.false_size
         self.retest_codes = params.retest_codes
         self.retest_re = params.retest_re
@@ -60,7 +60,7 @@ class HostsBruterThread(HttpThread):
             return True
 
         search_scope = get_full_response_text(resp)
-        if not search_scope.count(self.false_phrase):
+        if not self.false_re.findall(search_scope):
             return True
 
         return False

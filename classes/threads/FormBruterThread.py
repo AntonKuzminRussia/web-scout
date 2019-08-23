@@ -37,9 +37,9 @@ class FormBruterThread(HttpThread):
         self.retested_words = {}
         self.queue = queue
         self.url = params.url
-        self.false_phrase = params.false_phrase
+        self.false_re = params.false_re
         self.false_size = params.false_size
-        self.true_phrase = params.true_phrase
+        self.true_re = params.true_re
         self.delay = params.delay
         self.confstr = params.confstr
         self.first_stop = params.first_stop
@@ -85,9 +85,9 @@ class FormBruterThread(HttpThread):
     def is_positive(self, resp):
         if self.false_size is not None and get_response_size(resp) != self.false_size:
             return True
-        if len(self.false_phrase) and not resp.content.count(self.false_phrase):
+        if len(self.false_re) and not self.false_re.findall(resp.content):
             return True
-        if len(self.true_phrase) and resp.content.count(self.true_phrase):
+        if len(self.true_re) and self.true_re.findall(resp.content):
             return True
         return False
 

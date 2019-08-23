@@ -14,8 +14,8 @@ import re
 
 class FormBruterThreadParams:
     url = None
-    false_phrase = None
-    true_phrase = None
+    false_re = None
+    true_re = None
     delay = None
     browser_wait_re = None
     browser_recreate_phrase = None
@@ -33,8 +33,8 @@ class FormBruterThreadParams:
 
     def __init__(self, options):
         self.url = options['url'].value
-        self.false_phrase = options['false-phrase'].value
-        self.true_phrase = options['true-phrase'].value
+        self.false_re = False if not len(options['false-re'].value) else re.compile(options['false-re'].value)
+        self.true_re = False if not len(options['true-re'].value) else re.compile(options['true-re'].value)
         self.delay = int(options['delay'].value)
         self.browser_wait_re = False if not len(options['browser-wait-re'].value) else re.compile(
             options['browser-wait-re'].value)
