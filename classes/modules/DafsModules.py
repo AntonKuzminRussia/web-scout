@@ -29,7 +29,7 @@ class DafsModules(WSModule):
         super(DafsModules, self).validate_main()
 
         parsed_url = urlparse(self.options['template'].value)
-        if not len(parsed_url.schema) or not len(parsed_url.netloc):
+        if not len(parsed_url.scheme) or not len(parsed_url.netloc):
             raise WSException("Target URL not valid")
 
         if self.options['not-found-size'].value != "-1" and self.options['method'].value.lower() == 'head':

@@ -39,7 +39,7 @@ class FormBruter(WSModule):
         super(FormBruter, self).validate_main()
 
         parsed_url = urlparse(self.options['url'].value)
-        if not len(parsed_url.schema) or not len(parsed_url.netloc):
+        if not len(parsed_url.scheme) or not len(parsed_url.netloc):
             raise WSException("Target URL not valid")
 
         if self.options['selenium'].value:
