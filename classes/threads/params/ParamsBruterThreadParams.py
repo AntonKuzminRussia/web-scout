@@ -34,8 +34,10 @@ class ParamsBruterThreadParams:
         self.method = options['params-method'].value.lower()
         self.not_found_re = options['not-found-re'].value
         self.delay = int(options['delay'].value)
-        self.browser_wait_re = options['browser-wait-re'].value
-        self.browser_recreate_re = options['browser-recreate-re'].value
+        self.browser_wait_re = False if not len(options['browser-wait-re'].value) else re.compile(
+            options['browser-wait-re'].value)
+        self.browser_recreate_re = False if not len(options['browser-recreate-re'].value) else re.compile(
+            options['browser-recreate-re'].value)
         self.ignore_words_re = False if not len(options['ignore-words-re'].value) else re.compile(options['ignore-words-re'].value)
         self.not_found_re = False if not len(options['not-found-re'].value) else re.compile(options['not-found-re'].value)
         self.not_found_size = int(options['not-found-size'].value)

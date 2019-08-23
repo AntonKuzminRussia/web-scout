@@ -34,12 +34,11 @@ class SeleniumBrowser(webdriver.Firefox):
 
         for re_phrase in self.re_phrases:
             if self.page_source.count(re_phrase):
-                #print "re-phrase detected"
                 time.sleep(5)
                 return self.get(url)
 
-        if len(self.browser_wait_re):
-            while self.page_source.count(self.browser_wait_re):
+        if self.browser_wait_re:
+            while self.browser_wait_re.findall(self.page_source):
                 time.sleep(1)
 
     def element_exists(self, by, _id):

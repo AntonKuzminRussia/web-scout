@@ -38,7 +38,7 @@ class SFuzzerUrlsThread(SeleniumThread):
         self.bad_words = params.bad_words
         self.delay = params.delay
         self.browser_wait_re = params.browser_wait_re
-        self.recreate_phrase = params.browser_recreate_phrase
+        self.browser_recreate_re = params.browser_recreate_re
 
         Registry().set('url_for_proxy_check', "https://google.com")
 
@@ -54,6 +54,12 @@ class SFuzzerUrlsThread(SeleniumThread):
             try:
                 url = self.queue.get()
                 self.browser.get(url)
+
+                if self.browser_recreate_re and self.browser_recreate_re.findall(self.browser.page_source):
+                    self.queue.put(url)
+                    self.browser_close()
+                    self.browser_create()
+                    continue
 
                 found_words = []
                 for bad_word in self.bad_words:

@@ -39,7 +39,7 @@ class SDafsThread(SeleniumThread):
         self.counter = counter
         self.result = result
         self.not_found_re = params.not_found_re
-        self.recreate_re = params.browser_recreate_re
+        self.browser_recreate_re = params.browser_recreate_re
         self.delay = params.delay
         self.browser_wait_re = params.browser_wait_re
         self.ignore_words_re = params.ignore_words_re
@@ -76,7 +76,7 @@ class SDafsThread(SeleniumThread):
                 rtime = int(time.time())
                 self.browser.get(url)
 
-                if self.recreate_re and self.recreate_re.findall(self.browser.page_source):
+                if self.browser_recreate_re and self.browser_recreate_re.findall(self.browser.page_source):
                     need_retest = True
                     self.browser_close()
                     self.browser_create()

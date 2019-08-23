@@ -9,6 +9,8 @@ Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pr
 Class with thread params
 """
 
+import re
+
 
 class FormBruterThreadParams:
     url = None
@@ -34,8 +36,10 @@ class FormBruterThreadParams:
         self.false_phrase = options['false-phrase'].value
         self.true_phrase = options['true-phrase'].value
         self.delay = int(options['delay'].value)
-        self.browser_wait_re = options['browser-wait-re'].value
-        self.browser_recreate_phrase = options['browser-recreate-re'].value
+        self.browser_wait_re = False if not len(options['browser-wait-re'].value) else re.compile(
+            options['browser-wait-re'].value)
+        self.browser_recreate_re = False if not len(options['browser-recreate-re'].value) else re.compile(
+            options['browser-recreate-re'].value)
         self.conffile = options['conf-file'].value
         self.first_stop = options['first-stop'].value.lower()
         self.login = options['login'].value

@@ -39,7 +39,7 @@ class SFormBruterThread(SeleniumThread):
         self.url = params.url
         self.delay = params.delay
         self.browser_wait_re = params.browser_wait_re
-        self.recreate_phrase = params.browser_recreate_phrase
+        self.browser_recreate_re = params.browser_recreate_phrase
         self.conffile = params.conffile
         self.false_phrase = params.false_phrase
         self.true_phrase = params.true_phrase
@@ -106,7 +106,7 @@ class SFormBruterThread(SeleniumThread):
 
                 # self.browser.get(self.protocol + "://" + self.host + self.url)
 
-                if len(self.recreate_phrase) and self.browser.page_source.lower().count(self.recreate_phrase.lower()):
+                if self.browser_recreate_re and self.browser_recreate_re.findall(self.browser.page_source):
                     need_retest = True
                     self.browser_close()
                     self.browser_create()
