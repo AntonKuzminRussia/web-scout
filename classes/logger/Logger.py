@@ -86,14 +86,14 @@ class Logger(object):
 
         ext = "bin" if binary else "txt"
 
-        fh = codecs.open("{0}/{1}.{2}".format(self.items_dir, name, ext), 'ab', 'utf-8')
-
         if binary:
+            fh = open("{0}/{1}.{2}".format(self.items_dir, name, ext), 'wb')
             try:
                 fh.write(content)
             except UnicodeDecodeError:
                 fh.write("BINARY ENCODING ERROR")
         else:
+            fh = codecs.open("{0}/{1}.{2}".format(self.items_dir, name, ext), 'ab', 'utf-8')
             decoded_content = ""
             for symbol in content:
                 try:
