@@ -168,7 +168,7 @@ class AbstractModuleParams:
         ),
         "browser-wait-re": WSOption(
             "browser-wait-re",
-            "Phrase for detect moments when selenium browser need wait (ddos check, human action need)",
+            "RegEx for detect moments when selenium browser need wait (ddos check, human action need)",
             "",
             False,
             ['--browser-wait-re']
@@ -238,7 +238,7 @@ class AbstractModuleParams:
         ),
         "http-retest-re": WSOption(
             "http-retest-re",
-            "Phrase in response for retest",
+            "RegEx for check retest is need",
             "",
             False,
             ['--http-retest-re']
