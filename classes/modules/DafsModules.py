@@ -9,6 +9,7 @@ Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pr
 Threads pool class for Dafs* modules
 """
 import time
+from urlparse import urlparse
 
 from classes.kernel.WSModule import WSModule
 from classes.kernel.WSCounter import WSCounter
@@ -26,6 +27,10 @@ class DafsModules(WSModule):
     def validate_main(self):
         """ Check users params """
         super(DafsModules, self).validate_main()
+
+        parsed_url = urlparse(self.options['template'].value)
+        if not len(parsed_url.schema) or not len(parsed_url.netloc):
+            raise WSException("Target URL not valid")
 
         if self.options['not-found-size'].value != "-1" and self.options['method'].value.lower() == 'head':
             raise WSException(

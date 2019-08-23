@@ -11,6 +11,7 @@ Class of FormBruter module
 
 import time
 import os
+from urlparse import urlparse
 
 from classes.Registry import Registry
 from classes.generators.FileGenerator import FileGenerator
@@ -36,6 +37,10 @@ class FormBruter(WSModule):
     def validate_main(self):
         """ Check users params """
         super(FormBruter, self).validate_main()
+
+        parsed_url = urlparse(self.options['url'].value)
+        if not len(parsed_url.schema) or not len(parsed_url.netloc):
+            raise WSException("Target URL not valid")
 
         if self.options['selenium'].value:
             if not len(self.options['conf-file'].value.strip()):

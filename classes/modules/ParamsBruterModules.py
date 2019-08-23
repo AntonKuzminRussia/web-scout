@@ -9,6 +9,7 @@ Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pr
 Common module class form Dafs* modules
 """
 import time
+from urlparse import urlparse
 
 from classes.kernel.WSModule import WSModule
 from classes.kernel.WSException import WSException
@@ -26,6 +27,10 @@ class ParamsBruterModules(WSModule):
     def validate_main(self):
         """ Check users params """
         super(ParamsBruterModules, self).validate_main()
+
+        parsed_url = urlparse(self.options['url'].value)
+        if not len(parsed_url.schema) or not len(parsed_url.netloc):
+            raise WSException("Target URL not valid")
 
         if self.options['params-method'].value.lower() not in ['get', 'post'] and int(self.options['max-params-length'].value) > 100:
             raise WSException(
