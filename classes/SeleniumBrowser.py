@@ -21,13 +21,13 @@ class SeleniumBrowser(webdriver.Firefox):
     ]
     profile_path = None
 
-    def __init__(self, profile, firefox_binary, ddos_human, proxy=None):
+    def __init__(self, profile, firefox_binary, browser_wait_re, proxy=None):
         super(SeleniumBrowser, self).__init__(profile, firefox_binary=firefox_binary, proxy=proxy)
-        self.ddos_human = ddos_human
+        self.browser_wait_re = browser_wait_re
         self.profile_path = profile.path
 
     def get(self, url, from_blank=True):
-        """ Get a url, but with check on recreate browser need and anti-ddos sleep """
+        """ Get a url, but with check on recreate browser need and browser wait need """
         if from_blank:
             super(SeleniumBrowser, self).get("about:blank")
         super(SeleniumBrowser, self).get(url)
@@ -38,8 +38,8 @@ class SeleniumBrowser(webdriver.Firefox):
                 time.sleep(5)
                 return self.get(url)
 
-        if len(self.ddos_human):
-            while self.page_source.count(self.ddos_human):
+        if len(self.browser_wait_re):
+            while self.page_source.count(self.browser_wait_re):
                 time.sleep(1)
 
     def element_exists(self, by, _id):

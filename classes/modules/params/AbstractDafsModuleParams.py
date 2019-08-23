@@ -28,7 +28,7 @@ class AbstractDafsModuleParams(AbstractModuleParams):
                 'retest-phrase',
                 'delay',
                 'selenium',
-                'ddos-human-action',
+                'browser-wait-re',
                 'browser-recreate-re',
                 'proxies',
                 'headers-file',

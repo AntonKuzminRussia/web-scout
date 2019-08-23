@@ -15,7 +15,7 @@ class FormBruterThreadParams:
     false_phrase = None
     true_phrase = None
     delay = None
-    ddos_human_action = None
+    browser_wait_re = None
     browser_recreate_phrase = None
     conffile = None
     first_stop = None
@@ -34,7 +34,7 @@ class FormBruterThreadParams:
         self.false_phrase = options['false-phrase'].value
         self.true_phrase = options['true-phrase'].value
         self.delay = int(options['delay'].value)
-        self.ddos_human_action = options['ddos-human-action'].value
+        self.browser_wait_re = options['browser-wait-re'].value
         self.browser_recreate_phrase = options['browser-recreate-re'].value
         self.conffile = options['conf-file'].value
         self.first_stop = options['first-stop'].value.lower()

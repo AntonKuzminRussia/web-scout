@@ -15,7 +15,7 @@ from classes.Registry import Registry
 class FuzzerThreadParams:
     method = None
     delay = None
-    ddos_human_action = None
+    browser_wait_re = None
     browser_recreate_phrase = None
     bad_words = None
     headers = None
@@ -23,8 +23,8 @@ class FuzzerThreadParams:
     def __init__(self, options):
         self.method = options['method'].value.lower()
         self.delay = int(options['delay'].value)
-        if 'ddos-human-action' in options:
-            self.ddos_human_action = options['ddos-human-action'].value
+        if 'browser-wait-re' in options:
+            self.browser_wait_re = options['browser-wait-re'].value
         if 'browser-recreate-phrase' in options:
             self.browser_recreate_phrase = options['browser-recreate-re'].value
 

@@ -37,7 +37,7 @@ class SFuzzerUrlsThread(SeleniumThread):
         self.counter = counter
         self.bad_words = params.bad_words
         self.delay = params.delay
-        self.ddos_human = params.ddos_human_action
+        self.browser_wait_re = params.browser_wait_re
         self.recreate_phrase = params.browser_recreate_phrase
 
         Registry().set('url_for_proxy_check', "https://google.com")

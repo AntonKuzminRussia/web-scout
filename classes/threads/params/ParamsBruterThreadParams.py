@@ -21,7 +21,7 @@ class ParamsBruterThreadParams:
     not_found_size = None
     not_found_codes = None
     delay = None
-    ddos_human_action = None
+    browser_wait_re = None
     browser_recreate_re = None
     ignore_words_re = None
     retest_codes = None
@@ -34,7 +34,7 @@ class ParamsBruterThreadParams:
         self.method = options['params-method'].value.lower()
         self.not_found_re = options['not-found-re'].value
         self.delay = int(options['delay'].value)
-        self.ddos_human_action = options['ddos-human-action'].value
+        self.browser_wait_re = options['browser-wait-re'].value
         self.browser_recreate_re = options['browser-recreate-re'].value
         self.ignore_words_re = False if not len(options['ignore-words-re'].value) else re.compile(options['ignore-words-re'].value)
         self.not_found_re = False if not len(options['not-found-re'].value) else re.compile(options['not-found-re'].value)

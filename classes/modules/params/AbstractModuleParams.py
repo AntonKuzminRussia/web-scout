@@ -166,12 +166,12 @@ class AbstractModuleParams:
             False,
             ['--selenium']
         ),
-        "ddos-human-action": WSOption(
-            "ddos-human-action",
-            "Phrase for detect human action need",
+        "browser-wait-re": WSOption(
+            "browser-wait-re",
+            "Phrase for detect moments when selenium browser need wait (ddos check, human action need)",
             "",
             False,
-            ['--ddos-human-action']
+            ['--browser-wait-re']
         ),
         "browser-recreate-re": WSOption(
             "browser-recreate-re",

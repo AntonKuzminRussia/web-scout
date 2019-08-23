@@ -28,6 +28,7 @@ class SeleniumThread(AbstractThread):
     requests_count = 0
     proxy_using = False
     browser = None
+    browser_wait_re = None
 
     def up_requests_count(self):
         """ Up requests counter """
@@ -100,7 +101,7 @@ class SeleniumThread(AbstractThread):
                 profile,
                 firefox_binary=binary,
                 proxy=proxy,
-                ddos_human=self.ddos_human,
+                browser_wait_re=self.browser_wait_re,
             )
         except WebDriverException as e:
             self.logger.ex(e)

@@ -17,8 +17,8 @@ class FuzzerUrlsModuleParams(AbstractFuzzerModuleParams):
         AbstractFuzzerModuleParams.__init__(self)
         self.add_options(
             [
-                "ddos-human-action",
+                "browser-wait-re",
                 "selenium",
+                "browser-recreate-re",
             ]
         )
-        self.add_option("browser-recreate-re")
