@@ -166,13 +166,6 @@ class AbstractModuleParams:
             False,
             ['--selenium']
         ),
-        "ddos-detect-phrase": WSOption(
-            "ddos-detect-phrase",
-            "Phrase for detect DDoS protection",
-            "",
-            False,
-            ['--ddos-detect-phrase']
-        ),
         "ddos-human-action": WSOption(
             "ddos-human-action",
             "Phrase for detect human action need",

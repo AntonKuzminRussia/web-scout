@@ -29,7 +29,6 @@ class AbstractParamsBruterModule(AbstractModuleParams):
                 "retest-codes",
                 "retest-phrase",
                 "delay",
-                "ddos-detect-phrase",
                 "ddos-human-action",
                 "selenium",
                 "browser-recreate-re",

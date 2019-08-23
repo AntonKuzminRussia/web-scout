@@ -22,7 +22,6 @@ class DafsThreadParams:
     not_found_codes = None
     retest_codes = None
     delay = None
-    ddos_detect_phrase = None
     ddos_human_action = None
     browser_recreate_re = None
     ignore_words_re = None
@@ -36,7 +35,6 @@ class DafsThreadParams:
         self.found_re = False if not len(options['found-re'].value) else re.compile(options['found-re'].value)
         self.not_found_ex = False if not len(options['not-found-ex'].value) else options['not-found-ex'].value
         self.not_found_size = options['not-found-size'].value
-        self.ddos_detect_phrase = options['ddos-detect-phrase'].value
         self.ddos_human_action = options['ddos-human-action'].value
         self.browser_recreate_re = options['browser-recreate-re'].value
         self.ignore_words_re = False if not len(options['ignore-words-re'].value) else re.compile(options['ignore-words-re'].value)

@@ -17,7 +17,6 @@ class FuzzerUrlsModuleParams(AbstractFuzzerModuleParams):
         AbstractFuzzerModuleParams.__init__(self)
         self.add_options(
             [
-                "ddos-detect-phrase",
                 "ddos-human-action",
                 "selenium",
             ]

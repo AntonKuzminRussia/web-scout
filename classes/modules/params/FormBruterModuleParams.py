@@ -25,7 +25,6 @@ class FormBruterModuleParams(AbstractModuleParams):
                 "retest-phrase",
                 'delay',
                 'selenium',
-                "ddos-detect-phrase",
                 "ddos-human-action",
                 "reload-form-page",
                 'proxies',

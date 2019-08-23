@@ -27,7 +27,6 @@ class ContentDiscoveryModuleParams(AbstractModuleParams):
                 'retest-phrase',
                 'delay',
                 'selenium',
-                'ddos-detect-phrase',
                 'ddos-human-action',
                 'browser-recreate-re',
                 'proxies',
