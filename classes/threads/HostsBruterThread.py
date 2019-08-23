@@ -18,6 +18,7 @@ from requests.exceptions import ChunkedEncodingError, ConnectionError
 from libs.common import get_response_size, get_full_response_text
 from classes.threads.HttpThread import HttpThread
 from classes.threads.params.HostsBruterThreadParams import HostsBruterThreadParams
+from classes.ErrorsCounter import ErrorsCounter
 
 
 class HostsBruterThread(HttpThread):
@@ -97,9 +98,16 @@ class HostsBruterThread(HttpThread):
 
                 try:
                     resp = req_func(self.protocol + "://" + self.ip, headers={'host': hostname})
+                    ErrorsCounter.flush()
                 except ConnectionError:
-                    need_retest = True
-                    self.http.change_proxy()
+                    ErrorsCounter.up()
+
+                    if not self.is_test():
+                        need_retest = True
+                        self.http.change_proxy()
+                        continue
+
+                    self.test_log(hostname, None, False)
                     continue
 
                 if self.is_retest_need(word, resp):
