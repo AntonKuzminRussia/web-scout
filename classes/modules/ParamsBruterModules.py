@@ -32,6 +32,11 @@ class ParamsBruterModules(WSModule):
                 "Attention! Too big --max-params-length. Big value here allowed only in GET and POST modes"
             )
 
+        if not len(self.options['not-found-re'].value) and not len(self.options['not-found-size'].value) and not len(self.options['not-found-codes'].value):
+            raise WSException(
+                "You must set one or more params for detect negative server respose: not-found-re, not-found-size, not-found-codes"
+            )
+
     def make_queue(self):
         """
         Make work queue
