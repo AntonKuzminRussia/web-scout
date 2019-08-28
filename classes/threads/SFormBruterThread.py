@@ -131,8 +131,8 @@ class SFormBruterThread(SeleniumThread):
                 time.sleep(1)
 
                 positive_item = False
-                if ((len(self.false_re) and not self.false_re.findall(self.browser.page_source)) or
-                        (len(self.true_re) and self.true_re.findall(self.browser.page_source))):
+                if ((self.false_re and not self.false_re.findall(self.browser.page_source)) or
+                        (self.true_re and self.true_re.findall(self.browser.page_source))):
                     item_data = {'word': word, 'content': self.browser.page_source}
                     self.result.append(item_data)
                     self.xml_log(item_data)

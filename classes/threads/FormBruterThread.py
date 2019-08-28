@@ -85,9 +85,9 @@ class FormBruterThread(HttpThread):
     def is_positive(self, resp):
         if self.false_size is not None and get_response_size(resp) != self.false_size:
             return True
-        if len(self.false_re) and not self.false_re.findall(resp.content):
+        if self.false_re and not self.false_re.findall(resp.content):
             return True
-        if len(self.true_re) and self.true_re.findall(resp.content):
+        if self.true_re and self.true_re.findall(resp.content):
             return True
         return False
 
