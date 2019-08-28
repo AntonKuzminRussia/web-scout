@@ -28,7 +28,7 @@ class AbstractModuleParams:
         "follow-redirects": WSOption(
             "follow-redirects",
             "Follow redirects from server response",
-            "0",
+            "1",
             False,
             ['--follow-redirects']
         ),
