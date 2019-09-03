@@ -14,6 +14,7 @@ import os
 import requests
 from classes.Registry import Registry
 from classes.kernel.WSException import WSException
+from classes.HttpResponseImitation import HttpResponseImitation
 
 
 class HttpMaxSizeException(BaseException):
@@ -153,7 +154,7 @@ class Http(object):
         )
 
         if not self.is_response_length_less_than_limit(url, resp):
-            resp = None
+            resp = HttpResponseImitation(0, resp.headers, "too big for download, see docs or increase config.ini->max_size")
 
         if resp and 'content-type' in resp.headers and (len(self.scan_content_types) or len(self.noscan_content_types)):
             if len(self.noscan_content_types):
@@ -209,7 +210,7 @@ class Http(object):
             files=files
         )
         if not self.is_response_length_less_than_limit(url, resp):
-            resp = None
+            resp = HttpResponseImitation(0, resp.headers, "too big for download, see docs or increase config.ini->max_size")
 
         return resp
 
