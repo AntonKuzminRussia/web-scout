@@ -425,6 +425,9 @@ class AbstractModuleParams:
         for name in names_list:
             self.add_option(name)
 
+    def del_option(self, name):
+        del self.options[name]
+
     def add_option(self, internal_name, external_name=None):
         if internal_name not in self.all_options:
             raise WSException("Option '{0}' not exists".format(internal_name))

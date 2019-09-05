@@ -26,3 +26,5 @@ class AbstractFuzzerModuleParams(AbstractModuleParams):
                 'retest-re',
             ]
         )
+        self.del_option("parts")
+        self.del_option("part")
