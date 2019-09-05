@@ -8,3 +8,4 @@
 /tests_old
 /.idea
 /docker/
+docker-build.sh
