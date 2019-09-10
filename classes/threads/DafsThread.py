@@ -61,9 +61,8 @@ class DafsThread(HttpThread):
         if resp is None:
             return False
 
-        if self.found_re and not self.is_response_content_binary(resp) and \
-                self.found_re.findall(self.get_response_full_text(resp)):
-            return True
+        if self.found_re and not self.is_response_content_binary(resp):
+            return self.found_re.findall(self.get_response_full_text(resp))
 
         return HttpThread.is_response_right(self, resp)
 
