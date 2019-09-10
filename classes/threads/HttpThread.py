@@ -78,8 +78,8 @@ class HttpThread(AbstractThread):
         if resp is None:
             return False
 
-        if self.not_found_size != -1 and self.not_found_size != len(resp.content):
-            return True
+        if self.not_found_size != -1:
+            return self.not_found_size != len(resp.content)
 
         if self.not_found_re and not self.is_response_content_binary(resp):
             return not self.not_found_re.findall(self.get_response_full_text(resp))
