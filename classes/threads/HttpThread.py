@@ -81,9 +81,8 @@ class HttpThread(AbstractThread):
         if self.not_found_size != -1 and self.not_found_size != len(resp.content):
             return True
 
-        if self.not_found_re and not self.is_response_content_binary(resp) and \
-                not self.not_found_re.findall(self.get_response_full_text(resp)):
-            return True
+        if self.not_found_re and not self.is_response_content_binary(resp):
+            return not self.not_found_re.findall(self.get_response_full_text(resp))
 
         if str(resp.status_code) not in self.not_found_codes:
             return True
