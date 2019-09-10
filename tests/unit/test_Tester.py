@@ -1,3 +1,9 @@
+import os
+import sys
+
+myPath = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, myPath + '/../../')
+
 from classes.Tester import Tester as TClass
 from classes.Registry import Registry
 

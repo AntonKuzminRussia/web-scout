@@ -1,5 +1,10 @@
 import pytest
 import mock
+import os
+import sys
+
+myPath = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, myPath + '/../../')
 
 from classes.Proxies import Proxies
 from classes.Registry import Registry
@@ -43,7 +48,7 @@ class Test_Proxies(object):
                 assert not proxies.get_proxy()
 
     def test_check_alive_default_url(self):
-        def get_mock_function(url, timeout=0, allow_redirects=False, proxies=None):
+        def get_mock_function(url, timeout=0, allow_redirects=False, proxies=None, verify=False):
             assert url == 'http://google.com'
 
         with mock.patch('requests.get', side_effect=get_mock_function):
@@ -52,7 +57,7 @@ class Test_Proxies(object):
             assert proxies.check_live("aaa")
 
     def test_check_alive_custom_url(self):
-        def get_mock_function(url, timeout=0, allow_redirects=False, proxies=None):
+        def get_mock_function(url, timeout=0, allow_redirects=False, proxies=None, verify=False):
             assert url == 'http://www.ru'
 
         with mock.patch('requests.get', side_effect=get_mock_function):

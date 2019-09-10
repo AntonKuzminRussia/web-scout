@@ -1,5 +1,10 @@
 # -*- coding: utf-8 -*-
 import time
+import os
+import sys
+
+myPath = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, myPath + '/../../')
 
 from classes.kernel.WSCounter import WSCounter
 from classes.Registry import Registry

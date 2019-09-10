@@ -8,6 +8,12 @@ Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pr
 
 Unit tests for DictOfMask
 """
+import os
+import sys
+
+myPath = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, myPath + '/../../')
+
 from classes.generators.DictOfMask import DictOfMask
 
 

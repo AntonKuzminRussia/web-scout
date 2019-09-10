@@ -2,6 +2,11 @@ import pytest
 import mock
 import random
 import string
+import os
+import sys
+
+myPath = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, myPath + '/../../')
 
 from classes.Http import Http
 from classes.Registry import Registry
