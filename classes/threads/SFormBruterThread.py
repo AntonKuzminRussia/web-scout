@@ -43,6 +43,7 @@ class SFormBruterThread(SeleniumThread):
         self.conffile = params.conffile
         self.false_re = params.false_re
         self.true_re = params.true_re
+        self.false_size = params.false_size
         self.first_stop = params.first_stop
         self.login = params.login
         self.reload_form_page = params.reload_form_page
@@ -132,7 +133,8 @@ class SFormBruterThread(SeleniumThread):
 
                 positive_item = False
                 if ((self.false_re and not self.false_re.findall(self.browser.page_source)) or
-                        (self.true_re and self.true_re.findall(self.browser.page_source))):
+                        (self.true_re and self.true_re.findall(self.browser.page_source))) or \
+                        (self.false_size != None and len(self.browser.page_source) != self.false_size):
                     item_data = {'word': word, 'content': self.browser.page_source}
                     self.result.append(item_data)
                     self.xml_log(item_data)

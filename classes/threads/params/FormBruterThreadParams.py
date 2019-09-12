@@ -47,7 +47,7 @@ class FormBruterThreadParams:
         self.pass_min_len = int(options['pass-min-len'].value)
         self.pass_max_len = int(options['pass-max-len'].value)
         self.confstr = options['conf-str'].value
-        self.false_size = int(options['false-size'].value) if options['false-size'].value is not None else None
+        self.false_size = int(options['false-size'].value) if options['false-size'].value is not None else None #TODO make one, -1 or None
         self.retest_codes = list(set(options['retest-codes'].value.split(','))) if len(options['retest-codes'].value) else []
         self.retest_re = False if not len(options['retest-re'].value) else re.compile(options['retest-re'].value)
         self.follow_redirects = (options['follow-redirects'].value != "0")
