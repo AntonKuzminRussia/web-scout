@@ -4,8 +4,8 @@ import time
 import re
 
 runPath = os.path.realpath(os.path.dirname(os.path.abspath(__file__)) + '/../../')
-
-
+#TODO tests re as re, not as str only
+#TODO selenium not-found-size
 class Test_Dafs(object):
     dict_path = '/tmp/wstest.dict'
     headers_file_path = '/tmp/wstest.headers_file'
