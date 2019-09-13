@@ -5,6 +5,7 @@ import re
 
 runPath = os.path.realpath(os.path.dirname(os.path.abspath(__file__)) + '/../../')
 #TODO test found 2 passwords
+#TODO - in filenames, refactoring
 
 class Test_FormBruter(object):
     dict_path = '/tmp/wstest.dict'
