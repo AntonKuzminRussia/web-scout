@@ -29,9 +29,6 @@ class AbstractParamsBruterModule(AbstractModuleParams):
                 "retest-codes",
                 "retest-re",
                 "delay",
-                "browser-wait-re",
-                "selenium",
-                "browser-recreate-re",
                 "proxies",
                 "headers-file",
             ]
