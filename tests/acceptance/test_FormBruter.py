@@ -14,7 +14,7 @@ class Test_FormBruter(object):
     def get_results_count(self, output):
         return len(re.findall('^(\t.+)', output, re.M))
 
-    def test_raw_brute_false_re(self): #TODO all names to raw|selenium
+    def test_raw_false_re(self): #TODO all names to raw|selenium
         fh = open(self.dict_path, 'w')
         fh.write("aaa\nbb\nccc\nddd\neee\nff\nadmin\ntest\nwegweg\negwdg\nssss\n")
         fh.close()
@@ -37,7 +37,7 @@ class Test_FormBruter(object):
         assert self.get_results_count(output) == 1
         assert output.count("Passwords found:\n\ttest") == 1
 
-    def test_raw_brute_true_re(self):
+    def test_raw_true_re(self):
         fh = open(self.dict_path, 'w')
         fh.write("aaa\nbb\nccc\nddd\neee\nff\nadmin\ntest\nwegweg\negwdg\nssss\n")
         fh.close()
@@ -60,7 +60,7 @@ class Test_FormBruter(object):
         assert self.get_results_count(output) == 1
         assert output.count("Passwords found:\n\ttest") == 1
 
-    def test_raw_brute_false_size(self):
+    def test_raw_false_size(self):
         fh = open(self.dict_path, 'w')
         fh.write("aaa\nbb\nccc\nddd\neee\nff\nadmin\ntest\nwegweg\negwdg\nssss\n")
         fh.close()
@@ -83,7 +83,7 @@ class Test_FormBruter(object):
         assert self.get_results_count(output) == 1
         assert output.count("Passwords found:\n\ttest") == 1
 
-    def test_selenium_brute_false_re(self):
+    def test_selenium_false_re(self):
         fh = open(self.dict_path, 'w')
         fh.write("aaa\nbb\nccc\nddd\neee\nff\nadmin\ntest\nwegweg\negwdg\nssss\n")
         fh.close()
@@ -112,7 +112,7 @@ class Test_FormBruter(object):
         assert self.get_results_count(output) == 1
         assert output.count("Passwords found:\n\ttest") == 1
 
-    def test_selenium_brute_true_re(self):
+    def test_selenium_true_re(self):
         fh = open(self.dict_path, 'w')
         fh.write("aaa\nbb\nccc\nddd\neee\nff\nadmin\ntest\nwegweg\negwdg\nssss\n")
         fh.close()
@@ -141,7 +141,7 @@ class Test_FormBruter(object):
         assert self.get_results_count(output) == 1
         assert output.count("Passwords found:\n\ttest") == 1
 
-    def test_selenium_brute_false_size(self):
+    def test_selenium_false_size(self):
         fh = open(self.dict_path, 'w')
         fh.write("aaa\nadmin\ntest\n")
         fh.close()
@@ -170,7 +170,7 @@ class Test_FormBruter(object):
         assert self.get_results_count(output) == 1
         assert output.count("Passwords found:\n\ttest") == 1
 
-    def test_raw_brute_retest_codes(self):
+    def test_raw_retest_codes(self):
         fh = open(self.dict_path, 'w')
         fh.write("aaa\nbb\nccc\nddd\neee\nff\nadmin\ntest\nwegweg\negwdg\nssss\n")
         fh.close()
@@ -195,7 +195,7 @@ class Test_FormBruter(object):
         assert self.get_results_count(output) == 1
         assert output.count("Passwords found:\n\ttest") == 1
 
-    def test_raw_brute_retest_re(self):
+    def test_raw_retest_re(self):
         fh = open(self.dict_path, 'w')
         fh.write("aaa\nbb\nccc\nddd\neee\nff\nadmin\ntest\nwegweg\negwdg\nssss\n")
         fh.close()
@@ -220,7 +220,7 @@ class Test_FormBruter(object):
         assert self.get_results_count(output) == 1
         assert output.count("Passwords found:\n\ttest") == 1
 
-    def test_raw_brute_delay(self):
+    def test_raw_delay(self):
         fh = open(self.dict_path, 'w')
         fh.write("aaa\nbb\nccc\nddd\neee")
         fh.close()
@@ -280,7 +280,7 @@ class Test_FormBruter(object):
         print (output)
         assert etime - stime > 10
 
-    def test_selenium_brute_false_re_browser_wait_re(self):
+    def test_selenium_false_re_browser_wait_re(self):
         fh = open(self.dict_path, 'w')
         fh.write("aaa\nbb\nadmin\ntest\nwegweg\negwdg\nssss\n")
         fh.close()
@@ -311,7 +311,7 @@ class Test_FormBruter(object):
         assert self.get_results_count(output) == 1
         assert output.count("Passwords found:\n\ttest") == 1
 
-    def test_selenium_brute_true_browser_wait_re(self):
+    def test_selenium_true_browser_wait_re(self):
         fh = open(self.dict_path, 'w')
         fh.write("aaa\nadmin\ntest\nwegweg\negwdg\nssss\n")
         fh.close()
@@ -342,7 +342,7 @@ class Test_FormBruter(object):
         assert self.get_results_count(output) == 1
         assert output.count("Passwords found:\n\ttest") == 1
 
-    def test_selenium_brute_false_size_browser_wait_re(self):
+    def test_selenium_false_size_browser_wait_re(self):
         fh = open(self.dict_path, 'w')
         fh.write("aaa\nadmin\ntest\n")
         fh.close()
@@ -373,7 +373,7 @@ class Test_FormBruter(object):
         assert self.get_results_count(output) == 1
         assert output.count("Passwords found:\n\ttest") == 1
 
-    def test_selenium_brute_reload_form_page(self):
+    def test_selenium_reload_form_page(self):
         fh = open(self.dict_path, 'w')
         fh.write("aaa\nbb\nccc\nddd\neee\nff\nadmin\ntest\nwegweg\negwdg\nssss\n")
         fh.close()

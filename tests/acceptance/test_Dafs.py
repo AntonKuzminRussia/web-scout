@@ -5,7 +5,7 @@ import re
 
 runPath = os.path.realpath(os.path.dirname(os.path.abspath(__file__)) + '/../../')
 #TODO tests re as re, not as str only
-#TODO selenium not-found-size
+
 class Test_Dafs(object):
     dict_path = '/tmp/wstest.dict'
     headers_file_path = '/tmp/wstest.headers_file'
@@ -13,7 +13,7 @@ class Test_Dafs(object):
     def get_results_count(self, output):
         return len(re.findall('^(\d+ http)', output, re.M))
 
-    def test_run_dict(self):
+    def test_dict(self):
         fh = open(self.dict_path, 'w')
         fh.write("simpledicta.php\naaa\nsimpledictb.php\nbbb\nsimpledict9.php\n")
         fh.close()
@@ -32,7 +32,7 @@ class Test_Dafs(object):
         assert output.count("/simpledictb.php") == 1
         assert output.count("/simpledict9.php") == 1
 
-    def test_run_mask(self):
+    def test_mask(self):
         output = subprocess.check_output([
             './main.py',
             'DafsMask',
@@ -47,7 +47,7 @@ class Test_Dafs(object):
         assert output.count("/simplemaskb.php") == 1
         assert output.count("/simplemask9.php") == 1
 
-    def test_run_comb(self):
+    def test_comb(self):
         fh = open(self.dict_path, 'w')
         fh.write("simpleaaa\nsimplecomb\nsimplebbb")
         fh.close()
@@ -70,7 +70,7 @@ class Test_Dafs(object):
         assert output.count("/simplecombb.php") == 1
         assert output.count("/simplecomb9.php") == 1
 
-    def test_run_not_found_re_dict(self):
+    def test_not_found_re_dict(self):
         fh = open(self.dict_path, 'w')
         fh.write("nfredicta.php\nnfreaaa\nnfredictb.php\nnfrebbb\nnfredict9.php\n")
         fh.close()
@@ -91,7 +91,7 @@ class Test_Dafs(object):
         assert output.count("/nfredictb.php") == 1
         assert output.count("/nfredict9.php") == 1
 
-    def test_run_not_found_re_mask(self):
+    def test_not_found_re_mask(self):
         output = subprocess.check_output([
             './main.py',
             'DafsMask',
@@ -108,7 +108,7 @@ class Test_Dafs(object):
         assert output.count("/nfremaskb.php") == 1
         assert output.count("/nfremask9.php") == 1
 
-    def test_run_not_found_re_comb(self):
+    def test_not_found_re_comb(self):
         fh = open(self.dict_path, 'w')
         fh.write("nfreaaa\nnfrecomb\nnfrebbb")
         fh.close()
@@ -133,7 +133,7 @@ class Test_Dafs(object):
         assert output.count("/nfrecombb.php") == 1
         assert output.count("/nfrecomb9.php") == 1
 
-    def test_run_found_re_dict(self):
+    def test_found_re_dict(self):
         fh = open(self.dict_path, 'w')
         fh.write("fredicta.php\nfreaaa\nfredictb.php\nfrebbb\nfredict9.php\n")
         fh.close()
@@ -154,7 +154,7 @@ class Test_Dafs(object):
         assert output.count("/fredictb.php") == 1
         assert output.count("/fredict9.php") == 1
 
-    def test_run_found_re_mask(self):
+    def test_found_re_mask(self):
         output = subprocess.check_output([
             './main.py',
             'DafsMask',
@@ -171,7 +171,7 @@ class Test_Dafs(object):
         assert output.count("/fremaskb.php") == 1
         assert output.count("/fremask9.php") == 1
 
-    def test_run_found_re_comb(self):
+    def test_found_re_comb(self):
         fh = open(self.dict_path, 'w')
         fh.write("freaaa\nfrecomb\nfrebbb")
         fh.close()
@@ -196,7 +196,7 @@ class Test_Dafs(object):
         assert output.count("/frecombb.php") == 1
         assert output.count("/frecomb9.php") == 1
 
-    def test_run_not_found_size_dict(self):
+    def test_not_found_size_dict(self):
         fh = open(self.dict_path, 'w')
         fh.write("nfsizedicta.php\nnfsizeaaa\nnfsizedictb.php\nnfsizebbb\nnfsizedict9.php\n")
         fh.close()
@@ -217,7 +217,7 @@ class Test_Dafs(object):
         assert output.count("/nfsizedictb.php") == 1
         assert output.count("/nfsizedict9.php") == 1
 
-    def test_run_not_found_size_mask(self):
+    def test_not_found_size_mask(self):
         output = subprocess.check_output([
             './main.py',
             'DafsMask',
@@ -234,7 +234,7 @@ class Test_Dafs(object):
         assert output.count("/nfsizemaskb.php") == 1
         assert output.count("/nfsizemask9.php") == 1
 
-    def test_run_not_found_size_comb(self):
+    def test_not_found_size_comb(self):
         fh = open(self.dict_path, 'w')
         fh.write("nfsizeaaa\nnfsizecomb\nnfsizebbb")
         fh.close()
@@ -259,7 +259,7 @@ class Test_Dafs(object):
         assert output.count("/nfsizecombb.php") == 1
         assert output.count("/nfsizecomb9.php") == 1
 
-    def test_run_not_found_codes_dict(self):
+    def test_not_found_codes_dict(self):
         fh = open(self.dict_path, 'w')
         fh.write("nfcodesdicta.php\nnfcodesaaa\nnfcodesdictb.php\nnfcodesbbb\nnfcodesdict9.php\n")
         fh.close()
@@ -280,7 +280,7 @@ class Test_Dafs(object):
         assert output.count("/nfcodesdictb.php") == 1
         assert output.count("/nfcodesdict9.php") == 1
 
-    def test_run_not_found_codes_mask(self):
+    def test_not_found_codes_mask(self):
         output = subprocess.check_output([
             './main.py',
             'DafsMask',
@@ -297,7 +297,7 @@ class Test_Dafs(object):
         assert output.count("/nfcodesmaskb.php") == 1
         assert output.count("/nfcodesmask9.php") == 1
 
-    def test_run_not_found_codes_comb(self):
+    def test_not_found_codes_comb(self):
         fh = open(self.dict_path, 'w')
         fh.write("nfcodesaaa\nnfcodescomb\nnfcodesbbb")
         fh.close()
@@ -322,7 +322,7 @@ class Test_Dafs(object):
         assert output.count("/nfcodescombb.php") == 1
         assert output.count("/nfcodescomb9.php") == 1
 
-    def test_run_dict_ignore_words(self):
+    def test_dict_ignore_words(self):
         fh = open(self.dict_path, 'w')
         fh.write("simpledicta.php\naaa\nsimpledictb.php\nbbb\nsimpledict9.php\n")
         fh.close()
@@ -342,7 +342,7 @@ class Test_Dafs(object):
         assert output.count("/simpledicta.php") == 1
         assert output.count("/simpledict9.php") == 1
 
-    def test_run_mask_ignore_words(self):
+    def test_mask_ignore_words(self):
         output = subprocess.check_output([
             './main.py',
             'DafsMask',
@@ -358,7 +358,7 @@ class Test_Dafs(object):
         assert output.count("/simplemaska.php") == 1
         assert output.count("/simplemask9.php") == 1
 
-    def test_run_comb_ignore_words(self):
+    def test_comb_ignore_words(self):
         fh = open(self.dict_path, 'w')
         fh.write("simpleaaa\nsimplecomb\nsimplebbb")
         fh.close()
@@ -382,7 +382,7 @@ class Test_Dafs(object):
         assert output.count("/simplecomba.php") == 1
         assert output.count("/simplecomb9.php") == 1
 
-    def test_run_dict_retest_codes(self):
+    def test_dict_retest_codes(self):
         fh = open(self.dict_path, 'w')
         fh.write("retestcodesdicta.php\naaa\nretestcodesdictb.php\nbbb\nretestcodesdict9.php\n")
         fh.close()
@@ -403,7 +403,7 @@ class Test_Dafs(object):
         assert output.count("/retestcodesdictb.php") == 1
         assert output.count("/retestcodesdict9.php") == 1
 
-    def test_run_mask_retest_codes(self):
+    def test_mask_retest_codes(self):
         output = subprocess.check_output([
             './main.py',
             'DafsMask',
@@ -420,7 +420,7 @@ class Test_Dafs(object):
         assert output.count("/retestcodesmaskb.php") == 1
         assert output.count("/retestcodesmask9.php") == 1
 
-    def test_run_comb_retest_codes(self):
+    def test_comb_retest_codes(self):
         fh = open(self.dict_path, 'w')
         fh.write("retestcodesaaa\nretestcodescomb\nretestcodesbbb")
         fh.close()
@@ -445,7 +445,7 @@ class Test_Dafs(object):
         assert output.count("/retestcodescombb.php") == 1
         assert output.count("/retestcodescomb9.php") == 1
 
-    def test_run_dict_retest_re(self):
+    def test_dict_retest_re(self):
         fh = open(self.dict_path, 'w')
         fh.write("retestredicta.php\naaa\nretestredictb.php\nbbb\nretestredict9.php\n")
         fh.close()
@@ -466,7 +466,7 @@ class Test_Dafs(object):
         assert output.count("/retestredictb.php") == 1
         assert output.count("/retestredict9.php") == 1
 
-    def test_run_mask_retest_re(self):
+    def test_mask_retest_re(self):
         output = subprocess.check_output([
             './main.py',
             'DafsMask',
@@ -483,7 +483,7 @@ class Test_Dafs(object):
         assert output.count("/retestremaskb.php") == 1
         assert output.count("/retestremask9.php") == 1
 
-    def test_run_comb_retest_re(self):
+    def test_comb_retest_re(self):
         fh = open(self.dict_path, 'w')
         fh.write("retestreaaa\nretestrecomb\nretestrebbb")
         fh.close()
@@ -508,7 +508,7 @@ class Test_Dafs(object):
         assert output.count("/retestrecombb.php") == 1
         assert output.count("/retestrecomb9.php") == 1
 
-    def test_run_dict_delay(self):
+    def test_dict_delay(self):
         fh = open(self.dict_path, 'w')
         fh.write("simpledicta.php\naaa\nsimpledictb.php\nbbb\nsimpledict9.php\n")
         fh.close()
@@ -530,7 +530,7 @@ class Test_Dafs(object):
 
         assert etime-stime > 10
 
-    def test_run_mask_delay(self):
+    def test_mask_delay(self):
         stime = int(time.time())
         output = subprocess.check_output([
             './main.py',
@@ -548,7 +548,7 @@ class Test_Dafs(object):
 
         assert etime-stime > 10
 
-    def test_run_comb_delay(self):
+    def test_comb_delay(self):
         fh = open(self.dict_path, 'w')
         fh.write("test\n")
         fh.close()
@@ -574,7 +574,7 @@ class Test_Dafs(object):
 
         assert etime-stime > 10
 
-    def test_run_dict_selenium(self):
+    def test_dict_selenium(self):
         fh = open(self.dict_path, 'w')
         fh.write("simpledicta.php\nsimpleaaa\nsimpledictb.php\nsimplebbb\nsimpledict9.php\n")
         fh.close()
@@ -597,7 +597,7 @@ class Test_Dafs(object):
         assert output.count("/simpledictb.php") == 1
         assert output.count("/simpledict9.php") == 1
 
-    def test_run_mask_selenium(self):
+    def test_mask_selenium(self):
         output = subprocess.check_output([
             './main.py',
             'DafsMask',
@@ -616,7 +616,7 @@ class Test_Dafs(object):
         assert output.count("/simplemaskb.php") == 1
         assert output.count("/simplemask9.php") == 1
 
-    def test_run_comb_selenium(self):
+    def test_comb_selenium(self):
         fh = open(self.dict_path, 'w')
         fh.write("simplecomb\nsimpleaaa\n")
         fh.close()
@@ -643,7 +643,76 @@ class Test_Dafs(object):
         assert output.count("/simplecombb.php") == 1
         assert output.count("/simplecomb9.php") == 1
 
-    def test_run_dict_selenium_wait_re(self):
+    def test_dict_selenium_not_found_size(self):
+        fh = open(self.dict_path, 'w')
+        fh.write("simpledicta.php\nsimpleaaa\nsimpledictb.php\nsimplebbb\nsimpledict9.php\n")
+        fh.close()
+
+        output = subprocess.check_output([
+            './main.py',
+            'DafsDict',
+            '--selenium',
+            '1',
+            '--not-found-size',
+            '61',
+            '--template',
+            'http://wsat.local/@',
+            '--dict',
+            self.dict_path
+        ])
+
+        assert self.get_results_count(output) == 3
+        assert output.count("/simpledicta.php") == 1
+        assert output.count("/simpledictb.php") == 1
+        assert output.count("/simpledict9.php") == 1
+
+    def test_mask_selenium_not_found_size(self):
+        output = subprocess.check_output([
+            './main.py',
+            'DafsMask',
+            '--selenium',
+            '1',
+            '--not-found-size',
+            '61',
+            '--template',
+            'http://wsat.local/simplemask@.php',
+            '--mask',
+            '?l?d,1,1'
+        ])
+
+        assert self.get_results_count(output) == 3
+        assert output.count("/simplemaska.php") == 1
+        assert output.count("/simplemaskb.php") == 1
+        assert output.count("/simplemask9.php") == 1
+
+    def test_comb_selenium_not_found_size(self):
+        fh = open(self.dict_path, 'w')
+        fh.write("simplecomb\nsimpleaaa\n")
+        fh.close()
+
+        output = subprocess.check_output([
+            './main.py',
+            'DafsCombine',
+            '--selenium',
+            '1',
+            '--not-found-size',
+            '61',
+            '--template',
+            'http://wsat.local/@.php',
+            '--combine-template',
+            '%d%%m%',
+            '--dict',
+            self.dict_path,
+            '--mask',
+            '?l?d,1,1'
+        ])
+
+        assert self.get_results_count(output) == 3
+        assert output.count("/simplecomba.php") == 1
+        assert output.count("/simplecombb.php") == 1
+        assert output.count("/simplecomb9.php") == 1
+
+    def test_dict_selenium_wait_re(self):
         fh = open(self.dict_path, 'w')
         fh.write("seleniumwaitdicta.php\naaa\nseleniumwaitdictb.php\nbbb\nseleniumwaitdict9.php\n")
         fh.close()
@@ -667,7 +736,7 @@ class Test_Dafs(object):
         assert output.count("/seleniumwaitdicta.php") == 1
         assert output.count("/seleniumwaitdictb.php") == 1
 
-    def test_run_mask_selenium_wait_re(self):
+    def test_mask_selenium_wait_re(self):
         output = subprocess.check_output([
             './main.py',
             'DafsMask',
@@ -687,7 +756,7 @@ class Test_Dafs(object):
         assert output.count("/seleniumwaitmaska.php") == 1
         assert output.count("/seleniumwaitmaskb.php") == 1
 
-    def test_run_comb_headers_file(self):
+    def test_comb_headers_file(self):
         fh = open(self.dict_path, 'w')
         fh.write("headersdicta.php\nheadersaaa\nheadersdictb.php\nheadersbbb\nheadersdict9.php\n")
         fh.close()
@@ -715,7 +784,7 @@ class Test_Dafs(object):
         assert output.count("/seleniumwaitdicta.php") == 1
         assert output.count("/seleniumwaitdictb.php") == 1
 
-    def test_run_mask_headers_file(self):
+    def test_mask_headers_file(self):
         fh = open(self.headers_file_path, 'w')
         fh.write("Cookie: a=b\n")
         fh.close()
@@ -736,7 +805,7 @@ class Test_Dafs(object):
         assert output.count("/headersmaskb.php") == 1
         assert output.count("/headersmask9.php") == 1
 
-    def test_run_comb_headers_file(self):
+    def test_comb_headers_file(self):
         fh = open(self.dict_path, 'w')
         fh.write("headersaaa\nheaderscomb\nheadersbbb")
         fh.close()
@@ -765,7 +834,7 @@ class Test_Dafs(object):
         assert output.count("/headerscombb.php") == 1
         assert output.count("/headerscomb9.php") == 1
 
-    def test_run_dict_method_post(self):
+    def test_dict_method_post(self):
         fh = open(self.dict_path, 'w')
         fh.write("postdicta.php\naaa\npostdictb.php\nbbb\npostdict9.php\n")
         fh.close()
@@ -786,7 +855,7 @@ class Test_Dafs(object):
         assert output.count("/postdictb.php") == 1
         assert output.count("/postdict9.php") == 1
 
-    def test_run_mask_method_post(self):
+    def test_mask_method_post(self):
         output = subprocess.check_output([
             './main.py',
             'DafsMask',
@@ -803,7 +872,7 @@ class Test_Dafs(object):
         assert output.count("/postmaskb.php") == 1
         assert output.count("/postmask9.php") == 1
 
-    def test_run_comb_method_post(self):
+    def test_comb_method_post(self):
         fh = open(self.dict_path, 'w')
         fh.write("postcomb\naaa\n")
         fh.close()
@@ -828,7 +897,7 @@ class Test_Dafs(object):
         assert output.count("/postcombb.php") == 1
         assert output.count("/postcomb9.php") == 1
 
-    def test_run_dict_method_head(self):
+    def test_dict_method_head(self):
         fh = open(self.dict_path, 'w')
         fh.write("headdicta.php\naaa\nheaddictb.php\nbbb\nheaddict9.php\n")
         fh.close()
@@ -849,7 +918,7 @@ class Test_Dafs(object):
         assert output.count("/headdictb.php") == 1
         assert output.count("/headdict9.php") == 1
 
-    def test_run_mask_method_head(self):
+    def test_mask_method_head(self):
         output = subprocess.check_output([
             './main.py',
             'DafsMask',
@@ -866,7 +935,7 @@ class Test_Dafs(object):
         assert output.count("/headmaskb.php") == 1
         assert output.count("/headmask9.php") == 1
 
-    def test_run_comb_method_head(self):
+    def test_comb_method_head(self):
         fh = open(self.dict_path, 'w')
         fh.write("headcomb\naaa\n")
         fh.close()
@@ -891,7 +960,7 @@ class Test_Dafs(object):
         assert output.count("/headcombb.php") == 1
         assert output.count("/headcomb9.php") == 1
 
-    def test_run_dict_method_get_default(self):
+    def test_dict_method_get_default(self):
         fh = open(self.dict_path, 'w')
         fh.write("getdicta.php\naaa\ngetdictb.php\nbbb\ngetdict9.php\n")
         fh.close()
@@ -910,7 +979,7 @@ class Test_Dafs(object):
         assert output.count("/getdictb.php") == 1
         assert output.count("/getdict9.php") == 1
 
-    def test_run_mask_method_get_default(self):
+    def test_mask_method_get_default(self):
         output = subprocess.check_output([
             './main.py',
             'DafsMask',
@@ -925,7 +994,7 @@ class Test_Dafs(object):
         assert output.count("/getmaskb.php") == 1
         assert output.count("/getmask9.php") == 1
 
-    def test_run_comb_method_get_default(self):
+    def test_comb_method_get_default(self):
         fh = open(self.dict_path, 'w')
         fh.write("getcomb\naaa\n")
         fh.close()
