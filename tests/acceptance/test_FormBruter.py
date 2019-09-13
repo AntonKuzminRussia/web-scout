@@ -5,7 +5,7 @@ import re
 
 runPath = os.path.realpath(os.path.dirname(os.path.abspath(__file__)) + '/../../')
 #TODO test found 2 passwords
-#TODO print out everythere
+
 class Test_FormBruter(object):
     dict_path = '/tmp/wstest.dict'
     headers_file_path = '/tmp/wstest.headers_file'
@@ -33,7 +33,7 @@ class Test_FormBruter(object):
             '--false-re',
             'false'
         ])
-
+        print(output)
         assert self.get_results_count(output) == 1
         assert output.count("Passwords found:\n\ttest") == 1
 
@@ -79,7 +79,7 @@ class Test_FormBruter(object):
             '--false-size',
             '5'
         ])
-
+        print(output)
         assert self.get_results_count(output) == 1
         assert output.count("Passwords found:\n\ttest") == 1
 
@@ -429,7 +429,7 @@ class Test_FormBruter(object):
             '--headers-file',
             self.headers_file_path,
         ])
-
+        print(output)
         assert self.get_results_count(output) == 1
         assert output.count("Passwords found:\n\ttest") == 1
 
@@ -531,6 +531,6 @@ class Test_FormBruter(object):
             '--follow-redirects',
             '1',
         ])
-
+        print(output)
         assert self.get_results_count(output) == 1
         assert output.count("Passwords found:\n\ttest") == 1
