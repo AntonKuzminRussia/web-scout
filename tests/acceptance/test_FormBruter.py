@@ -372,3 +372,165 @@ class Test_FormBruter(object):
         print (output)
         assert self.get_results_count(output) == 1
         assert output.count("Passwords found:\n\ttest") == 1
+
+    def test_selenium_brute_reload_form_page(self):
+        fh = open(self.dict_path, 'w')
+        fh.write("aaa\nbb\nccc\nddd\neee\nff\nadmin\ntest\nwegweg\negwdg\nssss\n")
+        fh.close()
+
+        fh = open(self.conf_file_path, 'w')
+        fh.write("^USER^\t#login\n^PASS^\t#pass\n^SUBMIT^\t#submit\n")
+        fh.close()
+
+        output = subprocess.check_output([
+            './main.py',
+            'FormBruter',
+            '--selenium',
+            '1',
+            '--url',
+            'http://wsat.local/fbseleniumreloadformpage.php',
+            '--dict',
+            self.dict_path,
+            '--login',
+            'admin',
+            '--false-re',
+            'false',
+            '--conf-file',
+            self.conf_file_path,
+            '--reload-form-page',
+            '1',
+        ])
+        print (output)
+        assert self.get_results_count(output) == 1
+        assert output.count("Passwords found:\n\ttest") == 1
+
+    def test_raw_headers_file(self):
+        fh = open(self.dict_path, 'w')
+        fh.write("aaa\nbb\nccc\nddd\neee\nff\nadmin\ntest\nwegweg\negwdg\nssss\n")
+        fh.close()
+
+        fh = open(self.headers_file_path, 'w')
+        fh.write("Cookie: a=b\n")
+        fh.close()
+
+        output = subprocess.check_output([
+            './main.py',
+            'FormBruter',
+            '--url',
+            'http://wsat.local/fbheadersfile.php',
+            '--dict',
+            self.dict_path,
+            '--conf-str',
+            'login=^USER^&password=^PASS^',
+            '--login',
+            'admin',
+            '--false-re',
+            'false',
+            '--headers-file',
+            self.headers_file_path,
+        ])
+
+        assert self.get_results_count(output) == 1
+        assert output.count("Passwords found:\n\ttest") == 1
+
+    def test_raw_pass_min_len(self):
+        fh = open(self.dict_path, 'w')
+        fh.write("aaa\nbb\nccc\nddd\neee\nff\nadmin\ntest\nwegweg\negwdg\nssss\n")
+        fh.close()
+
+        output = subprocess.check_output([
+            './main.py',
+            'FormBruter',
+            '--url',
+            'http://wsat.local/fbpassminlen.php',
+            '--dict',
+            self.dict_path,
+            '--conf-str',
+            'login=^USER^&password=^PASS^',
+            '--login',
+            'admin',
+            '--false-re',
+            'false',
+            '--pass-min-len',
+            '4',
+        ])
+        print(output)
+        assert self.get_results_count(output) == 1
+        assert output.count("Passwords found:\n\ttest") == 1
+
+    def test_raw_pass_max_len(self):
+        fh = open(self.dict_path, 'w')
+        fh.write("aaa\nbb\nccc\nddd\neee\nff\nadmin\ntest\nwegweg\negwdg\nssss\n")
+        fh.close()
+
+        output = subprocess.check_output([
+            './main.py',
+            'FormBruter',
+            '--url',
+            'http://wsat.local/fbpassmaxlen.php',
+            '--dict',
+            self.dict_path,
+            '--conf-str',
+            'login=^USER^&password=^PASS^',
+            '--login',
+            'admin',
+            '--false-re',
+            'false',
+            '--pass-max-len',
+            '4',
+        ])
+        print(output)
+        assert self.get_results_count(output) == 1
+        assert output.count("Passwords found:\n\ttest") == 1
+
+    def test_raw_first_stop(self):
+        fh = open(self.dict_path, 'w')
+        fh.write("aaa\nbb\nccc\nddd\neee\nff\nadmin\ntest\nwegweg\negwdg\nssss\n")
+        fh.close()
+
+        output = subprocess.check_output([
+            './main.py',
+            'FormBruter',
+            '--url',
+            'http://wsat.local/fbfirststop.php',
+            '--dict',
+            self.dict_path,
+            '--conf-str',
+            'login=^USER^&password=^PASS^',
+            '--login',
+            'admin',
+            '--false-re',
+            'false',
+            '--first-stop',
+            '1',
+            '--threads',
+            '1',
+        ])
+        print(output)
+        assert self.get_results_count(output) == 1
+        assert output.count("Passwords found:\n\tadmin") == 1
+
+    def test_raw_follow_redirects(self):
+        fh = open(self.dict_path, 'w')
+        fh.write("aaa\nbb\nccc\nddd\neee\nff\nadmin\ntest\nwegweg\negwdg\nssss\n")
+        fh.close()
+
+        output = subprocess.check_output([
+            './main.py',
+            'FormBruter',
+            '--url',
+            'http://wsat.local/fbfollowredirects.php',
+            '--dict',
+            self.dict_path,
+            '--conf-str',
+            'login=^USER^&password=^PASS^',
+            '--login',
+            'admin',
+            '--false-re',
+            'false',
+            '--follow-redirects',
+            '1',
+        ])
+
+        assert self.get_results_count(output) == 1
+        assert output.count("Passwords found:\n\ttest") == 1
