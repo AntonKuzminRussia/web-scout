@@ -20,9 +20,10 @@ class ParamsBruterThreadsPool(AbstractPool):
         return ParamsBruterThreadParams(self.options)
 
     def born_thread(self):
-        if self.options['selenium'].value:
-            thrd = SParamsBruterThread(self.queue, self.counter, self.result, self.threads_params)
-        else:
-            thrd = ParamsBruterThread(self.queue, self.counter, self.result, self.threads_params)
+        thrd = ParamsBruterThread(self.queue, self.counter, self.result, self.threads_params)
+        # if self.options['selenium'].value:
+        #     thrd = SParamsBruterThread(self.queue, self.counter, self.result, self.threads_params)
+        # else:
+        #     thrd = ParamsBruterThread(self.queue, self.counter, self.result, self.threads_params)
         thrd.start()
         return thrd
