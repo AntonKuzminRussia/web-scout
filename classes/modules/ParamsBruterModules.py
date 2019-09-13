@@ -81,4 +81,4 @@ class ParamsBruterModules(WSModule):
 
         self.logger.log("\n")
         for result_row in self.result:
-            self.logger.log(result_row)
+            self.logger.log("\t" + result_row)
