@@ -79,5 +79,7 @@ class ParamsBruterModules(WSModule):
         """
         WSModule.output(self)
 
+        self.logger.log("\n")
+        self.logger.log("Params found:\n")
         for result_row in self.result:
             self.logger.log("\t" + result_row)
