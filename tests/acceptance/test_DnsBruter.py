@@ -32,6 +32,26 @@ class Test_DnsBruter(object):
         assert output.count("test.standart-zone.polygon.web-scout.online") == 2
         assert output.count("dev.standart-zone.polygon.web-scout.online") == 2
 
+    def test_msymbol(self):
+        fh = open(self.dict_path, 'w')
+        fh.write("test\nfoobar\ncc\nhh\nii\ndev")
+        fh.close()
+
+        output = subprocess.check_output([
+            './main.py',
+            'DnsBruterDict',
+            '--template',
+            '%.standart-zone.polygon.web-scout.online',
+            '--dict',
+            self.dict_path,
+            '--msymbol',
+            '%',
+        ])
+        print(output)
+        assert self.get_results_count(output) == 2
+        assert output.count("test.standart-zone.polygon.web-scout.online") == 2
+        assert output.count("dev.standart-zone.polygon.web-scout.online") == 2
+
     def test_dict_ignore_words_re(self):
         fh = open(self.dict_path, 'w')
         fh.write("test\nfoobar\ncc\nhh\nii\ndev")
