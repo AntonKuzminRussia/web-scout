@@ -249,7 +249,7 @@ class DnsBruterThread(AbstractThread):
 
                 text_for_search = get_full_response_text(resp)
 
-                if len(self.http_retest_re) and text_for_search.count(self.http_retest_re):
+                if self.http_retest_re and self.http_retest_re.findall(text_for_search):
                     if i == self.retest_limit - 1:
                         self.logger.log("Too many retest actions for {0}".format(self.check_name))
                     time.sleep(self.retest_delay)
