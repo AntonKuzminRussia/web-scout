@@ -27,9 +27,9 @@ class HostsBruterModules(WSModule):
         """ Check users params """
         super(HostsBruterModules, self).validate_main()
 
-        if (not self.options['false-phrase'].value or not len(self.options['false-phrase'].value)) and (not self.options['false-size'].value or not len(self.options['false-size'].value)):
+        if (not self.options['false-re'].value or not len(self.options['false-re'].value)) and (not self.options['false-size'].value or not len(self.options['false-size'].value)):
             raise WSException(
-                "You must specify --false-phrase param or --false-size param!"
+                "You must specify --false-re param or --false-size param!"
             )
 
     def make_queue(self):
