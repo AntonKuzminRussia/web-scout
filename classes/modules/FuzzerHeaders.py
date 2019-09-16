@@ -60,9 +60,9 @@ class FuzzerHeaders(FuzzerModules):
         """
         WSModule.output(self)
 
-        self.logger.log("\n")
+        self.logger.log("")
         for fuzz in self.result:
-            self.logger.log("{0} (Word(s): {1}, Header: {2})".format(
+            self.logger.log("\t{0} (Word(s): {1}, Header: {2})".format(
                 fuzz['url'],
                 ", ".join(fuzz['words']),
                 fuzz['header']

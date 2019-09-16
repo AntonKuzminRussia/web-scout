@@ -122,9 +122,9 @@ class FuzzerUrls(FuzzerModules):
         """
         WSModule.output(self)
 
-        self.logger.log("\n")
+        self.logger.log("")
         for fuzz in self.result:
-            self.logger.log("{0} (Word(s): {1})".format(
+            self.logger.log("\t{0} (Word(s): {1})".format(
                 fuzz['url'],
                 ", ".join(fuzz['words'])
             ))
