@@ -14,8 +14,8 @@ import subprocess
 import datetime
 from urlparse import urlparse
 
-from classes.modules.DafsDict import DafsDict
-from classes.modules.DafsModules import DafsModules
+from classes.modules.UrlsDict import UrlsDict
+from classes.modules.UrlsModules import UrlsModules
 from classes.modules.params.ContentDiscoveryModuleParams import ContentDiscoveryModuleParams
 from classes.kernel.WSModule import WSModule
 from classes.Registry import Registry
@@ -24,13 +24,13 @@ from classes.generators.DictOfMask import DictOfMask
 from classes.generators.ContentDiscoveryNameGenerator import ContentDiscoveryNameGenerator
 
 
-class ContentDiscovery(DafsDict):
+class ContentDiscovery(UrlsDict):
     """ ContentDiscovery module class """
     logger_name = 'content_discovery'
     exts = []
 
     def __init__(self, kernel):
-        DafsModules.__init__(self, kernel)
+        UrlsModules.__init__(self, kernel)
         self.options = ContentDiscoveryModuleParams().get_options()
         self.exts = self.options['discovery-exts'].value.split(",")
 

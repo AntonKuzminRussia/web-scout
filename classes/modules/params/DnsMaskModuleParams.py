@@ -6,11 +6,13 @@ Docs RU: http://hack4sec.pro/wiki/index.php/WebScout
 License: MIT
 Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pro> (en)
 
-Threads pool class
+Module params class
 """
 
-from classes.threads.pools.UrlsThreadsPool import UrlsThreadsPool
+from classes.modules.params.AbstractDnsModuleParams import AbstractDnsModuleParams
 
 
-class ContentDiscoveryThreadsPool(UrlsThreadsPool):
-    pass
+class DnsMaskModuleParams(AbstractDnsModuleParams):
+    def __init__(self):
+        AbstractDnsModuleParams.__init__(self)
+        self.add_option('mask')

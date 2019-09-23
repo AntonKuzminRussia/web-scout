@@ -16,11 +16,11 @@ import time
 from requests.exceptions import ConnectionError
 
 from classes.threads.params.FuzzerThreadParams import FuzzerThreadParams
-from classes.threads.HttpThread import HttpThread
+from classes.threads.AbstractRawThread import AbstractRawThread
 from classes.ErrorsCounter import ErrorsCounter
 
 
-class FuzzerUrlsThread(HttpThread):
+class FuzzerUrlsThread(AbstractRawThread):
     """ Thread class for FuzzerUrls module """
     method = None
     url = None
@@ -31,7 +31,7 @@ class FuzzerUrlsThread(HttpThread):
 
         :type params: FuzzerThreadParams
         """
-        HttpThread.__init__(self)
+        AbstractRawThread.__init__(self)
         self.queue = queue
         self.method = params.method
         self.retest_codes = params.retest_codes

@@ -9,17 +9,16 @@ Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pr
 Threads pool class
 """
 
-from classes.threads.FuzzerHeadersRawThread import FuzzerHeadersRawThread
-from classes.threads.params.FuzzerThreadParams import FuzzerThreadParams
 from classes.threads.pools.AbstractPool import AbstractPool
+from classes.threads.params.HostsThreadParams import HostsThreadParams
+from classes.threads.HostsRawThread import HostsRawThread
 
 
-class FuzzerHeadersThreadsPool(AbstractPool):
+class HostsThreadsPool(AbstractPool):
     def build_threads_params(self):
-        return FuzzerThreadParams(self.options)
+        return HostsThreadParams(self.options)
 
     def born_thread(self):
-        thrd = FuzzerHeadersRawThread(self.queue, self.counter, self.result, self.threads_params)
+        thrd = HostsRawThread(self.queue, self.counter, self.result, self.threads_params)
         thrd.start()
         return thrd
-

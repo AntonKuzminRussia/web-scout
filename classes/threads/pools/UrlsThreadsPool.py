@@ -9,21 +9,21 @@ Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pr
 Threads pool class
 """
 
-from classes.threads.params.FuzzerThreadParams import FuzzerThreadParams
+from classes.threads.UrlsRawThread import UrlsRawThread
+from classes.threads.UrlsSeleniumThread import UrlsSeleniumThread
+from classes.threads.params.DafsParams import DafsParams
 from classes.threads.pools.AbstractPool import AbstractPool
-from classes.threads.FuzzerUrlsSeleniumThread import FuzzerUrlsSeleniumThread
-from classes.threads.FuzzerUrlsThread import FuzzerUrlsThread
 
 
-class FuzzerUrlsThreadsPool(AbstractPool):
+class UrlsThreadsPool(AbstractPool):
     def build_threads_params(self):
-        return FuzzerThreadParams(self.options)
+        return DafsParams(self.options)
 
     def born_thread(self):
         if self.options['selenium'].value:
-            thrd = FuzzerUrlsSeleniumThread(self.queue, self.counter, self.result, self.threads_params)
+            thrd = UrlsSeleniumThread(self.queue, self.counter, self.result, self.threads_params)
         else:
-            thrd = FuzzerUrlsThread(self.queue, self.counter, self.result, self.threads_params)
+            thrd = UrlsRawThread(self.queue, self.counter, self.result, self.threads_params)
         thrd.start()
         return thrd
 
