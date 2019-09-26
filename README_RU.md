@@ -38,11 +38,14 @@ WebScout (WS) — это набор инструментов для сбора �
 
 # Документация
 EN: [https://webscout.gitbook.io/webscout-en/](https://webscout.gitbook.io/webscout-en/)
+
 RU: [https://webscout.gitbook.io/webscout-ru/](https://webscout.gitbook.io/webscout-ru/)
 
 # Other
 Сайт: [https://web-scout.online/](https://web-scout.online/)
+
 Twitter: [https://twitter.com/WebScoutNews](https://twitter.com/WebScoutNews)
+
 Полигон (для тестов): [http://polygon.web-scout.online/](http://polygon.web-scout.online/) 
 
 # Авторы

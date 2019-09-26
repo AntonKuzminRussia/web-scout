@@ -37,11 +37,14 @@ Written by Python v2.7. Distributed by MIT license.
 
 # Docs
 EN: [https://webscout.gitbook.io/webscout-en/](https://webscout.gitbook.io/webscout-en/)
+
 RU: [https://webscout.gitbook.io/webscout-ru/](https://webscout.gitbook.io/webscout-ru/)
 
 # Other
 Homepage: [https://web-scout.online/](https://web-scout.online/)
+
 Twitter: [https://twitter.com/WebScoutNews](https://twitter.com/WebScoutNews)
+
 Polygon (for tests): [http://polygon.web-scout.online/](http://polygon.web-scout.online/) 
 
 # Authors
