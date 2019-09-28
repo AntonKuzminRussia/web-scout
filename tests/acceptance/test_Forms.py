@@ -21,7 +21,7 @@ class Test_Forms(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'Forms',
             '--url',
             'http://wsat.local/fbfalseandtruere.php',
@@ -44,7 +44,7 @@ class Test_Forms(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'Forms',
             '--url',
             'http://wsat.local/fbfalseandtruere.php',
@@ -67,7 +67,7 @@ class Test_Forms(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'Forms',
             '--url',
             'http://wsat.local/fbfalsesize.php', #TODO - everythere
@@ -94,7 +94,7 @@ class Test_Forms(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'Forms',
             '--selenium',
             '1',
@@ -123,7 +123,7 @@ class Test_Forms(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'Forms',
             '--selenium',
             '1',
@@ -152,7 +152,7 @@ class Test_Forms(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'Forms',
             '--selenium',
             '1',
@@ -177,7 +177,7 @@ class Test_Forms(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'Forms',
             '--url',
             'http://wsat.local/fbretestcodes.php',
@@ -202,7 +202,7 @@ class Test_Forms(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'Forms',
             '--url',
             'http://wsat.local/fbretestre.php',
@@ -228,7 +228,7 @@ class Test_Forms(object):
 
         stime = int(time.time())
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'Forms',
             '--url',
             'http://wsat.local/fbretestre.php',
@@ -260,7 +260,7 @@ class Test_Forms(object):
 
         stime = int(time.time())
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'Forms',
             '--selenium',
             '1',
@@ -291,7 +291,7 @@ class Test_Forms(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'Forms',
             '--selenium',
             '1',
@@ -322,7 +322,7 @@ class Test_Forms(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'Forms',
             '--selenium',
             '1',
@@ -353,7 +353,7 @@ class Test_Forms(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'Forms',
             '--selenium',
             '1',
@@ -384,7 +384,7 @@ class Test_Forms(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'Forms',
             '--selenium',
             '1',
@@ -415,7 +415,7 @@ class Test_Forms(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'Forms',
             '--url',
             'http://wsat.local/fbheadersfile.php',
@@ -440,7 +440,7 @@ class Test_Forms(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'Forms',
             '--url',
             'http://wsat.local/fbpassminlen.php',
@@ -465,7 +465,7 @@ class Test_Forms(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'Forms',
             '--url',
             'http://wsat.local/fbpassmaxlen.php',
@@ -490,7 +490,7 @@ class Test_Forms(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'Forms',
             '--url',
             'http://wsat.local/fbfirststop.php',
@@ -517,7 +517,7 @@ class Test_Forms(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'Forms',
             '--url',
             'http://wsat.local/fbfollowredirects.php',

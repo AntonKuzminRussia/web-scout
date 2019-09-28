@@ -21,7 +21,7 @@ from classes.threads.pools.UrlsThreadsPool import UrlsThreadsPool
 class UrlsModules(WSModule):
     """ Common module class form Dafs* modules """
     logger_enable = True
-    logger_name = 'dafs'
+    logger_name = 'urls'
     logger_have_items = True
 
     def validate_main(self):

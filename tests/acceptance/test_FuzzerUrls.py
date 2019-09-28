@@ -20,7 +20,7 @@ class Test_FuzzerUrls(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'FuzzerUrls',
             '--urls-file',
             self.dict_path,

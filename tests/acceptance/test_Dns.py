@@ -20,7 +20,7 @@ class Test_Dns(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'DnsDict',
             '--template',
             '@.standart-zone.polygon.web-scout.online',
@@ -38,7 +38,7 @@ class Test_Dns(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'DnsDict',
             '--template',
             '%.standart-zone.polygon.web-scout.online',
@@ -58,7 +58,7 @@ class Test_Dns(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'DnsDict',
             '--template',
             '@.standart-zone.polygon.web-scout.online',
@@ -74,7 +74,7 @@ class Test_Dns(object):
 
     def test_mask(self):
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'DnsMask',
             '--template',
             'tes@.standart-zone.polygon.web-scout.online',
@@ -91,7 +91,7 @@ class Test_Dns(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'DnsDict',
             '--template',
             '@.wildcard-ip.polygon.web-scout.online',
@@ -110,7 +110,7 @@ class Test_Dns(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'DnsDict',
             '--template',
             '@.wildcard-web.polygon.web-scout.online',
@@ -129,7 +129,7 @@ class Test_Dns(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'DnsCombine',
             '--template',
             '@.standart-zone.polygon.web-scout.online',
@@ -150,7 +150,7 @@ class Test_Dns(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'DnsDict',
             '--template',
             '@.standart-zone.polygon.web-scout.online',
@@ -170,7 +170,7 @@ class Test_Dns(object):
 
         stime = int(time.time())
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'DnsDict',
             '--template',
             '@.standart-zone.polygon.web-scout.online',

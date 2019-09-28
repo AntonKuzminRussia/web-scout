@@ -20,7 +20,7 @@ class Test_Params(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'ParamsDict',
             '--url',
             'http://wsat.local/params-bruter-dict-get.php',
@@ -39,7 +39,7 @@ class Test_Params(object):
 
     def test_get_mask(self):
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'ParamsMask',
             '--url',
             'http://wsat.local/params-bruter-mask-get.php',
@@ -62,7 +62,7 @@ class Test_Params(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'ParamsDict',
             '--url',
             'http://wsat.local/params-bruter-dict-post.php',
@@ -81,7 +81,7 @@ class Test_Params(object):
 
     def test_post_mask(self):
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'ParamsMask',
             '--url',
             'http://wsat.local/params-bruter-mask-post.php',
@@ -104,7 +104,7 @@ class Test_Params(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'ParamsDict',
             '--url',
             'http://wsat.local/params-bruter-dict-cookie.php',
@@ -123,7 +123,7 @@ class Test_Params(object):
 
     def test_cookie_mask(self):
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'ParamsMask',
             '--url',
             'http://wsat.local/params-bruter-mask-cookie.php',
@@ -146,7 +146,7 @@ class Test_Params(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'ParamsDict',
             '--url',
             'http://wsat.local/params-bruter-dict-files.php',
@@ -165,7 +165,7 @@ class Test_Params(object):
 
     def test_files_mask(self):
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'ParamsMask',
             '--url',
             'http://wsat.local/params-bruter-mask-files.php',
@@ -188,7 +188,7 @@ class Test_Params(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'ParamsDict',
             '--url',
             'http://wsat.local/params-bruter-dict-get-value.php',
@@ -209,7 +209,7 @@ class Test_Params(object):
 
     def test_get_mask_value(self):
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'ParamsMask',
             '--url',
             'http://wsat.local/params-bruter-mask-get-value.php',
@@ -234,7 +234,7 @@ class Test_Params(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'ParamsDict',
             '--url',
             'http://wsat.local/params-bruter-dict-not-found-re.php',
@@ -257,7 +257,7 @@ class Test_Params(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'ParamsDict',
             '--url',
             'http://wsat.local/params-bruter-dict-not-found-codes.php',
@@ -280,7 +280,7 @@ class Test_Params(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'ParamsDict',
             '--url',
             'http://wsat.local/params-bruter-dict-get.php',
@@ -306,7 +306,7 @@ class Test_Params(object):
 
         stime = int(time.time())
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'ParamsDict',
             '--url',
             'http://wsat.local/params-bruter-dict-get.php',
@@ -333,7 +333,7 @@ class Test_Params(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'ParamsDict',
             '--url',
             'http://wsat.local/params-bruter-dict-retest-codes.php',
@@ -358,7 +358,7 @@ class Test_Params(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'ParamsDict',
             '--url',
             'http://wsat.local/params-bruter-dict-retest-re.php',
@@ -387,7 +387,7 @@ class Test_Params(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'ParamsDict',
             '--url',
             'http://wsat.local/params-bruter-dict-headers-file.php',

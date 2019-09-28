@@ -20,7 +20,7 @@ class Test_Hosts(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'HostsDict',
             '--template',
             '@.wildcard-web.polygon.web-scout.online',
@@ -37,7 +37,7 @@ class Test_Hosts(object):
 
     def test_mask(self):
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'HostsMask',
             '--template',
             'admi@.wildcard-web.polygon.web-scout.online',
@@ -58,7 +58,7 @@ class Test_Hosts(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'HostsCombine',
             '--combine-template',
             '%d%%m%',
@@ -83,7 +83,7 @@ class Test_Hosts(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'HostsDict',
             '--template',
             '@.wildcard-web.polygon.web-scout.online',
@@ -104,7 +104,7 @@ class Test_Hosts(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'HostsDict',
             '--template',
             '%.wildcard-web.polygon.web-scout.online',
@@ -127,7 +127,7 @@ class Test_Hosts(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'HostsDict',
             '--template',
             '@.wildcard-web.polygon.web-scout.online',
@@ -151,7 +151,7 @@ class Test_Hosts(object):
 
         stime = int(time.time())
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'HostsDict',
             '--template',
             '@.wildcard-web.polygon.web-scout.online',

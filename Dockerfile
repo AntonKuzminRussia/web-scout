@@ -16,4 +16,4 @@ ENV LC_ALL en_US.UTF-8
 ENV PYTHONIOENCODING=utf-8
 
 WORKDIR "/ws/"
-ENTRYPOINT ["pypy", "./main.py"]
+ENTRYPOINT ["pypy", "./ws.py"]

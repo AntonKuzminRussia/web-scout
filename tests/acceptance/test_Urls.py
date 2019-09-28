@@ -19,7 +19,7 @@ class Test_Urls(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'UrlsDict',
             '--template',
             'http://wsat.local/@',
@@ -34,7 +34,7 @@ class Test_Urls(object):
 
     def test_mask(self):
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'UrlsMask',
             '--template',
             'http://wsat.local/dafs-simple-mask-@.php',
@@ -53,7 +53,7 @@ class Test_Urls(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'UrlsCombine',
             '--template',
             'http://wsat.local/@.php',
@@ -76,7 +76,7 @@ class Test_Urls(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'UrlsDict',
             '--template',
             'http://wsat.local/@',
@@ -93,7 +93,7 @@ class Test_Urls(object):
 
     def test_not_found_re_mask(self):
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'UrlsMask',
             '--template',
             'http://wsat.local/dafs-not-found-re-mask-@.php',
@@ -114,7 +114,7 @@ class Test_Urls(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'UrlsCombine',
             '--template',
             'http://wsat.local/@.php',
@@ -139,7 +139,7 @@ class Test_Urls(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'UrlsDict',
             '--template',
             'http://wsat.local/@',
@@ -156,7 +156,7 @@ class Test_Urls(object):
 
     def test_found_re_mask(self):
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'UrlsMask',
             '--template',
             'http://wsat.local/dafs-found-re-mask-@.php',
@@ -177,7 +177,7 @@ class Test_Urls(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'UrlsCombine',
             '--template',
             'http://wsat.local/@.php',
@@ -202,7 +202,7 @@ class Test_Urls(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'UrlsDict',
             '--template',
             'http://wsat.local/@',
@@ -219,7 +219,7 @@ class Test_Urls(object):
 
     def test_not_found_size_mask(self):
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'UrlsMask',
             '--template',
             'http://wsat.local/dafs-not-found-size-mask-@.php',
@@ -240,7 +240,7 @@ class Test_Urls(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'UrlsCombine',
             '--template',
             'http://wsat.local/@.php',
@@ -265,7 +265,7 @@ class Test_Urls(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'UrlsDict',
             '--template',
             'http://wsat.local/@',
@@ -282,7 +282,7 @@ class Test_Urls(object):
 
     def test_not_found_codes_mask(self):
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'UrlsMask',
             '--template',
             'http://wsat.local/dafs-not-found-codes-mask-@.php',
@@ -303,7 +303,7 @@ class Test_Urls(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'UrlsCombine',
             '--template',
             'http://wsat.local/@.php',
@@ -328,7 +328,7 @@ class Test_Urls(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'UrlsDict',
             '--ignore-words-re',
             'b',
@@ -344,7 +344,7 @@ class Test_Urls(object):
 
     def test_mask_ignore_words(self):
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'UrlsMask',
             '--ignore-words-re',
             'b',
@@ -364,7 +364,7 @@ class Test_Urls(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'UrlsCombine',
             '--ignore-words-re',
             'b', #TODO fix here
@@ -388,7 +388,7 @@ class Test_Urls(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'UrlsDict',
             '--retest-codes',
             '503',
@@ -405,7 +405,7 @@ class Test_Urls(object):
 
     def test_mask_retest_codes(self):
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'UrlsMask',
             '--retest-codes',
             '503',
@@ -426,7 +426,7 @@ class Test_Urls(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'UrlsCombine',
             '--retest-codes',
             '503',
@@ -451,7 +451,7 @@ class Test_Urls(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'UrlsDict',
             '--retest-re',
             'unavailable',
@@ -468,7 +468,7 @@ class Test_Urls(object):
 
     def test_mask_retest_re(self):
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'UrlsMask',
             '--retest-re',
             'unavailable',
@@ -489,7 +489,7 @@ class Test_Urls(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'UrlsCombine',
             '--retest-re',
             'unavailable',
@@ -515,7 +515,7 @@ class Test_Urls(object):
 
         stime = int(time.time())
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'UrlsDict',
             '--threads',
             '1',
@@ -533,7 +533,7 @@ class Test_Urls(object):
     def test_mask_delay(self):
         stime = int(time.time())
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'UrlsMask',
             '--threads',
             '1',
@@ -555,7 +555,7 @@ class Test_Urls(object):
 
         stime = int(time.time())
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'UrlsCombine',
             '--threads',
             '1',
@@ -580,7 +580,7 @@ class Test_Urls(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'UrlsDict',
             '--selenium',
             '1',
@@ -599,7 +599,7 @@ class Test_Urls(object):
 
     def test_mask_selenium(self):
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'UrlsMask',
             '--selenium',
             '1',
@@ -622,7 +622,7 @@ class Test_Urls(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'UrlsCombine',
             '--selenium',
             '1',
@@ -649,7 +649,7 @@ class Test_Urls(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'UrlsDict',
             '--selenium',
             '1',
@@ -668,7 +668,7 @@ class Test_Urls(object):
 
     def test_mask_selenium_not_found_size(self):
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'UrlsMask',
             '--selenium',
             '1',
@@ -691,7 +691,7 @@ class Test_Urls(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'UrlsCombine',
             '--selenium',
             '1',
@@ -718,7 +718,7 @@ class Test_Urls(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'UrlsDict',
             '--selenium',
             '1',
@@ -738,7 +738,7 @@ class Test_Urls(object):
 
     def test_mask_selenium_wait_re(self):
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'UrlsMask',
             '--selenium',
             '1',
@@ -762,7 +762,7 @@ class Test_Urls(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'UrlsCombine',
             '--combine-template',
             '%d%%m%',
@@ -794,7 +794,7 @@ class Test_Urls(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'UrlsDict',
             '--headers-file',
             self.headers_file_path,
@@ -815,7 +815,7 @@ class Test_Urls(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'UrlsMask',
             '--headers-file',
             self.headers_file_path,
@@ -840,7 +840,7 @@ class Test_Urls(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'UrlsCombine',
             '--headers-file',
             self.headers_file_path,
@@ -865,7 +865,7 @@ class Test_Urls(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'UrlsDict',
             '--method',
             'POST',
@@ -882,7 +882,7 @@ class Test_Urls(object):
 
     def test_mask_method_post(self):
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'UrlsMask',
             '--method',
             'POST',
@@ -903,7 +903,7 @@ class Test_Urls(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'UrlsCombine',
             '--method',
             'POST',
@@ -928,7 +928,7 @@ class Test_Urls(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'UrlsDict',
             '--method',
             'HEAD',
@@ -945,7 +945,7 @@ class Test_Urls(object):
 
     def test_mask_method_head(self):
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'UrlsMask',
             '--method',
             'HEAD',
@@ -966,7 +966,7 @@ class Test_Urls(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'UrlsCombine',
             '--method',
             'HEAD',
@@ -991,7 +991,7 @@ class Test_Urls(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'UrlsDict',
             '--template',
             'http://wsat.local/@',
@@ -1006,7 +1006,7 @@ class Test_Urls(object):
 
     def test_mask_method_get_default(self):
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'UrlsMask',
             '--template',
             'http://wsat.local/dafs-get-mask-@.php',
@@ -1025,7 +1025,7 @@ class Test_Urls(object):
         fh.close()
 
         output = subprocess.check_output([
-            './main.py',
+            './ws.py',
             'UrlsCombine',
             '--template',
             'http://wsat.local/@.php',
