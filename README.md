@@ -40,6 +40,10 @@ EN: [https://webscout.gitbook.io/webscout-en/](https://webscout.gitbook.io/websc
 
 RU: [https://webscout.gitbook.io/webscout-ru/](https://webscout.gitbook.io/webscout-ru/)
 
+QuickStart EN [https://webscout.gitbook.io/webscout-en/quick-start](https://webscout.gitbook.io/webscout-en/quick-start)
+
+QuickStart RU [https://webscout.gitbook.io/webscout-ru/bystryi-start](https://webscout.gitbook.io/webscout-ru/bystryi-start) 
+
 # Other
 Homepage: [https://web-scout.online/](https://web-scout.online/)
 
