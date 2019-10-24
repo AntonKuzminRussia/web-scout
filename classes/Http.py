@@ -124,7 +124,7 @@ class Http(object):
             return False
         return True
 
-    def get(self, url, verify=None, allow_redirects=None, headers=None, cookies=None):
+    def get(self, url, verify=None, allow_redirects=None, headers=None, cookies=None, auth=None):
         """ HTTP GET request """
         self.up_requests_counter()
 
@@ -150,7 +150,8 @@ class Http(object):
             stream=True,
             proxies=self.get_current_proxy(),
             timeout=timeout,
-            cookies=cookies
+            cookies=cookies,
+            auth=auth
         )
 
         if not self.is_response_length_less_than_limit(url, resp):
