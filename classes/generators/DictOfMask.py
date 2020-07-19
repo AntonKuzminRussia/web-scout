@@ -42,7 +42,7 @@ class DictOfMask(object):
 
             if self.first_border:
                 for _ in range(0, self.first_border-1):
-                    self._get()
+                    self.up_last_point()
                     self.current_counter += 1
 
     def keys_in_str(self, _str, keys):
