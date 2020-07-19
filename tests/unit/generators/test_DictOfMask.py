@@ -21,6 +21,30 @@ class Test_DictOfMask(object):
     """Unit tests for DictOfMask"""
     model = None
 
+    def test_parts(self):
+        # build test sets
+        full_count = 47988
+        one_part_count = 15996
+        test_sets = {}
+        dom = DictOfMask("?l?d,1,3")
+        for i in range(full_count):
+            part_key = i/one_part_count+1
+            if part_key not in test_sets.keys():
+                test_sets[part_key] = dom.get()
+            else:
+                dom.get()
+
+        for i in range(1, 4):
+            counter = 0
+            dom = DictOfMask("?l?d,1,3", 3, i)
+            assert one_part_count == dom.second_border - dom.first_border
+            while True:
+                phrase = dom.get()
+                if phrase is None:
+                    break
+                counter += 1
+            assert one_part_count == counter
+
     def test_gen_dict(self):
         test_data = {
             '?l': [
@@ -117,3 +141,4 @@ class Test_DictOfMask(object):
         for mask in test_data:
             dom = DictOfMask(mask)
             assert dom.dict() == test_data[mask]
+
