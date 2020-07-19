@@ -146,7 +146,7 @@ class DictOfMask(object):
 
     def prepare(self):
         """ Internal method for build self.symbols_points from current mask """
-        self.work_mask = self.masks.keys()[self.mask_num]
+        self.work_mask = list(self.masks.keys())[self.mask_num]
         self.symbols_points = {}
         for n in self.masks[self.work_mask].keys():
             self.symbols_points[n] = 0
