@@ -12,6 +12,8 @@ Class of FormBruter module
 import time
 from urlparse import urlparse
 
+import requests
+
 from classes.Registry import Registry
 from classes.generators.FileGenerator import FileGenerator
 from classes.jobs.HttpAuthBruterJob import HttpAuthBruterJob
@@ -36,6 +38,11 @@ class HttpAuth(WSModule):
     def validate_main(self):
         """ Check users params """
         super(HttpAuth, self).validate_main()
+
+        try:
+            resp = Registry().get('http').get(self.options['url'].value)
+        except requests.exceptions.ConnectionError:
+            raise WSException("Target web-site not available")
 
         parsed_url = urlparse(self.options['url'].value)
         if not len(parsed_url.scheme) or not len(parsed_url.netloc):

@@ -10,11 +10,14 @@ Common module class form HostsBrute* modules
 """
 import time
 
+import requests
+
 from classes.kernel.WSModule import WSModule
 from classes.kernel.WSException import WSException
 from classes.kernel.WSCounter import WSCounter
 from classes.jobs.HostsBruteJob import HostsBruteJob
 from classes.threads.pools.HostsThreadsPool import HostsThreadsPool
+from classes.Registry import Registry
 
 
 class HostsModules(WSModule):
@@ -26,6 +29,11 @@ class HostsModules(WSModule):
     def validate_main(self):
         """ Check users params """
         super(HostsModules, self).validate_main()
+
+        try:
+            resp = Registry().get('http').get(self.options['ip'].value)
+        except requests.exceptions.ConnectionError:
+            raise WSException("Target web-site not available")
 
         if (not self.options['false-re'].value or not len(self.options['false-re'].value)) and (not self.options['false-size'].value or not len(self.options['false-size'].value)):
             raise WSException(

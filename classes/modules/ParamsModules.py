@@ -11,11 +11,14 @@ Common module class form Dafs* modules
 import time
 from urlparse import urlparse
 
+import requests
+
 from classes.kernel.WSModule import WSModule
 from classes.kernel.WSException import WSException
 from classes.kernel.WSCounter import WSCounter
 from classes.jobs.ParamsBruterJob import ParamsBruterJob
 from classes.threads.pools.ParamsThreadsPool import ParamsThreadsPool
+from classes.Registry import Registry
 
 
 class ParamsModules(WSModule):
@@ -27,6 +30,11 @@ class ParamsModules(WSModule):
     def validate_main(self):
         """ Check users params """
         super(ParamsModules, self).validate_main()
+
+        try:
+            resp = Registry().get('http').get(self.options['url'].value)
+        except requests.exceptions.ConnectionError:
+            raise WSException("Target web-site not available")
 
         parsed_url = urlparse(self.options['url'].value)
         if not len(parsed_url.scheme) or not len(parsed_url.netloc):
