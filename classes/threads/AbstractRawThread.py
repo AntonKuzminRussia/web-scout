@@ -37,6 +37,8 @@ class AbstractRawThread(AbstractThread):
         :param positive_item:
         :return:
         """
+        if isinstance(url, dict):
+            url = str(url.keys())
         if self.is_test():
             self.test_put(
                 url,
