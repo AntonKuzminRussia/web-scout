@@ -249,7 +249,7 @@ class ParamsRawThread(AbstractRawThread):
 
                     self.log_item(found_item, resp, positive_item)
 
-                self.test_log(params_str, resp, positive_item)
+                self.test_log(params_str, resp, str(positive_item))
 
                 self.check_positive_limit_stop(self.result)
 
