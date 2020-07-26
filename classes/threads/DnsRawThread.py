@@ -32,7 +32,7 @@ class DnsRawThread(AbstractThread):
 
     re = {
         'ip': re.compile(r"(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})"),
-        'ns_resp': re.compile(r";ANSWER\s(?P<data>(.|\s)*)\s;AUTHORITY", re.M),
+        'ns_resp': re.compile(r";ANSWER\s(?P<data>(.|\s)*?)\s;AUTHORITY", re.M),
         'cname': re.compile("IN CNAME (.*?)\.$", re.MULTILINE)
     }
 
