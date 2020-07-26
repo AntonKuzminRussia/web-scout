@@ -107,6 +107,10 @@ class ParamsRawThread(AbstractRawThread):
 
                 self.last_word = word
 
+                if self.is_test():
+                    self.last_word = ""
+                    break
+
             return count, cookies
         elif self.method == 'files':
             files = {self.last_word: self.files_params_fh} if len(self.last_word) else {}
@@ -128,6 +132,10 @@ class ParamsRawThread(AbstractRawThread):
                 files[word] = self.files_params_fh
 
                 self.last_word = word
+
+                if self.is_test():
+                    self.last_word = ""
+                    break
             return count, files
         else:
             raise BaseException("Unknown work type - {0}".format(self.method))

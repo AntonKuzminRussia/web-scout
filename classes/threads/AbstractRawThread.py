@@ -29,26 +29,28 @@ class AbstractRawThread(AbstractThread):
         """ Return headers and body of response """
         return self.get_headers_text(resp) + "\r\n" + resp.text
 
-    def test_log(self, url, resp, positive_item):
+    def test_log(self, target_obj, resp, positive_item):
         """
         Log data for test mode
-        :param url:
+        :param target_obj: checked obj (params str, dir name, url, files set, ...)
         :param resp:
         :param positive_item:
         :return:
         """
-        if isinstance(url, dict):
-            url = str(url.keys())
-        if self.is_test():
-            self.test_put(
-                url,
-                {
-                    'code': resp.status_code if resp is not None else 0,
-                    'positive': positive_item,
-                    'size': get_response_size(resp) if resp is not None else 0,
-                    'content': resp.content if resp is not None else '',
-                }
-            )
+        if not self.is_test():
+            return
+        if isinstance(target_obj, dict):
+            target_obj = ",".join(target_obj.keys())
+
+        self.test_put(
+            target_obj,
+            {
+                'code': resp.status_code if resp is not None else 0,
+                'positive': positive_item,
+                'size': get_response_size(resp) if resp is not None else 0,
+                'content': resp.content if resp is not None else '',
+            }
+        )
 
     def is_response_content_binary(self, resp):
         """
