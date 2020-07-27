@@ -12,3 +12,6 @@ class HttpResponseImitation:
         self.headers = headers
         self.content = content
         self.text = codecs.decode(content, 'utf-8', 'ignore')
+
+    def close(self):
+        pass

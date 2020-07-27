@@ -228,6 +228,7 @@ class ParamsRawThread(AbstractRawThread):
                 if self.is_retest_need(params_str, resp):
                     time.sleep(self.retest_delay)
                     need_retest = True
+                    resp.close()
                     continue
 
                 positive_item = False
@@ -264,6 +265,8 @@ class ParamsRawThread(AbstractRawThread):
                 need_retest = False
                 for _ in range(0, params_count):
                     self.counter.up()
+
+                resp.close()
             except Queue.Empty:
                 self.done = True
                 break

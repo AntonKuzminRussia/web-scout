@@ -113,6 +113,7 @@ class HostsRawThread(AbstractRawThread):
                 if self.is_retest_need(word, resp):
                     time.sleep(self.retest_delay)
                     need_retest = True
+                    resp.close()
                     continue
 
                 positive_item = False
@@ -128,6 +129,8 @@ class HostsRawThread(AbstractRawThread):
                 need_retest = False
 
                 self.counter.up()
+
+                resp.close()
             except Queue.Empty:
                 self.done = True
                 break

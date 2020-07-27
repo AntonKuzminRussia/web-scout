@@ -250,14 +250,19 @@ class DnsRawThread(AbstractThread):
                 text_for_search = get_full_response_text(resp)
 
                 if self.http_retest_re and self.http_retest_re.findall(text_for_search):
+                    resp.close()
+
                     if i == self.retest_limit - 1:
                         self.logger.log("Too many retest actions for {0}".format(self.check_name))
                     time.sleep(self.retest_delay)
+
                     continue
 
                 if not self.http_nf_re.findall(text_for_search):
+                    resp.close()
                     return True, text_for_search
 
+                resp.close()
                 break
             except (requests.exceptions.ConnectionError, requests.exceptions.ChunkedEncodingError) as e:
                 if self.http_proxy_error(str(e)):

@@ -67,6 +67,7 @@ class FuzzerUrlsThread(AbstractRawThread):
                 if self.is_retest_need(url, resp):
                     time.sleep(self.retest_delay)
                     need_retest = True
+                    resp.close()
                     continue
 
                 if resp is None:
@@ -76,6 +77,7 @@ class FuzzerUrlsThread(AbstractRawThread):
                     item_data = {"url": url, "words": ["{0} Status code".format(resp.status_code)]}
                     self.result.append(item_data)
                     self.xml_log(item_data)
+                    resp.close()
                     continue
 
                 found_words = []
@@ -95,6 +97,8 @@ class FuzzerUrlsThread(AbstractRawThread):
                 self.counter.up()
 
                 self.check_positive_limit_stop(self.result)
+
+                resp.close()
 
                 need_retest = False
             except Queue.Empty:

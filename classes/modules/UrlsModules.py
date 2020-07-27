@@ -36,7 +36,9 @@ class UrlsModules(WSModule):
         source_url = self.options['template'].value.replace(standart_msymbol, "")
         try:
             resp = Registry().get('http').get(source_url)
-            if ("<title>Index of" in resp.text or "<h1>Index of" in resp.text) and skip_listings == "1":
+            response_text = resp.text
+            resp.close()
+            if ("<title>Index of" in response_text or "<h1>Index of" in response_text) and skip_listings == "1":
                 raise WSException("Source URL is listing, check it. Or change 'skip_listings' param in config")
         except requests.exceptions.ConnectionError:
             raise WSException("Target web-site not available")

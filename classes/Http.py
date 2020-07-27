@@ -155,6 +155,7 @@ class Http(object):
         )
 
         if not self.is_response_length_less_than_limit(url, resp):
+            resp.close()
             resp = HttpResponseImitation(resp.status_code, resp.headers, "too big for download, see docs or increase config.ini->max_size")
 
         if resp and 'content-type' in resp.headers and (len(self.scan_content_types) or len(self.noscan_content_types)):
@@ -164,6 +165,7 @@ class Http(object):
                         self.errors['noscan_content_types'].append(
                             "URL {0} have denied content type  - {1}".format(url, _type)
                         )
+                        resp.close()
                         resp = None
                         break
             if resp and len(self.scan_content_types):
@@ -176,6 +178,7 @@ class Http(object):
                     self.errors['scan_content_types'].append(
                         "URL {0} have not allowed content type  - {1}".format(url, resp.headers['content-type'])
                     )
+                    resp.close()
                     resp = None
 
         return resp
@@ -211,6 +214,7 @@ class Http(object):
             files=files
         )
         if not self.is_response_length_less_than_limit(url, resp):
+            resp.close()
             resp = HttpResponseImitation(resp.status_code, resp.headers, "too big for download, see docs or increase config.ini->max_size")
 
         return resp
@@ -251,5 +255,6 @@ class Http(object):
                     Registry().get('config')['main']['max_size']
                 )
             )
+            resp.close()
             resp = None
         return resp

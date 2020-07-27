@@ -115,6 +115,7 @@ class UrlsRawThread(AbstractRawThread):
                 if self.is_retest_need(word, resp):
                     time.sleep(self.retest_delay)
                     need_retest = True
+                    resp.close()
                     continue
 
                 if self.is_response_right(resp):
@@ -134,6 +135,8 @@ class UrlsRawThread(AbstractRawThread):
                 self.check_positive_limit_stop(self.result)
 
                 need_retest = False
+
+                resp.close()
 
                 self.counter.up()
             except Queue.Empty:
