@@ -248,6 +248,7 @@ class ParamsRawThread(AbstractRawThread):
                             self.xml_log({'param': self.param_str_repr(one_param)})
                             param_found = True
                             found_item = self.param_str_repr(one_param)
+                            break
 
                     if param_found is False:
                         self.xml_log({'param': self.param_str_repr(params_str)})
