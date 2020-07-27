@@ -39,6 +39,7 @@ class UrlsSeleniumThread(AbstractSeleniumThread):
         self.counter = counter
         self.result = result
         self.not_found_re = params.not_found_re
+        self.found_re = params.found_re
         self.not_found_size = params.not_found_size
         self.browser_recreate_re = params.browser_recreate_re
         self.delay = params.delay
@@ -84,8 +85,9 @@ class UrlsSeleniumThread(AbstractSeleniumThread):
                     continue
 
                 positive_item = False
-                if self.not_found_re and not self.not_found_re.findall(self.browser.page_source) or \
-                    self.not_found_size != -1 and len(self.browser.page_source) != self.not_found_size:
+                if (self.not_found_re and not self.not_found_re.findall(self.browser.page_source)) or \
+                        (self.not_found_size != -1 and len(self.browser.page_source) != self.not_found_size) or \
+                        (self.found_re and self.not_found_re.findall(self.browser.page_source)):
                     item_data = {'url': url, 'code': 0, 'time': int(time.time()) - rtime}
                     self.xml_log(item_data)
                     self.result.append(item_data)
