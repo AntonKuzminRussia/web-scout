@@ -10,8 +10,10 @@ Class of FuzzerUrls module
 """
 
 import time
+import os
 from urlparse import urlparse
 
+from classes.kernel.WSException import WSException
 from classes.kernel.WSModule import WSModule
 from classes.Registry import Registry
 from classes.kernel.WSCounter import WSCounter
@@ -102,8 +104,10 @@ class FuzzerUrls(FuzzerModules):
 
     def do_work(self):
         """ Start work """
+        self.validate_main()
+
         self.build_queue_source_file()
-        WSModule.do_work(self)
+        super(FuzzerUrls, self).do_work()
 
     def start_pool(self):
         """ Start threads pool and control it live """
