@@ -17,11 +17,11 @@ from requests.exceptions import ConnectionError
 
 from classes.Registry import Registry
 from classes.threads.params.FuzzerThreadParams import FuzzerThreadParams
-from classes.threads.AbstractRawThread import AbstractRawThread
+from classes.threads.AbstractFuzzerRawThread import AbstractFuzzerRawThread
 from classes.ErrorsCounter import ErrorsCounter
 
 
-class FuzzerHeadersRawThread(AbstractRawThread):
+class FuzzerHeadersRawThread(AbstractFuzzerRawThread):
     """ Thread class for FuzzerHeaders module """
     method = None
     url = None
@@ -31,7 +31,8 @@ class FuzzerHeadersRawThread(AbstractRawThread):
 
         :type params: FuzzerThreadParams
         """
-        AbstractRawThread.__init__(self)
+        AbstractFuzzerRawThread.__init__(self)
+
         self.queue = queue
         self.method = params.method.lower()
         self.result = result
@@ -41,6 +42,14 @@ class FuzzerHeadersRawThread(AbstractRawThread):
         self.delay = params.delay
         self.retest_codes = params.retest_codes
         self.retest_re = params.retest_re
+
+    def build_positive_log_str(self, url, header_log_str, found_words, resp):
+        return "URL: {0}\nHeader: {1}\nWords: {2}\nResponse: {3}\n\n".format(
+            url,
+            header_log_str,
+            ",".join(found_words),
+            resp.text
+        )
 
     def run(self):
         """ Run thread """
@@ -57,6 +66,7 @@ class FuzzerHeadersRawThread(AbstractRawThread):
                     url = self.queue.get()
 
                 for header in self.headers:
+                    header_log_str = header.lower() + ": " + Registry().get('fuzzer_evil_value')
                     try:
                         resp = req_func(
                             url,
@@ -96,6 +106,12 @@ class FuzzerHeadersRawThread(AbstractRawThread):
                         item_data = {"url": url, "words": found_words, "header": header}
                         self.result.append({"url": url, "words": found_words, "header": header})
                         self.xml_log(item_data)
+
+                    self.log_item(
+                        "_".join(found_words),
+                        self.build_positive_log_str(url, header_log_str, found_words, resp),
+                        len(found_words) > 0
+                    )
 
                 self.counter.up()
 

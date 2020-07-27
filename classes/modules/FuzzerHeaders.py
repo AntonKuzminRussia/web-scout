@@ -27,7 +27,7 @@ class FuzzerHeaders(FuzzerModules):
     time_count = True
     logger_enable = True
     logger_name = 'fuzzer-headers'
-    logger_have_items = False
+    logger_have_items = True
     options = FuzzerHeadersModuleParams().get_options()
 
     def make_queue(self):

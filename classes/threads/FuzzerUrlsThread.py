@@ -16,11 +16,11 @@ import time
 from requests.exceptions import ConnectionError
 
 from classes.threads.params.FuzzerThreadParams import FuzzerThreadParams
-from classes.threads.AbstractRawThread import AbstractRawThread
+from classes.threads.AbstractFuzzerRawThread import AbstractFuzzerRawThread
 from classes.ErrorsCounter import ErrorsCounter
 
 
-class FuzzerUrlsThread(AbstractRawThread):
+class FuzzerUrlsThread(AbstractFuzzerRawThread):
     """ Thread class for FuzzerUrls module """
     method = None
     url = None
@@ -31,7 +31,8 @@ class FuzzerUrlsThread(AbstractRawThread):
 
         :type params: FuzzerThreadParams
         """
-        AbstractRawThread.__init__(self)
+        AbstractFuzzerRawThread.__init__(self)
+
         self.queue = queue
         self.method = params.method
         self.retest_codes = params.retest_codes
@@ -40,6 +41,9 @@ class FuzzerUrlsThread(AbstractRawThread):
         self.counter = counter
         self.bad_words = params.bad_words
         self.delay = params.delay
+
+    def build_positive_log_str(self, url, found_words, resp):
+        return "URL: {0}\nWords: {1}\nResponse: {2}\n\n".format(url, ",".join(found_words), resp.text)
 
     def run(self):
         """ Run thread """
@@ -92,7 +96,11 @@ class FuzzerUrlsThread(AbstractRawThread):
                     self.result.append(item_data)
                     self.xml_log(item_data)
 
-                self.log_item(str(found_words), resp, len(found_words) > 0)
+                self.log_item(
+                    "_".join(found_words),
+                    self.build_positive_log_str(url, found_words, resp),
+                    len(found_words) > 0
+                )
 
                 self.counter.up()
 
