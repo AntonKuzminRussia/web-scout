@@ -27,7 +27,9 @@ class AbstractRawThread(AbstractThread):
 
     def get_response_full_text(self,  resp):
         """ Return headers and body of response """
-        return self.get_headers_text(resp) + "\r\n" + resp.text
+        proto_version = "1.1" if resp.raw.version == 11 else "1.0"
+        first_str = "HTTP/{0} {1} {2}".format(proto_version, resp.status_code, resp.raw.reason)
+        return first_str + "\r\n" + self.get_headers_text(resp) + "\r\n" + resp.text
 
     def test_log(self, target_obj, resp, positive_item):
         """
