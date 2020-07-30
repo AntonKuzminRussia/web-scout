@@ -8,12 +8,13 @@ Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pr
 
 ContentDiscovery module class
 """
-import re
+import os
 import random
 import subprocess
 import datetime
 from urlparse import urlparse
 
+from classes.kernel.WSException import WSException
 from classes.modules.UrlsDict import UrlsDict
 from classes.modules.UrlsModules import UrlsModules
 from classes.modules.params.ContentDiscoveryModuleParams import ContentDiscoveryModuleParams
@@ -33,6 +34,15 @@ class ContentDiscovery(UrlsDict):
         UrlsModules.__init__(self, kernel)
         self.options = ContentDiscoveryModuleParams().get_options()
         self.exts = self.options['discovery-exts'].value.split(",")
+
+    def validate_main(self):
+        """ Check users params """
+        super(ContentDiscovery, self).validate_main()
+
+        if len(self.options['urls-file'].value) and not os.path.exists(self.options['urls-file'].value):
+            raise WSException(
+                "File with urls '{0}' not exists!".format(self.options['urls-file'].value)
+            )
 
     def write_bases_variants(self, base_fh):
         """
@@ -165,6 +175,8 @@ class ContentDiscovery(UrlsDict):
 
     def do_work(self):
         """ Start working """
+        self.validate_main()
+
         dict_path = "/tmp/web-scout-content-discovery-%d.txt" % random.randint(1000000, 9000000)
 
         self.build_attack_list(dict_path)
