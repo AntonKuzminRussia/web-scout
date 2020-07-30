@@ -43,6 +43,7 @@ class Http(object):
         self.allow_redirects = allow_redirects
         self.headers = {} if headers is None else headers
         self.session = requests.Session()
+        self.session.trust_env = False
 
         self.requests_counter = 0
         self.requests_per_session = 50
