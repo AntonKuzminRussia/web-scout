@@ -83,6 +83,8 @@ class Logger(object):
         name = name[1:] if name[0] == '/' else name
         name = name.replace(" ", "_")
         name = re.sub(r"[^a-zA-Z0-9_\-\.\|]", "_", name)
+        if len(name) > 50:
+            name = name[:50]
 
         ext = "bin" if binary else "txt"
 
