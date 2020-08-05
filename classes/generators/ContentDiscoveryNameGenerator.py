@@ -111,12 +111,18 @@ class ContentDiscoveryNameGenerator(object):
                 for i in range(0, 10):
                     results.append(basename[:-1] + str(i) + ext)
             if re.match("\d", basename[0]):
+                base_number = re.findall('^(\d+)', basename)[0]
+                base_number = int(base_number[:len(base_number)-1] + "0")
                 for i in range(0, 10):
-                    results.append(str(i) + basename[1:] + ext)
+                    prefix = str(base_number + i)
+                    results.append(prefix + basename[len(prefix):] + ext)
             if re.match("\d", basename[-1]) and re.match("\d", basename[0]):
+                first_base_number = re.findall('^(\d+)', basename)[0]
+                first_base_number = int(first_base_number[:len(first_base_number)-1] + "0")
                 for i in range(0, 10):
                     for j in range(0, 10):
-                        results.append(str(i) + basename[1:-1] + str(j) + ext)
+                        prefix = str(first_base_number + i)
+                        results.append(prefix + basename[len(prefix):-1] + str(j) + ext)
             if not re.match("\d", basename[-1]) and not re.match("\d", basename[0]):
                 for i in range(0, 10):
                     results.append(basename + str(i) + ext)
