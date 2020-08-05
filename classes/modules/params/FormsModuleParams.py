@@ -37,6 +37,7 @@ class FormsModuleParams(AbstractModuleParams):
                 "pass-max-len",
                 'first-stop',
                 'follow-redirects',
+                'bruteforce-method',
             ]
         )
         self.add_option("browser-recreate-re")

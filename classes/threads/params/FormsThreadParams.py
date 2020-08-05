@@ -30,6 +30,7 @@ class FormsThreadParams:
     retest_codes = None
     retest_re = None
     follow_redirects = False
+    method = None
 
     def __init__(self, options):
         self.url = options['url'].value
@@ -47,6 +48,7 @@ class FormsThreadParams:
         self.pass_min_len = int(options['pass-min-len'].value)
         self.pass_max_len = int(options['pass-max-len'].value)
         self.confstr = options['conf-str'].value
+        self.method = options['bruteforce-method'].value.lower()
         self.false_size = int(options['false-size'].value) if options['false-size'].value is not None else None #TODO make one, -1 or None
         self.retest_codes = list(set(options['retest-codes'].value.split(','))) if len(options['retest-codes'].value) else []
         self.retest_re = False if not len(options['retest-re'].value) else re.compile(options['retest-re'].value)

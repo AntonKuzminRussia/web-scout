@@ -11,6 +11,7 @@ Thread class for FormBruter module
 
 import Queue
 import time
+import urllib
 
 from requests.exceptions import ChunkedEncodingError, ConnectionError
 
@@ -27,7 +28,9 @@ class FormsRawThread(AbstractRawThread):
     url = None
     mask_symbol = None
     retested_words = None
-
+    method = None
+    
+    method = None
     def __init__(self, queue, counter, result, params):
         """
 
@@ -48,6 +51,7 @@ class FormsRawThread(AbstractRawThread):
         self.result = result
         self.retest_codes = params.retest_codes
         self.retest_re = params.retest_re
+        self.method = params.method
 
         self.http.every_request_new_session = True
         self.pass_min_len = params.pass_min_len
@@ -113,7 +117,10 @@ class FormsRawThread(AbstractRawThread):
 
                 work_conf = self.fill_conf(dict(conf), self.login, word)
                 try:
-                    resp = self.http.post(self.url, data=work_conf)
+                    if self.method == 'get':
+                        resp = self.http.get(self.url + "?" + urllib.urlencode(work_conf))
+                    else:
+                        resp = self.http.post(self.url, data=work_conf)
                     ErrorsCounter.flush()
                 except ConnectionError:
                     ErrorsCounter.up()

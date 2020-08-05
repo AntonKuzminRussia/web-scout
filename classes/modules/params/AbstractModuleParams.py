@@ -68,6 +68,13 @@ class AbstractModuleParams:
             False,
             ['--method']
         ),
+        "bruteforce-method": WSOption(
+            "bruteforce-method",
+            "Requests method (default - POST)",
+            "POST",
+            False,
+            ['--bruteforce-method']
+        ),
         "params-method": WSOption(
             "params-method",
             "Requests method (default - GET)",
