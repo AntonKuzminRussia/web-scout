@@ -41,6 +41,8 @@ class HttpAuth(WSModule):
 
         try:
             resp = Registry().get('http').get(self.options['url'].value)
+            if resp.status_code != 401:
+                raise WSException("Target URL has response code {0}, not 401".format(resp.status_code))
         except requests.exceptions.ConnectionError:
             raise WSException("Target web-site not available")
 
