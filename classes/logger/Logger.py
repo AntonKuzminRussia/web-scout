@@ -118,7 +118,7 @@ class Logger(object):
             tb_text += log_str
         tb_text += "{0:=^20}".format("")
 
-        self.log(tb_text, _print=True)
+        self.log(tb_text, _print=Registry().get('config')['main']['show_exceptions'] == "1")
 
         if Registry().isset('xml'):
             Registry().get('xml').put_error(str(_exception), tb_text)
