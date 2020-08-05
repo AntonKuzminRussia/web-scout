@@ -143,7 +143,7 @@ class ParamsRawThread(AbstractRawThread):
     def request_params(self, params):
         """ Make request with target params """
         if self.method == 'get':
-            return self.http.get(self.url + "?" + params)
+            return self.http.get(self.url + ("?" if self.url.count("?") == 0 else "&") + params)
         elif self.method == 'post':
             return self.http.post(self.url, data=params)
         elif self.method == 'cookies':
