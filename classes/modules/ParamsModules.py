@@ -22,7 +22,7 @@ from classes.Registry import Registry
 
 
 class ParamsModules(WSModule):
-    """ Common module class form Dafs* modules """
+    """ Common module class form Params* modules """
     logger_enable = True
     logger_name = 'params-bruter'
     logger_have_items = True
@@ -45,9 +45,9 @@ class ParamsModules(WSModule):
                 "Attention! Too big --max-params-length. Big value here allowed only in GET and POST modes"
             )
 
-        if not len(self.options['not-found-re'].value) and not len(self.options['not-found-size'].value) and not len(self.options['not-found-codes'].value):
+        if not len(self.options['not-found-re'].value) and self.options['not-found-size'].value == "-1":
             raise WSException(
-                "You must set one or more params for detect negative server respose: not-found-re, not-found-size, not-found-codes"
+                "You must set one or more params for detect negative server respose: not-found-re, not-found-size"
             )
 
     def make_queue(self):

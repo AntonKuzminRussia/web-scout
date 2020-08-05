@@ -49,7 +49,6 @@ class ParamsRawThread(AbstractRawThread):
         self.not_found_re = params.not_found_re
         self.not_found_size = params.not_found_size
         self.method = params.method
-        self.not_found_codes = params.not_found_codes
         self.retest_codes = params.retest_codes
         self.retest_re = params.retest_re
         self.delay = params.delay
@@ -192,9 +191,6 @@ class ParamsRawThread(AbstractRawThread):
         if self.not_found_re and not self.is_response_content_binary(resp) and (
                     self.not_found_re.findall(resp.content) or
                     self.not_found_re.findall(self.get_headers_text(resp))):
-            return False
-
-        if str(resp.status_code) in self.not_found_codes:
             return False
 
         return True
