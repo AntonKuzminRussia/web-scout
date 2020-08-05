@@ -115,7 +115,8 @@ class ContentDiscoveryNameGenerator(object):
                     results.append(str(i) + basename[1:] + ext)
             if re.match("\d", basename[-1]) and re.match("\d", basename[0]):
                 for i in range(0, 10):
-                    results.append(str(i) + basename[1:-1] + str(i) + ext)
+                    for j in range(0, 10):
+                        results.append(str(i) + basename[1:-1] + str(j) + ext)
             if not re.match("\d", basename[-1]) and not re.match("\d", basename[0]):
                 for i in range(0, 10):
                     results.append(basename + str(i) + ext)
