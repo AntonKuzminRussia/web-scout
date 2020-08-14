@@ -29,8 +29,7 @@ class FormsRawThread(AbstractRawThread):
     mask_symbol = None
     retested_words = None
     method = None
-    
-    method = None
+
     def __init__(self, queue, counter, result, params):
         """
 
