@@ -10,7 +10,7 @@ Thread class for FuzzerHeaders module
 """
 from __future__ import division
 
-import Queue
+import queue
 import time
 
 from requests.exceptions import ConnectionError
@@ -120,8 +120,8 @@ class FuzzerHeadersRawThread(AbstractFuzzerRawThread):
                 resp.close()
 
                 need_retest = False
-            except Queue.Empty:
+            except queue.Empty:
                 self.done = True
                 break
             except BaseException as e:
-                print url + " " + str(e)
+                print(url + " " + str(e))

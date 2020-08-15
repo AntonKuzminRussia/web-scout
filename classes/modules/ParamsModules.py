@@ -9,7 +9,7 @@ Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pr
 Common module class form Dafs* modules
 """
 import time
-from urlparse import urlparse
+from urllib.parse import urlparse
 
 import requests
 

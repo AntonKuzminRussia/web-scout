@@ -8,7 +8,7 @@ Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pr
 
 Common job class for generator jobs
 """
-import Queue
+import queue
 
 
 class GeneratorJob(object):
@@ -23,5 +23,5 @@ class GeneratorJob(object):
         """ Get next generator word """
         word = self.generator.get()
         if word is None:
-            raise Queue.Empty
+            raise queue.Empty
         return word

@@ -41,4 +41,4 @@ class Tester:
             if not self.display_items_content and "content" in self.items[item].keys():
                 del self.items[item]["content"]
 
-            print "{0} => {1}".format(item, self.items[item])
+            print("{0} => {1}".format(item, self.items[item]))

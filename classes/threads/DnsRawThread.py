@@ -9,7 +9,7 @@ Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pr
 Thread class for DnsBrute* modules
 """
 import time
-import Queue
+import queue
 import re
 import copy
 
@@ -141,7 +141,7 @@ class DnsRawThread(AbstractThread):
                 need_retest = False
 
                 self.counter.up()
-            except Queue.Empty:
+            except queue.Empty:
                 self.done = True
                 break
             except dns.exception.Timeout:

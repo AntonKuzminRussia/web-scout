@@ -9,7 +9,7 @@ Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pr
 Thread class for Dafs modules (selenium)
 """
 
-import Queue
+import queue
 import time
 import pprint
 
@@ -112,7 +112,7 @@ class UrlsSeleniumThread(AbstractSeleniumThread):
                 need_retest = False
 
                 self.counter.up()
-            except Queue.Empty:
+            except queue.Empty:
                 self.done = True
                 break
 

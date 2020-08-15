@@ -9,7 +9,7 @@ Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pr
 Worker thread of selenium mode ParamsBruter modules
 """
 
-import Queue
+import queue
 import time
 
 from selenium.common.exceptions import TimeoutException
@@ -58,7 +58,7 @@ class ParamsSeleniumThread(AbstractSeleniumThread):
         while len(params_str) < self.max_params_length:
             try:
                 word = self.queue.get()
-            except Queue.Empty:
+            except queue.Empty:
                 self.queue_is_empty = True
                 break
 

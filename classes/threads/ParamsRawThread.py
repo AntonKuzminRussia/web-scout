@@ -9,7 +9,7 @@ Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pr
 Thread class for ParamsBruter modules
 """
 
-import Queue
+import queue
 import time
 import os
 
@@ -68,10 +68,10 @@ class ParamsRawThread(AbstractRawThread):
                 try:
                     word = self.queue.get()
                     count += 1
-                except Queue.Empty:
+                except queue.Empty:
                     self.queue_is_empty = True
                     if params_str == "":
-                        raise Queue.Empty
+                        raise queue.Empty
                     break
 
                 if not len(word.strip()) or (self.ignore_words_re and self.ignore_words_re.findall(word)):
@@ -93,7 +93,7 @@ class ParamsRawThread(AbstractRawThread):
                 try:
                     word = self.queue.get()
                     count += 1
-                except Queue.Empty:
+                except queue.Empty:
                     self.queue_is_empty = True
                     if len(cookies) == 0:
                         raise Queue.Empty
@@ -119,10 +119,10 @@ class ParamsRawThread(AbstractRawThread):
                 try:
                     word = self.queue.get()
                     count += 1
-                except Queue.Empty:
+                except queue.Empty:
                     self.queue_is_empty = True
                     if len(files) == 0:
-                        raise Queue.Empty
+                        raise queue.Empty
                     break
 
                 if not len(word.strip()) or (self.ignore_words_re and self.ignore_words_re.findall(word)):
@@ -264,7 +264,7 @@ class ParamsRawThread(AbstractRawThread):
                     self.counter.up()
 
                 resp.close()
-            except Queue.Empty:
+            except queue.Empty:
                 self.done = True
                 break
             except ChunkedEncodingError as e:

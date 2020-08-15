@@ -11,7 +11,7 @@ Class of FuzzerUrls module
 
 import time
 import os
-from urlparse import urlparse
+from urllib.parse import urlparse
 
 from classes.kernel.WSException import WSException
 from classes.kernel.WSModule import WSModule

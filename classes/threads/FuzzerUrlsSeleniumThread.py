@@ -10,7 +10,7 @@ Thread class for FuzzerUrls module (selenium)
 """
 from __future__ import division
 
-import Queue
+import queue
 import time
 
 from selenium.common.exceptions import TimeoutException
@@ -72,7 +72,7 @@ class FuzzerUrlsSeleniumThread(AbstractSeleniumThread):
                     self.result.append(item_data)
 
                 self.counter.up()
-            except Queue.Empty:
+            except queue.Empty:
                 self.done = True
                 break
             except TimeoutException as e:
@@ -82,7 +82,7 @@ class FuzzerUrlsSeleniumThread(AbstractSeleniumThread):
                 continue
             except BaseException as e:
                 if not str(e).count('Timed out waiting for page load'):
-                    print url + " " + str(e)
+                    print(url + " " + str(e))
             self.up_requests_count()
 
         self.browser.close()

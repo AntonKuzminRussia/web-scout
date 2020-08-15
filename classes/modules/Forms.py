@@ -11,7 +11,7 @@ Class of FormBruter module
 
 import time
 import os
-from urlparse import urlparse
+from urllib.parse import urlparse
 
 import requests
 

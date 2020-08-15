@@ -9,7 +9,7 @@ Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pr
 Thread class for Dafs modules
 """
 
-import Queue
+import queue
 import time
 import pprint
 
@@ -139,7 +139,7 @@ class UrlsRawThread(AbstractRawThread):
                 resp.close()
 
                 self.counter.up()
-            except Queue.Empty:
+            except queue.Empty:
                 self.done = True
                 break
 

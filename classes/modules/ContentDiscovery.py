@@ -12,7 +12,7 @@ import os
 import random
 import subprocess
 import datetime
-from urlparse import urlparse
+from urllib.parse import urlparse
 
 from classes.kernel.WSException import WSException
 from classes.modules.UrlsDict import UrlsDict

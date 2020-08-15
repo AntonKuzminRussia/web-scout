@@ -69,9 +69,9 @@ class Logger(object):
         self.log_fh.flush()
         if _print:
             if new_str:
-                print _str
+                print(_str)
             else:
-                print _str,
+                print(_str),
         sys.stdout.flush()
 
     def item(self, name, content, binary=False, positive=False):

@@ -78,8 +78,8 @@ def main_help():
     """ Main help function (usage) """
     config = configparser.ConfigParser()
     config.read(os.getcwd() + '/' + 'config.ini')
-    print "Web-Scout " + config['main']['version']
-    print "Usage: {0} moduleName [-h|args]".format(sys.argv[0])
+    print("Web-Scout " + config['main']['version'])
+    print("Usage: {0} moduleName [-h|args]".format(sys.argv[0]))
     exit(0)
 
 

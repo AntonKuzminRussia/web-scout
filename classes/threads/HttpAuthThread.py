@@ -9,7 +9,7 @@ Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pr
 Thread class for FormBruter module
 """
 
-import Queue
+import queue
 import time
 
 from requests.exceptions import ChunkedEncodingError, ConnectionError
@@ -117,7 +117,7 @@ class HttpAuthThread(AbstractRawThread):
                 self.counter.up()
 
                 resp.close()
-            except Queue.Empty:
+            except queue.Empty:
                 self.done = True
                 break
             except ChunkedEncodingError as e:

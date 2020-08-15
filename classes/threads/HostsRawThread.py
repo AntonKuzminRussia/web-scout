@@ -9,7 +9,7 @@ Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pr
 Thread class for HostsBrute modules
 """
 
-import Queue
+import queue
 import time
 import pprint
 
@@ -131,7 +131,7 @@ class HostsRawThread(AbstractRawThread):
                 self.counter.up()
 
                 resp.close()
-            except Queue.Empty:
+            except queue.Empty:
                 self.done = True
                 break
 

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 """
@@ -18,7 +18,7 @@ import time
 import logging
 import os
 import urllib3
-from urlparse import urlparse
+from urllib.parse import urlparse
 
 from libs.common import secs_to_text, main_help, t
 
@@ -46,8 +46,8 @@ except WSException as e:
     if len(str(e)):
         print(e)
     else:
-        print "ERROR: Module '{0}' not exists!".format(module_name)
-        print "Possible modules:"
+        print("ERROR: Module '{0}' not exists!".format(module_name))
+        print("Possible modules:")
         modules_list = []
         for tmp in os.listdir(Registry().get('wr_path') + "/classes/modules/"):
             if tmp.count("Modules") or tmp.count(".pyc") or tmp.count("__init__") or tmp == "params":
@@ -55,14 +55,14 @@ except WSException as e:
             modules_list.append(tmp.replace(".py", ""))
         modules_list.sort()
         for module_name in modules_list:
-            print "\t" + module_name
+            print("\t" + module_name)
     exit(1)
 
 if module.logger_enable:
     Registry().set('logger', Logger(module.logger_name, module.logger_have_items))
 
 if module.time_count:
-    print "Started module work at " + t("%Y-%m-%d %H:%M:%S")
+    print("Started module work at " + t("%Y-%m-%d %H:%M:%S"))
     start_time = int(time.time())
 
 Registry().set('module', module)
@@ -104,7 +104,7 @@ for option in args.keys():
             try:
                 Registry().get('http').load_headers_from_file(args[option].strip())
             except WSException as e:
-                print "{0}".format(str(e))
+                print("{0}".format(str(e)))
                 exit(0)
 
 try:
@@ -117,12 +117,12 @@ try:
             time.sleep(1)
 
 except WSException as e:
-    print " " + str(e)
+    print(" " + str(e))
 
 Http = Registry().get('http')
 for k in Http.errors:
     for err_str in Http.errors[k]:
-        print err_str
+        print(err_str)
 
 if module.logger_enable:
     Registry().get('logger').stop()
@@ -138,5 +138,5 @@ if len(Registry().get('tmp_files')):
         os.remove(tmp_file)
 
 elif module.time_count:
-    print "\nEnded module work at " + t("%Y-%m-%d %H:%M:%S")
-    print "Common work time: {0}".format(secs_to_text(int(time.time()) - start_time))
+    print("\nEnded module work at " + t("%Y-%m-%d %H:%M:%S"))
+    print("Common work time: {0}".format(secs_to_text(int(time.time()) - start_time)))

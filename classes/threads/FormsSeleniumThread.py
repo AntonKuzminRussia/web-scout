@@ -8,7 +8,7 @@ Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pr
 
 Thread class for FormBruter module (selenium)
 """
-import Queue
+import queue
 import time
 
 from selenium.webdriver.common.by import By
@@ -168,7 +168,7 @@ class FormsSeleniumThread(AbstractSeleniumThread):
                 need_retest = False
 
                 self.counter.up()
-            except Queue.Empty:
+            except queue.Empty:
                 self.done = True
                 break
             except TimeoutException as e:
