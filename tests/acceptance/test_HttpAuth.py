@@ -32,6 +32,7 @@ class Test_HttpAuth(object):
             'user'
         ])
         print(output)
+        output = output.decode('utf8')
         assert self.get_results_count(output) == 1
         assert output.count("Passwords found:\n\tpassword") == 1
 
@@ -54,6 +55,7 @@ class Test_HttpAuth(object):
             '503'
         ])
         print(output)
+        output = output.decode('utf8')
         assert self.get_results_count(output) == 1
         assert output.count("Passwords found:\n\tpassword") == 1
 
@@ -75,6 +77,7 @@ class Test_HttpAuth(object):
             'Too big'
         ])
         print(output)
+        output = output.decode('utf8')
         assert self.get_results_count(output) == 1
         assert output.count("Passwords found:\n\tpassword") == 1
 
@@ -100,4 +103,5 @@ class Test_HttpAuth(object):
         ])
         etime = int(time.time())
         print(output)
+        output = output.decode('utf8')
         assert etime - stime > 10

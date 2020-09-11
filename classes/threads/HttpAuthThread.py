@@ -98,7 +98,7 @@ class HttpAuthThread(AbstractRawThread):
                 positive_item = False
                 if self.is_positive(resp):
                     positive_item = True
-                    item_data = {'word': word, 'content': resp.content, 'size': get_response_size(resp)}
+                    item_data = {'word': word, 'content': resp.text, 'size': get_response_size(resp)}
                     self.result.append(item_data)
                     self.xml_log(item_data)
                     self.logger.log("F", False)

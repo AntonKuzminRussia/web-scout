@@ -8,7 +8,7 @@ Copyright (c) Alexey Meshcheryakov <tank1st99@gmail.com>
 
 Kernel class of work counter for all modules
 """
-from __future__ import division
+
 import sys
 import time
 
@@ -48,7 +48,7 @@ class WSCounter(object):
 
             if self.counter%self.new_str == 0:
                 if self.all == 0:
-                    print "({0})".format(self.counter)
+                    print("({0})".format(self.counter))
                 else:
                     percents = round(self.counter/(self.all/100)) if round(self.counter/(self.all/100)) > 0 else 1
                     # For cases when 0 secs passed, but we already has results
@@ -62,7 +62,7 @@ class WSCounter(object):
                     time_left_str = secs_to_text(time_left)
                     speed = round((self.counter - self.last_point_count) / (int(time.time()) - self.last_point_time), 2)
 
-                    print "({6}) ({0}/{1}/{2}%) | {3} | {4} | {5} o/s".format(
+                    print("({6}) ({0}/{1}/{2}%) | {3} | {4} | {5} o/s".format(
                         counter_str,
                         all_str,
                         percent,
@@ -70,7 +70,7 @@ class WSCounter(object):
                         time_left_str,
                         speed,
                         time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-                    )
+                    ))
 
                     if Registry().isset('xml'):
                         Registry().get('xml').put_progress(

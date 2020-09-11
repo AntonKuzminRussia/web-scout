@@ -75,7 +75,7 @@ class DictOfMask(object):
             start_limit = int(tmp[tmp.rfind(',')+1:])
             mask = tmp[:tmp.rfind(',')]
             for i in range(start_limit, end_limit+1):
-                mask_name = mask + ',' + str(start_limit) + ',' + str(i)
+                mask_name = mask + ',' + str(start_limit) + ',' + str(i) #TODO not i,i? Why start limit?
                 self.masks_keys.append(mask_name)
                 masks[mask_name] = {}
                 for c in range(i):

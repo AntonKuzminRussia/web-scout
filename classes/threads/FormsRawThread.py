@@ -88,9 +88,9 @@ class FormsRawThread(AbstractRawThread):
     def is_positive(self, resp):
         if self.false_size is not None and get_response_size(resp) != self.false_size:
             return True
-        if self.false_re and not self.false_re.findall(resp.content):
+        if self.false_re and not self.false_re.findall(resp.text):
             return True
-        if self.true_re and self.true_re.findall(resp.content):
+        if self.true_re and self.true_re.findall(resp.text):
             return True
         return False
 

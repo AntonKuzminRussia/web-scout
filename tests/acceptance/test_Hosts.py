@@ -23,34 +23,36 @@ class Test_Hosts(object):
             './ws.py',
             'HostsDict',
             '--template',
-            '@.wildcard-web.polygon.web-scout.online',
+            '@.wildcard-web.polygon.web-scout.ru',
             '--ip',
-            '82.146.56.21',
+            '185.43.7.81',
             '--false-re',
             'Apache2 Ubuntu Default Page',
             '--dict',
             self.dict_path,
         ])
         print(output)
+        output = output.decode('utf8')
         assert self.get_results_count(output) == 1
-        assert output.count("admin.wildcard-web.polygon.web-scout.online") == 1
+        assert output.count("admin.wildcard-web.polygon.web-scout.ru") == 1
 
     def test_mask(self):
         output = subprocess.check_output([
             './ws.py',
             'HostsMask',
             '--template',
-            'admi@.wildcard-web.polygon.web-scout.online',
+            'admi@.wildcard-web.polygon.web-scout.ru',
             '--ip',
-            '82.146.56.21',
+            '185.43.7.81',
             '--false-re',
             'Apache2 Ubuntu Default Page',
             '--mask',
             '?l,1,1',
         ])
         print(output)
+        output = output.decode('utf8')
         assert self.get_results_count(output) == 1
-        assert output.count("admin.wildcard-web.polygon.web-scout.online") == 1
+        assert output.count("admin.wildcard-web.polygon.web-scout.ru") == 1
 
     def test_combine(self):
         fh = open(self.dict_path, 'w')
@@ -63,9 +65,9 @@ class Test_Hosts(object):
             '--combine-template',
             '%d%%m%',
             '--template',
-            'admi@.wildcard-web.polygon.web-scout.online',
+            'admi@.wildcard-web.polygon.web-scout.ru',
             '--ip',
-            '82.146.56.21',
+            '185.43.7.81',
             '--false-re',
             'Apache2 Ubuntu Default Page',
             '--mask',
@@ -74,8 +76,9 @@ class Test_Hosts(object):
             self.dict_path,
         ])
         print(output)
+        output = output.decode('utf8')
         assert self.get_results_count(output) == 1
-        assert output.count("admin.wildcard-web.polygon.web-scout.online") == 1
+        assert output.count("admin.wildcard-web.polygon.web-scout.ru") == 1
 
     def test_false_size(self):
         fh = open(self.dict_path, 'w')
@@ -86,17 +89,18 @@ class Test_Hosts(object):
             './ws.py',
             'HostsDict',
             '--template',
-            '@.wildcard-web.polygon.web-scout.online',
+            '@.wildcard-web.polygon.web-scout.ru',
             '--ip',
-            '82.146.56.21',
+            '185.43.7.81',
             '--false-size',
-            '10918',
+            '11321',
             '--dict',
             self.dict_path,
         ])
         print(output)
+        output = output.decode('utf8')
         assert self.get_results_count(output) == 1
-        assert output.count("admin.wildcard-web.polygon.web-scout.online") == 1
+        assert output.count("admin.wildcard-web.polygon.web-scout.ru") == 1
 
     def test_msymbol(self):
         fh = open(self.dict_path, 'w')
@@ -107,19 +111,20 @@ class Test_Hosts(object):
             './ws.py',
             'HostsDict',
             '--template',
-            '%.wildcard-web.polygon.web-scout.online',
+            '%.wildcard-web.polygon.web-scout.ru',
             '--msymbol',
             '%',
             '--ip',
-            '82.146.56.21',
+            '185.43.7.81',
             '--false-re',
             'Apache2 Ubuntu Default Page',
             '--dict',
             self.dict_path,
         ])
         print(output)
+        output = output.decode('utf8')
         assert self.get_results_count(output) == 1
-        assert output.count("admin.wildcard-web.polygon.web-scout.online") == 1
+        assert output.count("admin.wildcard-web.polygon.web-scout.ru") == 1
 
     def test_ignore_words_re(self):
         fh = open(self.dict_path, 'w')
@@ -130,9 +135,9 @@ class Test_Hosts(object):
             './ws.py',
             'HostsDict',
             '--template',
-            '@.wildcard-web.polygon.web-scout.online',
+            '@.wildcard-web.polygon.web-scout.ru',
             '--ip',
-            '82.146.56.21',
+            '185.43.7.81',
             '--false-re',
             'Apache2 Ubuntu Default Page',
             '--dict',
@@ -141,8 +146,9 @@ class Test_Hosts(object):
             'admin'
         ])
         print(output)
+        output = output.decode('utf8')
         assert self.get_results_count(output) == 0
-        assert output.count("admin.wildcard-web.polygon.web-scout.online") == 0
+        assert output.count("admin.wildcard-web.polygon.web-scout.ru") == 0
 
     def test_delay(self):
         fh = open(self.dict_path, 'w')
@@ -154,9 +160,9 @@ class Test_Hosts(object):
             './ws.py',
             'HostsDict',
             '--template',
-            '@.wildcard-web.polygon.web-scout.online',
+            '@.wildcard-web.polygon.web-scout.ru',
             '--ip',
-            '82.146.56.21',
+            '185.43.7.81',
             '--false-re',
             'Apache2 Ubuntu Default Page',
             '--dict',
@@ -167,5 +173,6 @@ class Test_Hosts(object):
             '2',
         ])
         print(output)
+        output = output.decode('utf8')
         etime = int(time.time())
         assert etime - stime > 8

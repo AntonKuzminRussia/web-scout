@@ -68,12 +68,12 @@ class Test_Logger(object):
             assert not os.path.exists(self.logger.items_dir + "/" + item_filename)
 
     def test_ex(self):
+        Registry().set('config', {'main': {'show_exceptions': "1"}})
         try:
             raise BaseException("test")
         except BaseException as e:
+            self.logger.ex(e)
             pass
-
-        self.logger.ex(e)
 
         ex_content = open(self.logger.logs_dir + "/run.log").read()
         assert "test_Logger.py" in ex_content

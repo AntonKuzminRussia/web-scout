@@ -136,7 +136,7 @@ class Http(object):
         allow_redirects = self.allow_redirects if allow_redirects is None else allow_redirects
         headers = self.headers if headers is None else headers
 
-        if 'User-Agent' not in headers.keys():
+        if 'user-agent' not in map(str.lower, headers.keys()):
             headers['User-Agent'] = Registry().get('ua')
 
         timeout = int(Registry().get('config')['main']['http_timeout']) if \
@@ -194,7 +194,7 @@ class Http(object):
         allow_redirects = self.allow_redirects if allow_redirects is None else allow_redirects
         headers = self.headers if headers is None else headers
 
-        if 'User-Agent' not in headers.keys():
+        if 'user-agent' not in map(str.lower, headers.keys()):
             headers['User-Agent'] = Registry().get('ua')
         if files is None and 'Content-Type' not in headers.keys():
             headers['Content-Type'] = "application/x-www-form-urlencoded"
@@ -230,7 +230,7 @@ class Http(object):
         allow_redirects = self.allow_redirects if allow_redirects is None else allow_redirects
         headers = self.headers if headers is None else headers
 
-        if 'User-Agent' not in headers.keys():
+        if 'user-agent' not in map(str.lower, headers.keys()):
             headers['User-Agent'] = Registry().get('ua')
 
         timeout = int(Registry().get('config')['main']['http_timeout']) if \

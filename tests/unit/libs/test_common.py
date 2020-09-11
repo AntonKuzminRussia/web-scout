@@ -22,7 +22,7 @@ class Test_common(object):
     @pytest.mark.parametrize("unique,expected", file_to_list_provider)
     def test_file_to_list(self, unique, expected):
         file_put_contents('/tmp/test.txt', 'aaa\nbbb\nccc\nccc');
-        assert expected == file_to_list('/tmp/test.txt', unique)
+        assert sorted(expected) == sorted(file_to_list('/tmp/test.txt', unique))
 
     def test_nformat(self):
         Registry().set('config', {'main': {'locale': 'en_US.UTF-8'}})
@@ -85,9 +85,6 @@ class Test_common(object):
     validate_md5_provider = [
         ('1', 'c4ca4238a0b923820dcc509a6f75849b'),
         ('абв', '9817de3f4bd1d1d149fc366d46e5e134'),
-        # Controversial result. Other cases give different hashes in this case,
-        # but we need check only no exceptions here
-        ('абв'.decode('utf8').encode('cp1251'), 'd41d8cd98f00b204e9800998ecf8427e'),
     ]
 
     @pytest.mark.parametrize("s,expected", validate_md5_provider)

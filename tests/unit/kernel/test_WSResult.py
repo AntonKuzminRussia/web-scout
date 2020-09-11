@@ -34,4 +34,4 @@ class Test_WSResult(object):
         result.put("bbb")
         result.put("ccc")
         result.unique()
-        assert result.get_all() == ["aaa", "bbb", "ccc"]
+        assert sorted(result.get_all()) == ["aaa", "bbb", "ccc"]

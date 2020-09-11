@@ -27,6 +27,7 @@ class Test_Urls(object):
             self.dict_path
         ])
         print(output)
+        output = output.decode("utf8")
         assert self.get_results_count(output) == 3
         assert output.count("/dafs-simple-dict-a.php") == 1
         assert output.count("/dafs-simple-dict-b.php") == 1
@@ -42,6 +43,7 @@ class Test_Urls(object):
             '?l?d,1,1'
         ])
         print(output)
+        output = output.decode("utf8")
         assert self.get_results_count(output) == 3
         assert output.count("/dafs-simple-mask-a.php") == 1
         assert output.count("/dafs-simple-mask-b.php") == 1
@@ -65,10 +67,12 @@ class Test_Urls(object):
             '?l?d,1,1'
         ])
         print(output)
-        assert self.get_results_count(output) == 3
+        output = output.decode("utf8")
+        assert self.get_results_count(output) == 4
         assert output.count("/dafs-simple-comb-a.php") == 1
         assert output.count("/dafs-simple-comb-b.php") == 1
         assert output.count("/dafs-simple-comb-9.php") == 1
+        assert output.count("/dafs-simple-comb-x.php") == 1
 
     def test_not_found_re_dict(self):
         fh = open(self.dict_path, 'w')
@@ -86,6 +90,7 @@ class Test_Urls(object):
             self.dict_path
         ])
         print(output)
+        output = output.decode("utf8")
         assert self.get_results_count(output) == 3
         assert output.count("/dafs-not-found-re-dict-a.php") == 1
         assert output.count("/dafs-not-found-re-dict-b.php") == 1
@@ -103,6 +108,7 @@ class Test_Urls(object):
             '?l?d,1,1'
         ])
         print(output)
+        output = output.decode("utf8")
         assert self.get_results_count(output) == 3
         assert output.count("/dafs-not-found-re-mask-a.php") == 1
         assert output.count("/dafs-not-found-re-mask-b.php") == 1
@@ -128,6 +134,7 @@ class Test_Urls(object):
             '?l?d,1,1'
         ])
         print(output)
+        output = output.decode("utf8")
         assert self.get_results_count(output) == 3
         assert output.count("/dafs-not-found-re-comb-a.php") == 1
         assert output.count("/dafs-not-found-re-comb-b.php") == 1
@@ -148,7 +155,7 @@ class Test_Urls(object):
             '--dict',
             self.dict_path
         ])
-
+        output = output.decode("utf8")
         assert self.get_results_count(output) == 3
         assert output.count("/dafs-found-re-dict-a.php") == 1
         assert output.count("/dafs-found-re-dict-b.php") == 1
@@ -166,6 +173,7 @@ class Test_Urls(object):
             '?l?d,1,1'
         ])
         print(output)
+        output = output.decode("utf8")
         assert self.get_results_count(output) == 3
         assert output.count("/dafs-found-re-mask-a.php") == 1
         assert output.count("/dafs-found-re-mask-b.php") == 1
@@ -191,6 +199,7 @@ class Test_Urls(object):
             '?l?d,1,1'
         ])
         print(output)
+        output = output.decode("utf8")
         assert self.get_results_count(output) == 3
         assert output.count("/dafs-found-re-comb-a.php") == 1
         assert output.count("/dafs-found-re-comb-b.php") == 1
@@ -212,6 +221,7 @@ class Test_Urls(object):
             self.dict_path
         ])
         print(output)
+        output = output.decode("utf8")
         assert self.get_results_count(output) == 3
         assert output.count("/dafs-not-found-size-dict-a.php") == 1
         assert output.count("/dafs-not-found-size-dict-b.php") == 1
@@ -229,6 +239,7 @@ class Test_Urls(object):
             '?l?d,1,1'
         ])
         print(output)
+        output = output.decode("utf8")
         assert self.get_results_count(output) == 3
         assert output.count("/dafs-not-found-size-mask-a.php") == 1
         assert output.count("/dafs-not-found-size-mask-b.php") == 1
@@ -254,6 +265,7 @@ class Test_Urls(object):
             '?l?d,1,1'
         ])
         print(output)
+        output = output.decode("utf8")
         assert self.get_results_count(output) == 3
         assert output.count("/dafs-not-found-size-comb-a.php") == 1
         assert output.count("/dafs-not-found-size-comb-b.php") == 1
@@ -275,6 +287,7 @@ class Test_Urls(object):
             self.dict_path
         ])
         print(output)
+        output = output.decode("utf8")
         assert self.get_results_count(output) == 3
         assert output.count("/dafs-not-found-codes-dict-a.php") == 1
         assert output.count("/dafs-not-found-codes-dict-b.php") == 1
@@ -292,6 +305,7 @@ class Test_Urls(object):
             '?l?d,1,1'
         ])
         print(output)
+        output = output.decode("utf8")
         assert self.get_results_count(output) == 3
         assert output.count("/dafs-not-found-codes-mask-a.php") == 1
         assert output.count("/dafs-not-found-codes-mask-b.php") == 1
@@ -317,6 +331,7 @@ class Test_Urls(object):
             '?l?d,1,1'
         ])
         print(output)
+        output = output.decode("utf8")
         assert self.get_results_count(output) == 3
         assert output.count("/dafs-not-found-codes-comb-a.php") == 1
         assert output.count("/dafs-not-found-codes-comb-b.php") == 1
@@ -338,6 +353,7 @@ class Test_Urls(object):
             self.dict_path
         ])
         print(output)
+        output = output.decode("utf8")
         assert self.get_results_count(output) == 2
         assert output.count("/dafs-simple-dict-a.php") == 1
         assert output.count("/dafs-simple-dict-9.php") == 1
@@ -354,6 +370,7 @@ class Test_Urls(object):
             '?l?d,1,1'
         ])
         print(output)
+        output = output.decode("utf8")
         assert self.get_results_count(output) == 2
         assert output.count("/dafs-simple-mask-a.php") == 1
         assert output.count("/dafs-simple-mask-9.php") == 1
@@ -367,7 +384,7 @@ class Test_Urls(object):
             './ws.py',
             'UrlsCombine',
             '--ignore-words-re',
-            'b', #TODO fix here
+            'x', #TODO fix here
             '--template',
             'http://wsat.local/@.php',
             '--combine-template',
@@ -378,9 +395,12 @@ class Test_Urls(object):
             '?l?d,1,1'
         ])
         print(output)
-        assert self.get_results_count(output) == 2
+        output = output.decode("utf8")
+        assert self.get_results_count(output) == 3
         assert output.count("/dafs-simple-comb-a.php") == 1
+        assert output.count("/dafs-simple-comb-b.php") == 1
         assert output.count("/dafs-simple-comb-9.php") == 1
+        assert output.count("/dafs-simple-comb-x.php") == 0
 
     def test_dict_retest_codes(self):
         fh = open(self.dict_path, 'w')
@@ -398,6 +418,7 @@ class Test_Urls(object):
             self.dict_path
         ])
         print(output)
+        output = output.decode("utf8")
         assert self.get_results_count(output) == 3
         assert output.count("/dafs-retest-codes-dict-a.php") == 1
         assert output.count("/dafs-retest-codes-dict-b.php") == 1
@@ -415,6 +436,7 @@ class Test_Urls(object):
             '?l?d,1,1'
         ])
         print(output)
+        output = output.decode("utf8")
         assert self.get_results_count(output) == 3
         assert output.count("/dafs-retest-codes-mask-a.php") == 1
         assert output.count("/dafs-retest-codes-mask-b.php") == 1
@@ -440,6 +462,7 @@ class Test_Urls(object):
             '?l?d,1,1'
         ])
         print(output)
+        output = output.decode("utf8")
         assert self.get_results_count(output) == 3
         assert output.count("/dafs-retest-codes-comb-a.php") == 1
         assert output.count("/dafs-retest-codes-comb-b.php") == 1
@@ -461,6 +484,7 @@ class Test_Urls(object):
             self.dict_path
         ])
         print(output)
+        output = output.decode("utf8")
         assert self.get_results_count(output) == 3
         assert output.count("/dafs-retest-re-dict-a.php") == 1
         assert output.count("/dafs-retest-re-dict-b.php") == 1
@@ -478,6 +502,7 @@ class Test_Urls(object):
             '?l?d,1,1'
         ])
         print(output)
+        output = output.decode("utf8")
         assert self.get_results_count(output) == 3
         assert output.count("/dafs-retest-re-mask-a.php") == 1
         assert output.count("/dafs-retest-re-mask-b.php") == 1
@@ -503,6 +528,7 @@ class Test_Urls(object):
             '?l?d,1,1'
         ])
         print(output)
+        output = output.decode("utf8")
         assert self.get_results_count(output) == 3
         assert output.count("/dafs-retest-re-comb-a.php") == 1
         assert output.count("/dafs-retest-re-comb-b.php") == 1
@@ -546,6 +572,7 @@ class Test_Urls(object):
         ])
         etime = int(time.time())
         print(output)
+        output = output.decode("utf8")
         assert etime-stime > 10
 
     def test_comb_delay(self):
@@ -592,6 +619,7 @@ class Test_Urls(object):
             self.dict_path
         ])
         print(output)
+        output = output.decode("utf8")
         assert self.get_results_count(output) == 3
         assert output.count("/dafs-simple-dict-a.php") == 1
         assert output.count("/dafs-simple-dict-b.php") == 1
@@ -611,6 +639,7 @@ class Test_Urls(object):
             '?l?d,1,1'
         ])
         print(output)
+        output = output.decode("utf8")
         assert self.get_results_count(output) == 3
         assert output.count("/dafs-simple-mask-a.php") == 1
         assert output.count("/dafs-simple-mask-b.php") == 1
@@ -638,10 +667,12 @@ class Test_Urls(object):
             '?l?d,1,1'
         ])
         print(output)
-        assert self.get_results_count(output) == 3
+        output = output.decode("utf8")
+        assert self.get_results_count(output) == 4
         assert output.count("/dafs-simple-comb-a.php") == 1
         assert output.count("/dafs-simple-comb-b.php") == 1
         assert output.count("/dafs-simple-comb-9.php") == 1
+        assert output.count("/dafs-simple-comb-x.php") == 1
 
     def test_dict_selenium_not_found_size(self):
         fh = open(self.dict_path, 'w')
@@ -661,6 +692,7 @@ class Test_Urls(object):
             self.dict_path
         ])
         print(output)
+        output = output.decode("utf8")
         assert self.get_results_count(output) == 3
         assert output.count("/dafs-simple-dict-a.php") == 1
         assert output.count("/dafs-simple-dict-b.php") == 1
@@ -680,6 +712,7 @@ class Test_Urls(object):
             '?l?d,1,1'
         ])
         print(output)
+        output = output.decode("utf8")
         assert self.get_results_count(output) == 3
         assert output.count("/dafs-simple-mask-a.php") == 1
         assert output.count("/dafs-simple-mask-b.php") == 1
@@ -707,10 +740,12 @@ class Test_Urls(object):
             '?l?d,1,1'
         ])
         print(output)
-        assert self.get_results_count(output) == 3
+        output = output.decode("utf8")
+        assert self.get_results_count(output) == 4
         assert output.count("/dafs-simple-comb-a.php") == 1
         assert output.count("/dafs-simple-comb-b.php") == 1
         assert output.count("/dafs-simple-comb-9.php") == 1
+        assert output.count("/dafs-simple-comb-x.php") == 1
 
     def test_dict_selenium_wait_re(self):
         fh = open(self.dict_path, 'w')
@@ -732,6 +767,7 @@ class Test_Urls(object):
             self.dict_path
         ])
         print(output)
+        output = output.decode("utf8")
         assert self.get_results_count(output) == 2
         assert output.count("/dafs-selenium-browser-wait-re-dict-a.php") == 1
         assert output.count("/dafs-selenium-browser-wait-re-dict-b.php") == 1
@@ -752,6 +788,7 @@ class Test_Urls(object):
             '?l?d,1,1',
         ])
         print(output)
+        output = output.decode("utf8")
         assert self.get_results_count(output) == 2
         assert output.count("/dafs-selenium-browser-wait-re-mask-a.php") == 1
         assert output.count("/dafs-selenium-browser-wait-re-mask-b.php") == 1
@@ -780,6 +817,7 @@ class Test_Urls(object):
             '?l?d,1,1'
         ])
         print(output)
+        output = output.decode("utf8")
         assert self.get_results_count(output) == 2
         assert output.count("/dafs-selenium-browser-wait-re-dict-a.php") == 1
         assert output.count("/dafs-selenium-browser-wait-re-dict-b.php") == 1
@@ -804,6 +842,7 @@ class Test_Urls(object):
             self.dict_path,
         ])
         print(output)
+        output = output.decode("utf8")
         assert self.get_results_count(output) == 3
         assert output.count("/dafs-headers-file-dict-a.php") == 1
         assert output.count("/dafs-headers-file-dict-b.php") == 1
@@ -825,10 +864,12 @@ class Test_Urls(object):
             '?l?d,1,1'
         ])
         print(output)
+        output = output.decode('utf8')
         assert self.get_results_count(output) == 3
         assert output.count("/dafs-headers-file-mask-a.php") == 1
         assert output.count("/dafs-headers-file-mask-b.php") == 1
         assert output.count("/dafs-headers-file-mask-9.php") == 1
+
 
     def test_comb_headers_file(self):
         fh = open(self.dict_path, 'w')
@@ -854,6 +895,7 @@ class Test_Urls(object):
             '?l?d,1,1'
         ])
         print(output)
+        output = output.decode("utf8")
         assert self.get_results_count(output) == 3
         assert output.count("/dafs-headers-file-comb-a.php") == 1
         assert output.count("/dafs-headers-file-comb-b.php") == 1
@@ -875,6 +917,7 @@ class Test_Urls(object):
             self.dict_path
         ])
         print(output)
+        output = output.decode("utf8")
         assert self.get_results_count(output) == 3
         assert output.count("/dafs-post-dict-a.php") == 1
         assert output.count("/dafs-post-dict-b.php") == 1
@@ -892,6 +935,7 @@ class Test_Urls(object):
             '?l?d,1,1',
         ])
         print(output)
+        output = output.decode("utf8")
         assert self.get_results_count(output) == 3
         assert output.count("/dafs-post-mask-a.php") == 1
         assert output.count("/dafs-post-mask-b.php") == 1
@@ -917,6 +961,7 @@ class Test_Urls(object):
             '?l?d,1,1'
         ])
         print(output)
+        output = output.decode("utf8")
         assert self.get_results_count(output) == 3
         assert output.count("/dafs-post-comb-a.php") == 1
         assert output.count("/dafs-post-comb-b.php") == 1
@@ -938,6 +983,7 @@ class Test_Urls(object):
             self.dict_path
         ])
         print(output)
+        output = output.decode("utf8")
         assert self.get_results_count(output) == 3
         assert output.count("/dafs-head-dict-a.php") == 1
         assert output.count("/dafs-head-dict-b.php") == 1
@@ -955,6 +1001,7 @@ class Test_Urls(object):
             '?l?d,1,1'
         ])
         print(output)
+        output = output.decode("utf8")
         assert self.get_results_count(output) == 3
         assert output.count("/dafs-head-mask-a.php") == 1
         assert output.count("/dafs-head-mask-b.php") == 1
@@ -980,6 +1027,7 @@ class Test_Urls(object):
             '?l?d,1,1'
         ])
         print(output)
+        output = output.decode("utf8")
         assert self.get_results_count(output) == 3
         assert output.count("/dafs-head-comb-a.php") == 1
         assert output.count("/dafs-head-comb-b.php") == 1
@@ -999,6 +1047,7 @@ class Test_Urls(object):
             self.dict_path
         ])
         print(output)
+        output = output.decode("utf8")
         assert self.get_results_count(output) == 3
         assert output.count("/dafs-get-dict-a.php") == 1
         assert output.count("/dafs-get-dict-b.php") == 1
@@ -1014,6 +1063,7 @@ class Test_Urls(object):
             '?l?d,1,1',
         ])
         print(output)
+        output = output.decode("utf8")
         assert self.get_results_count(output) == 3
         assert output.count("/dafs-get-mask-a.php") == 1
         assert output.count("/dafs-get-mask-b.php") == 1
@@ -1037,6 +1087,7 @@ class Test_Urls(object):
             '?l?d,1,1'
         ])
         print(output)
+        output = output.decode("utf8")
         assert self.get_results_count(output) == 3
         assert output.count("/dafs-get-comb-a.php") == 1
         assert output.count("/dafs-get-comb-b.php") == 1

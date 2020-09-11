@@ -96,7 +96,7 @@ class ParamsRawThread(AbstractRawThread):
                 except queue.Empty:
                     self.queue_is_empty = True
                     if len(cookies) == 0:
-                        raise Queue.Empty
+                        raise queue.Empty
                     break
 
                 if not len(word.strip()) or (self.ignore_words_re and self.ignore_words_re.findall(word)):
@@ -189,7 +189,7 @@ class ParamsRawThread(AbstractRawThread):
             return False
 
         if self.not_found_re and not self.is_response_content_binary(resp) and (
-                    self.not_found_re.findall(resp.content) or
+                    self.not_found_re.findall(resp.text) or
                     self.not_found_re.findall(self.get_headers_text(resp))):
             return False
 

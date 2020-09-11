@@ -8,7 +8,6 @@ Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pr
 
 Thread class for FuzzerHeaders module
 """
-from __future__ import division
 
 import queue
 import time
@@ -72,6 +71,8 @@ class FuzzerHeadersRawThread(AbstractFuzzerRawThread):
                             url,
                             headers={header.lower(): Registry().get('fuzzer_evil_value')},
                         )
+                        print("{0} {1} {2}".format(resp.text, header, Registry().get('fuzzer_evil_value')))
+
                         ErrorsCounter.flush()
                     except ConnectionError:
                         ErrorsCounter.up()
@@ -97,7 +98,7 @@ class FuzzerHeadersRawThread(AbstractFuzzerRawThread):
 
                     found_words = []
                     for bad_word in self.bad_words:
-                        if resp.content.lower().count(bad_word):
+                        if resp.text.lower().count(bad_word):
                             found_words.append(bad_word)
 
                     self.test_log(url + " " + header, resp, len(found_words) > 0)

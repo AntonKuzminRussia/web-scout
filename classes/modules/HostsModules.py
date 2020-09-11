@@ -31,7 +31,7 @@ class HostsModules(WSModule):
         super(HostsModules, self).validate_main()
 
         try:
-            resp = Registry().get('http').get(self.options['ip'].value)
+            resp = Registry().get('http').get(self.options['http-protocol'].value + "://" + self.options['ip'].value)
         except requests.exceptions.ConnectionError:
             raise WSException("Target web-site not available")
 

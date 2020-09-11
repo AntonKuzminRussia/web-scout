@@ -107,7 +107,7 @@ class DnsRawThread(AbstractThread):
                     if not self.is_valid_hostname(check_host):
                         continue
 
-                self.check_name = self.template.replace(self.msymbol, check_host.decode('utf8', 'ignore'))
+                self.check_name = self.template.replace(self.msymbol, check_host)
                 query = dns.message.make_query(self.check_name, self.zone)
 
                 try:

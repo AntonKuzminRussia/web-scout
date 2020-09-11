@@ -50,7 +50,7 @@ class AbstractRawThread(AbstractThread):
                 'code': resp.status_code if resp is not None else 0,
                 'positive': positive_item,
                 'size': get_response_size(resp) if resp is not None else 0,
-                'content': resp.content if resp is not None else '',
+                'content': resp.text if resp is not None else '',
             }
         )
 
@@ -103,15 +103,18 @@ class AbstractRawThread(AbstractThread):
         :param is_positive:
         :return:
         """
-        if isinstance(resp, basestring):
+        if isinstance(resp, str):
             log_content = resp
         else:
-            log_content = resp.content if not resp is None else ""
+            if resp is None:
+                log_content = ""
+            else:
+                log_content = resp.content if self.is_response_content_binary(resp) else resp.text
 
         Registry().get('logger').item(
             item_str,
             log_content,
-            self.is_response_content_binary(resp) if not isinstance(resp, basestring) else False,
+            self.is_response_content_binary(resp) if not isinstance(resp, str) else False,
             positive=is_positive
         )
 
@@ -135,7 +138,7 @@ class AbstractRawThread(AbstractThread):
         try:
             if resp is not None:
                 if (len(self.retest_codes) and str(resp.status_code) in self.retest_codes) or \
-                        (self.retest_re and self.retest_re.findall(resp.content)):
+                        (self.retest_re and self.retest_re.findall(resp.text)):
                     if word not in self.retested_words.keys():
                         self.retested_words[word] = 0
                     self.retested_words[word] += 1

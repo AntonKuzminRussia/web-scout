@@ -8,7 +8,6 @@ Copyright (c) Anton Kuzmin <http://anton-kuzmin.ru> (ru) <http://anton-kuzmin.pr
 
 Thread class for FuzzerUrls module
 """
-from __future__ import division
 
 import queue
 import time

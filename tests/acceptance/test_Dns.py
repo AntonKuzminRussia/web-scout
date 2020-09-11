@@ -3,6 +3,8 @@ import os
 import time
 import re
 
+from classes.Registry import Registry
+
 runPath = os.path.realpath(os.path.dirname(os.path.abspath(__file__)) + '/../../')
 
 
@@ -15,6 +17,7 @@ class Test_Dns(object):
         return len(re.findall('^(\t.+DNS:.+)', output, re.M))
 
     def test_dict(self):
+        Registry().set('config', {'main': {'timeout_threads_resurect_max_count': '10'}})
         fh = open(self.dict_path, 'w')
         fh.write("test\nfoobar\ncc\nhh\nii\ndev")
         fh.close()
@@ -23,14 +26,15 @@ class Test_Dns(object):
             './ws.py',
             'DnsDict',
             '--template',
-            '@.standart-zone.polygon.web-scout.online',
+            '@.standart-zone.polygon.web-scout.ru',
             '--dict',
             self.dict_path,
         ])
         print(output)
+        output = output.decode('utf8')
         assert self.get_results_count(output) == 2
-        assert output.count("test.standart-zone.polygon.web-scout.online") == 2
-        assert output.count("dev.standart-zone.polygon.web-scout.online") == 2
+        assert output.count("test.standart-zone.polygon.web-scout.ru") == 2
+        assert output.count("dev.standart-zone.polygon.web-scout.ru") == 2
 
     def test_msymbol(self):
         fh = open(self.dict_path, 'w')
@@ -41,16 +45,17 @@ class Test_Dns(object):
             './ws.py',
             'DnsDict',
             '--template',
-            '%.standart-zone.polygon.web-scout.online',
+            '%.standart-zone.polygon.web-scout.ru',
             '--dict',
             self.dict_path,
             '--msymbol',
             '%',
         ])
         print(output)
+        output = output.decode('utf8')
         assert self.get_results_count(output) == 2
-        assert output.count("test.standart-zone.polygon.web-scout.online") == 2
-        assert output.count("dev.standart-zone.polygon.web-scout.online") == 2
+        assert output.count("test.standart-zone.polygon.web-scout.ru") == 2
+        assert output.count("dev.standart-zone.polygon.web-scout.ru") == 2
 
     def test_dict_ignore_words_re(self):
         fh = open(self.dict_path, 'w')
@@ -61,29 +66,31 @@ class Test_Dns(object):
             './ws.py',
             'DnsDict',
             '--template',
-            '@.standart-zone.polygon.web-scout.online',
+            '@.standart-zone.polygon.web-scout.ru',
             '--dict',
             self.dict_path,
             '--ignore-words-re',
             'test'
         ])
         print(output)
+        output = output.decode('utf8')
         assert self.get_results_count(output) == 1
-        assert output.count("test.standart-zone.polygon.web-scout.online") == 0
-        assert output.count("dev.standart-zone.polygon.web-scout.online") == 2
+        assert output.count("test.standart-zone.polygon.web-scout.ru") == 0
+        assert output.count("dev.standart-zone.polygon.web-scout.ru") == 2
 
     def test_mask(self):
         output = subprocess.check_output([
             './ws.py',
             'DnsMask',
             '--template',
-            'tes@.standart-zone.polygon.web-scout.online',
+            'tes@.standart-zone.polygon.web-scout.ru',
             '--mask',
             '?l,1,1',
         ])
         print(output)
+        output = output.decode('utf8')
         assert self.get_results_count(output) == 1
-        assert output.count("test.standart-zone.polygon.web-scout.online") == 2
+        assert output.count("test.standart-zone.polygon.web-scout.ru") == 2
 
     def test_ignore_ip(self):
         fh = open(self.dict_path, 'w')
@@ -94,15 +101,16 @@ class Test_Dns(object):
             './ws.py',
             'DnsDict',
             '--template',
-            '@.wildcard-ip.polygon.web-scout.online',
+            '@.wildcard-ip.polygon.web-scout.ru',
             '--ignore-ip',
             '8.8.8.8',
             '--dict',
             self.dict_path,
         ])
         print(output)
+        output = output.decode('utf8')
         assert self.get_results_count(output) == 1
-        assert output.count("dev.wildcard-ip.polygon.web-scout.online") == 2
+        assert output.count("dev.wildcard-ip.polygon.web-scout.ru") == 2
 
     def test_http_not_found(self):
         fh = open(self.dict_path, 'w')
@@ -113,15 +121,16 @@ class Test_Dns(object):
             './ws.py',
             'DnsDict',
             '--template',
-            '@.wildcard-web.polygon.web-scout.online',
+            '@.wildcard-web.polygon.web-scout.ru',
             '--http-not-found-re',
             'Apache2 Ubuntu Default Page',
             '--dict',
             self.dict_path,
         ])
         print(output)
+        output = output.decode('utf8')
         assert self.get_results_count(output) == 1
-        assert output.count("admin.wildcard-web.polygon.web-scout.online") == 2
+        assert output.count("admin.wildcard-web.polygon.web-scout.ru") == 2
 
     def test_combine(self):
         fh = open(self.dict_path, 'w')
@@ -132,7 +141,7 @@ class Test_Dns(object):
             './ws.py',
             'DnsCombine',
             '--template',
-            '@.standart-zone.polygon.web-scout.online',
+            '@.standart-zone.polygon.web-scout.ru',
             '--combine-template',
             '%d%%m%',
             '--mask',
@@ -141,8 +150,9 @@ class Test_Dns(object):
             self.dict_path,
         ])
         print(output)
+        output = output.decode('utf8')
         assert self.get_results_count(output) == 1
-        assert output.count("test.standart-zone.polygon.web-scout.online") == 2
+        assert output.count("test.standart-zone.polygon.web-scout.ru") == 2
 
     def test_dict_zone_cname(self):
         fh = open(self.dict_path, 'w')
@@ -153,15 +163,16 @@ class Test_Dns(object):
             './ws.py',
             'DnsDict',
             '--template',
-            '@.standart-zone.polygon.web-scout.online',
+            '@.standart-zone.polygon.web-scout.ru',
             '--dict',
             self.dict_path,
             '--zone',
             'CNAME',
         ])
         print(output)
+        output = output.decode('utf8')
         assert self.get_results_count(output) == 1
-        assert output.count("admin.standart-zone.polygon.web-scout.online") == 2
+        assert output.count("admin.standart-zone.polygon.web-scout.ru") == 2
 
     def test_delay(self):
         fh = open(self.dict_path, 'w')
@@ -173,7 +184,7 @@ class Test_Dns(object):
             './ws.py',
             'DnsDict',
             '--template',
-            '@.standart-zone.polygon.web-scout.online',
+            '@.standart-zone.polygon.web-scout.ru',
             '--dict',
             self.dict_path,
             '--delay',
@@ -182,6 +193,7 @@ class Test_Dns(object):
             '1',
         ])
         print(output)
+        output = output.decode('utf8')
         etime = int(time.time())
 
         assert etime - stime > 12

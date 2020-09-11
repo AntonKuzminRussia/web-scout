@@ -35,6 +35,7 @@ class Test_Forms(object):
             'false'
         ])
         print(output)
+        output = output.decode('utf8')
         assert self.get_results_count(output) == 1
         assert output.count("Passwords found:\n\ttest") == 1
 
@@ -58,6 +59,7 @@ class Test_Forms(object):
             'true'
         ])
         print(output)
+        output = output.decode('utf8')
         assert self.get_results_count(output) == 1
         assert output.count("Passwords found:\n\ttest") == 1
 
@@ -81,6 +83,7 @@ class Test_Forms(object):
             '5'
         ])
         print(output)
+        output = output.decode('utf8')
         assert self.get_results_count(output) == 1
         assert output.count("Passwords found:\n\ttest") == 1
 
@@ -110,6 +113,7 @@ class Test_Forms(object):
             self.conf_file_path,
         ])
         print (output)
+        output = output.decode('utf8')
         assert self.get_results_count(output) == 1
         assert output.count("Passwords found:\n\ttest") == 1
 
@@ -139,6 +143,7 @@ class Test_Forms(object):
             self.conf_file_path,
         ])
         print (output)
+        output = output.decode('utf8')
         assert self.get_results_count(output) == 1
         assert output.count("Passwords found:\n\ttest") == 1
 
@@ -168,6 +173,7 @@ class Test_Forms(object):
             self.conf_file_path,
         ])
         print (output)
+        output = output.decode('utf8')
         assert self.get_results_count(output) == 1
         assert output.count("Passwords found:\n\ttest") == 1
 
@@ -193,6 +199,7 @@ class Test_Forms(object):
             '503',
         ])
         print(output)
+        output = output.decode('utf8')
         assert self.get_results_count(output) == 1
         assert output.count("Passwords found:\n\ttest") == 1
 
@@ -218,6 +225,7 @@ class Test_Forms(object):
             'too big',
         ])
         print(output)
+        output = output.decode('utf8')
         assert self.get_results_count(output) == 1
         assert output.count("Passwords found:\n\ttest") == 1
 
@@ -247,6 +255,7 @@ class Test_Forms(object):
         ])
         etime = int(time.time())
         print(output)
+        output = output.decode('utf8')
         assert etime - stime > 10
 
     def test_selenium_delay(self):
@@ -279,6 +288,7 @@ class Test_Forms(object):
         ])
         etime = int(time.time())
         print (output)
+        output = output.decode('utf8')
         assert etime - stime > 10
 
     def test_selenium_false_re_browser_wait_re(self):
@@ -309,6 +319,7 @@ class Test_Forms(object):
             'Checking your browser',
         ])
         print (output)
+        output = output.decode('utf8')
         assert self.get_results_count(output) == 1
         assert output.count("Passwords found:\n\ttest") == 1
 
@@ -340,6 +351,7 @@ class Test_Forms(object):
             'Checking your browser',
         ])
         print (output)
+        output = output.decode('utf8')
         assert self.get_results_count(output) == 1
         assert output.count("Passwords found:\n\ttest") == 1
 
@@ -371,6 +383,7 @@ class Test_Forms(object):
             'Checking your browser',
         ])
         print (output)
+        output = output.decode('utf8')
         assert self.get_results_count(output) == 1
         assert output.count("Passwords found:\n\ttest") == 1
 
@@ -402,6 +415,7 @@ class Test_Forms(object):
             '1',
         ])
         print (output)
+        output = output.decode('utf8')
         assert self.get_results_count(output) == 1
         assert output.count("Passwords found:\n\ttest") == 1
 
@@ -431,6 +445,7 @@ class Test_Forms(object):
             self.headers_file_path,
         ])
         print(output)
+        output = output.decode('utf8')
         assert self.get_results_count(output) == 1
         assert output.count("Passwords found:\n\ttest") == 1
 
@@ -456,6 +471,7 @@ class Test_Forms(object):
             '4',
         ])
         print(output)
+        output = output.decode('utf8')
         assert self.get_results_count(output) == 1
         assert output.count("Passwords found:\n\ttest") == 1
 
@@ -481,6 +497,7 @@ class Test_Forms(object):
             '4',
         ])
         print(output)
+        output = output.decode('utf8')
         assert self.get_results_count(output) == 1
         assert output.count("Passwords found:\n\ttest") == 1
 
@@ -508,6 +525,7 @@ class Test_Forms(object):
             '1',
         ])
         print(output)
+        output = output.decode('utf8')
         assert self.get_results_count(output) == 1
         assert output.count("Passwords found:\n\tadmin") == 1
 
@@ -533,5 +551,6 @@ class Test_Forms(object):
             '1',
         ])
         print(output)
+        output = output.decode('utf8')
         assert self.get_results_count(output) == 1
         assert output.count("Passwords found:\n\ttest") == 1

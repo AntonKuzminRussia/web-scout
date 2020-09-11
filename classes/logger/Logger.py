@@ -91,7 +91,7 @@ class Logger(object):
         if binary:
             fh = open("{0}/{1}.{2}".format(self.items_dir, name, ext), 'wb')
             try:
-                fh.write(content)
+                fh.write(content.encode('utf8') if isinstance(content, str) else content)
             except UnicodeDecodeError:
                 fh.write("BINARY ENCODING ERROR")
         else:

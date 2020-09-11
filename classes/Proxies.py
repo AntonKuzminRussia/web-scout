@@ -43,7 +43,7 @@ class Proxies(object):
         proxy = self._proxies[random.randint(0, len(self._proxies)-1)] if len(self._proxies) else False
         return proxy if proxy is False or self.check_live(proxy) else self.get_proxy()
 
-    def check_live(self, proxy):
+    def check_live(self, proxy): #TODO cache of check results here
         """ Check proxy is it live """
         try:
             proxies = {

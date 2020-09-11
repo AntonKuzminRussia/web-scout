@@ -26,5 +26,6 @@ class Test_FuzzerHeaders(object):
             self.dict_path,
         ])
         print(output)
+        output = output.decode('utf8')
         assert self.get_results_count(output) == 1
         assert output.count("http://wsat.local/fuzzer-headers.php") == 1

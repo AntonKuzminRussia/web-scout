@@ -140,5 +140,5 @@ class Test_DictOfMask(object):
 
         for mask in test_data:
             dom = DictOfMask(mask)
-            assert dom.dict() == test_data[mask]
+            assert sorted(dom.dict()) == sorted(test_data[mask])
 

@@ -34,6 +34,7 @@ class Test_Params(object):
             '3'
         ])
         print(output)
+        output = output.decode("utf8")
         assert self.get_results_count(output) == 1
         assert output.count("Params found:\n\taa=1") == 1
 
@@ -53,6 +54,7 @@ class Test_Params(object):
             '3'
         ])
         print(output)
+        output = output.decode("utf8")
         assert self.get_results_count(output) == 1
         assert output.count("Params found:\n\tg=1") == 1
 
@@ -76,6 +78,7 @@ class Test_Params(object):
             '3'
         ])
         print(output)
+        output = output.decode("utf8")
         assert self.get_results_count(output) == 1
         assert output.count("Params found:\n\taa=1") == 1
 
@@ -95,6 +98,7 @@ class Test_Params(object):
             '3'
         ])
         print(output)
+        output = output.decode("utf8")
         assert self.get_results_count(output) == 1
         assert output.count("Params found:\n\tg=1") == 1
 
@@ -118,6 +122,7 @@ class Test_Params(object):
             '3'
         ])
         print(output)
+        output = output.decode("utf8")
         assert self.get_results_count(output) == 1
         assert output.count("Params found:\n\taa=1") == 1 #TODO different, in all places and tests
 
@@ -137,6 +142,7 @@ class Test_Params(object):
             '3'
         ])
         print(output)
+        output = output.decode("utf8")
         assert self.get_results_count(output) == 1
         assert output.count("Params found:\n\tg=1") == 1
 
@@ -160,6 +166,7 @@ class Test_Params(object):
             '3'
         ])
         print(output)
+        output = output.decode("utf8")
         assert self.get_results_count(output) == 1
         assert output.count("Params found:\n\taa=1") == 1
 
@@ -179,6 +186,7 @@ class Test_Params(object):
             '3'
         ])
         print(output)
+        output = output.decode("utf8")
         assert self.get_results_count(output) == 1
         assert output.count("Params found:\n\tg=1") == 1
 
@@ -204,6 +212,7 @@ class Test_Params(object):
             '2',
         ])
         print(output)
+        output = output.decode("utf8")
         assert self.get_results_count(output) == 1
         assert output.count("Params found:\n\taa=2") == 1
 
@@ -225,6 +234,7 @@ class Test_Params(object):
             '2',
         ])
         print(output)
+        output = output.decode("utf8")
         assert self.get_results_count(output) == 1
         assert output.count("Params found:\n\tg=2") == 1
 
@@ -248,29 +258,7 @@ class Test_Params(object):
             'NOT'
         ])
         print(output)
-        assert self.get_results_count(output) == 1
-        assert output.count("Params found:\n\taa=1") == 1
-
-    def test_get_dict_not_found_codes(self):
-        fh = open(self.dict_path, 'w')
-        fh.write("aa\nbb\ncc\ndd\nee\nff\ngg\nhh\nii\n")
-        fh.close()
-
-        output = subprocess.check_output([
-            './ws.py',
-            'ParamsDict',
-            '--url',
-            'http://wsat.local/params-bruter-dict-not-found-codes.php',
-            '--dict',
-            self.dict_path,
-            '--max-params-length',
-            '1000',
-            '--params-method',
-            'GET',
-            '--not-found-codes',
-            '404'
-        ])
-        print(output)
+        output = output.decode("utf8")
         assert self.get_results_count(output) == 1
         assert output.count("Params found:\n\taa=1") == 1
 
@@ -296,6 +284,7 @@ class Test_Params(object):
             'aa'
         ])
         print(output)
+        output = output.decode("utf8")
         assert self.get_results_count(output) == 0
         assert output.count("Params found:\n\taa=1") == 0
 
@@ -349,6 +338,7 @@ class Test_Params(object):
             '503',
         ])
         print(output)
+        output = output.decode("utf8")
         assert self.get_results_count(output) == 1
         assert output.count("Params found:\n\taa=1") == 1
 
@@ -374,10 +364,11 @@ class Test_Params(object):
             'Too big load',
         ])
         print(output)
+        output = output.decode("utf8")
         assert self.get_results_count(output) == 1
         assert output.count("Params found:\n\taa=1") == 1
 
-    def test_get_dict_heders_file(self):
+    def test_get_dict_headers_file(self):
         fh = open(self.dict_path, 'w')
         fh.write("aa\nbb\ncc\ndd\nee\nff\ngg\nhh\nii\n")
         fh.close()
@@ -405,5 +396,6 @@ class Test_Params(object):
             self.headers_file_path
         ])
         print(output)
+        output = output.decode("utf8")
         assert self.get_results_count(output) == 1
         assert output.count("Params found:\n\taa=1") == 1

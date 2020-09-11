@@ -27,12 +27,15 @@ from classes.Registry import Registry
 def file_to_list(path, unique=True):
     """ Split text file on lines, remove dups (if need), and return list of it """
     result = map(str.strip, open(path).readlines())
-    return result if not unique else list(set(result))
+    if unique:
+        result = set(result)
+
+    return list(result)
 
 
 def nformat(num):
     """ Return number formatted by locale from config """
-    locale.setlocale(locale.LC_ALL, Registry().get('config')['main']['locale'].encode())
+    locale.setlocale(locale.LC_ALL, Registry().get('config')['main']['locale'])
     return locale.format("%d", int(num), grouping=True)
 
 
@@ -49,15 +52,15 @@ def secs_to_text(secs):
     mins = 0
 
     if secs >= day_time:
-        days = secs / day_time
+        days = int(secs / day_time)
         secs = secs % day_time
 
     if secs >= hour_time:
-        hours = secs / hour_time
+        hours = int(secs / hour_time)
         secs = secs % hour_time
 
     if secs >= min_time:
-        mins = secs / min_time
+        mins = int(secs / min_time)
         secs = secs % min_time
 
     str_time = []
@@ -101,7 +104,7 @@ def validate_uri_start(url):
 def md5(s):
     """ String to MD5-hash """
     m = hashlib.md5()
-    m.update(s.decode(encoding='UTF-8', errors='ignore').encode('UTF-8', errors='ignore'))
+    m.update(s.encode('UTF-8', errors='ignore'))
     return m.hexdigest()
 
 
@@ -113,7 +116,7 @@ def parse_split_conf(conf):
         conf = conf.split(',')
         for item in conf:
             index = conf.index(item)
-            conf[index] = item.encode('utf8')
+            conf[index] = item
         result = list(map(str.strip, conf))
 
     return result
