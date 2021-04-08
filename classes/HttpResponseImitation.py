@@ -11,7 +11,7 @@ class HttpResponseImitation:
         self.status_code = status_code
         self.headers = headers
         self.content = content
-        self.text = codecs.decode(content, 'utf-8', 'ignore')
+        self.text = content
 
     def close(self):
         pass
