@@ -400,7 +400,7 @@ class AbstractModuleParams:
         "discovery-exts": WSOption(
             "discovery-exts",
             "Exts, comma separated, for generate discovery filenames",
-            "php,html,js,log,txt",
+            "php,html,js,log,txt,zip,tar,tar.gz,tar.bz2,gz,zip,7z,rar",
             False,
             ['--discovery-exts']
         ),
