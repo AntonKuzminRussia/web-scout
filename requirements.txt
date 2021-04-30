@@ -10,4 +10,4 @@ PySocks==1.7.1
 PyVirtualDisplay==0.2.4
 requests==2.22.0
 selenium==3.141.0
-urllib3==1.25.6
+urllib3==1.25.8
